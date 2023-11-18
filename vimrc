@@ -1,6 +1,7 @@
 filetype plugin indent on
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
+set completeopt-=preview
 set encoding=utf-8
 set nocompatible 
 set number
@@ -20,10 +21,10 @@ call plug#begin('~/.vim/bundle')
   Plug 'preservim/nerdtree'
   Plug 'Vimjas/vim-python-pep8-indent'
   Plug 'dense-analysis/ale'
-  " Plug 'davidhalter/jedi-vim'
   Plug 'ervandew/supertab'
   Plug 'sheerun/vim-polyglot'
-  " you complete me
+  Plug 'jiangmiao/auto-pairs'
+   " you complete me
   Plug 'VundleVim/Vundle.vim'
   Plug 'tpope/vim-fugitive'
   Plug 'git://git.wincent.com/command-t.git'
@@ -32,18 +33,23 @@ call plug#begin('~/.vim/bundle')
   Plug 'ycm-core/YouCompleteMe'
 call plug#end()
 
-" setup colorscheme
+" Start NERDTree and put the cursor back in the other window.
+autocmd VimEnter * NERDTree | wincmd p
+
+" setup colorschemefunction start
 let g:molokai_original = 1
 colorscheme monokai_custom
 highlight Normal ctermbg=NONE
 highlight notText ctermbg=NONE
 if has('macunix')
-  set guifont=Monaco:h12
+  set guifont=JetBrainsMono-Regular:h13
+  set linespace=3
 else
-  set guifont=Monaco\ Regular\ 10
+  set guifont=Monaco\ Regular\ 11
+  set guioptions-=m
+  set guioptions-=T
+  autocmd VimEnter * NERDTreeFind  | wincmd p
 endif
-" Start NERDTree and put the cursor back in the other window.
-autocmd VimEnter * NERDTree | wincmd p
 
 " disabling ale_completion and reverse supertab mapping
 " let g:ale_lint_on_text_changed = 1
@@ -53,24 +59,28 @@ let g:ale_linters = {'cpp': ['cc', 'clang', 'cppcheck']}
 let g:ale_cpp_cc_options = "-std=c++17 -Wall"
 let g:ale_cpp_clangd_options = "-std=c++17 -Wall"
 
-" let g:ycm_server_python_interpreter='/usr/local/bin/python3'
 let g:ycm_global_ycm_extra_conf = '/Users/zahar/.vim/bundle/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
 let g:ycm_confirm_extra_conf = 0
 
-let g:SuperTabMappingBackward = '<tab>'
-let g:SuperTabMappingForward = '<C-tab>'
-
-" autocmd FileType python map <buffer> <C-r> :w<CR>:exec '!python3-intel64' shellescape(@%, 1)<CR>
-" autocmd FileType python imap <buffer> <C-r> <esc>:w<CR>:exec '!python3-intel64' shellescape(@%, 1)<CR>
-
 " Hotkeys
-noremap q b
+noremap q ge
 noremap Q B
 " start of the next word
 noremap f w
 noremap F W
 
+let g:SuperTabMappingBackward = '<tab>'
+
 "moving in normal mode
+noremap ф <left>
+noremap Ф <left>
+noremap ц <up>
+noremap Ц <up>
+noremap ы <down>
+noremap ы <down>
+noremap в <right>
+noremap В <right>
+
 noremap a <left>
 noremap A <left>
 noremap w <up>
@@ -80,31 +90,30 @@ noremap S <down>
 noremap d <right>
 noremap D <right>
 
+noremap j a
+noremap J A
+ autocmd FileType python map <buffer> <C-r> :w<CR>:exec '!python3-intel64' shellescape(@%, 1)<CR>
 if has('macunix')
   " moving in insert mode
   inoremap <C-a> <left>
   inoremap <C-w> <up>
   inoremap <C-s> <down>
   inoremap <C-d> <right>
-  
+  let g:SuperTabMappingForward = '<C-tab>'
+
   " running python ctrl+r
   autocmd Filetype python noremap <buffer> <C-r> :w<CR> :cd %:p:h<CR> :ter python3-intel64 "%"<CR>
   autocmd Filetype python inoremap <buffer> <C-r> <esc>:w<CR> :cd %:p:h<CR> :ter python3-intel64 "%"<CR>
   " running c++ ctrl+r
-  autocmd Filetype cpp noremap <buffer> <C-r> :w<CR> :cd %:p:h<CR> :!g++ -std=c++20 *.cpp<CR> :NERDTreeRefreshRoot<CR> :ter ./a.out<CR>
+  autocmd Filetype cpp noremap <buffer> <C-r> :w<CR> :cd %:p:h<CR> :!g++ -std=c++20 *.cpp<CR> :NERDTreeRefreshRoot<CR> :ter ./a.out<CR> 
   autocmd FileType cpp inoremap <buffer> <C-r> <Esc>:w<CR> :cd %:p:h<CR> :!g++ -std=c++20 *.cpp<CR> :NERDTreeRefreshRoot<CR> :ter ./a.out<CR>
+
 else
-  " for gui
-  autocmd FileType python noremap <buffer> <A-r> :w<CR> :cd %:p:h<CR> :ter python "%"<CR>
-  autocmd FileType python inoremap <buffer> <A-r> <Esc>:w<CR> :cd %:p:h<CR> :ter python "%"<CR>
-  " running c++ alt+r
-  autocmd Filetype cpp noremap <buffer> <A-r> :w<CR> :cd %:p:h<CR> :!g++ -std=c++20 *.cpp<CR> :NERDTreeRefreshRoot<CR> :ter ./a.out<CR>
-  autocmd Filetype cpp inoremap <buffer> <A-r> <Esc>:w<CR> :cd %:p:h<CR> :!g++ -std=c++20 *.cpp<CR> :NERDTreeRefreshRoot<CR> :ter ./a.out<CR>
-  
-  " removing buffer
-  noremap <C-w> :bd<CR>
-  inoremap <C-w> <Esc>:bd<CR>
   " movement in Gvim
+  noremap <A-a> <left>
+  noremap <A-w> <up>
+  noremap <A-s> <down>
+  noremap <A-d> <right>
   inoremap <A-a> <left>
   inoremap <A-w> <up>
   inoremap <A-s> <down>
@@ -118,4 +127,26 @@ else
   inoremap <Esc>s <down>
   inoremap <Esc>d <right>
   inoremap <Esc>c <Esc>
+
+  let g:SuperTabMappingForward = '<A-tab>'
+
+  " normal cut and copy
+  noremap <C-c> "+yi<Esc>
+  noremap <C-x> "+c<Esc>
+  noremap <C-v> i<C-r><C-o>+
+  noremap <C-s> :w<CR>
+  inoremap <C-v> <C-r><C-o>+
+  inoremap <C-s> <Esc>:w<CR>
+  " for gui
+  autocmd FileType python noremap <buffer> <A-r> :w<CR> :cd %:p:h<CR> :ter python "%"<CR>
+  autocmd FileType python inoremap <buffer> <A-r> <Esc>:w<CR> :cd %:p:h<CR> :ter python "%"<CR>
+  " running c++ alt+r
+  autocmd Filetype cpp noremap <buffer> <A-r> :w<CR> :cd %:p:h<CR> :!g++ -std=c++20 *.cpp<CR> :NERDTreeRefreshRoot<CR> :ter ./a.out<CR>
+  autocmd Filetype cpp inoremap <buffer> <A-r> <Esc>:w<CR> :cd %:p:h<CR> :!g++ -std=c++20 *.cpp<CR> :NERDTreeRefreshRoot<CR> :ter ./a.out<CR>
+  
+  " removing buffer
+  noremap <C-w> :bd<CR>
+  inoremap <C-w> <Esc>:bd<CR>
 endif
+
+

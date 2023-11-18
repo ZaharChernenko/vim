@@ -6,7 +6,7 @@
    
 2) install vim-plug:
    curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 4) put in home directory (~) .vimrc
 5) launch vim and write :PlugInstall

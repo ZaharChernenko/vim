@@ -31,8 +31,8 @@ hi Boolean         guifg=#AE81FF
 hi Character       guifg=#E6DB74
 hi Number          guifg=#AE81FF
 hi String          guifg=#E6DB74
-hi Conditional     guifg=#F92672               gui=bold
-hi Constant        guifg=#AE81FF               gui=bold
+hi Conditional     guifg=#66D9EF               gui=italic
+hi Constant        guifg=#66D9EF               gui=none
 hi Cursor          guifg=#000000 guibg=#F8F8F0
 hi iCursor         guifg=#000000 guibg=#F8F8F0
 hi Debug           guifg=#BCA3A3               gui=bold
@@ -72,9 +72,9 @@ hi PmenuSbar                     guibg=#080808
 hi PmenuThumb      guifg=#66D9EF
 
 hi PreCondit       guifg=#A6E22E               gui=bold
-hi PreProc         guifg=#A6E22E
+hi PreProc         guifg=#F92672
 hi Question        guifg=#66D9EF
-hi Repeat          guifg=#F92672               gui=bold
+hi Repeat          guifg=#F92672               gui=italic
 hi Search          guifg=#000000 guibg=#FFE792
 " marks
 hi SignColumn      guifg=#A6E22E guibg=#232526
@@ -87,7 +87,7 @@ if has("spell")
     hi SpellLocal  guisp=#70F0F0 gui=undercurl
     hi SpellRare   guisp=#FFFFFF gui=undercurl
 endif
-hi Statement       guifg=#F92672               gui=bold
+hi Statement       guifg=#F92672               gui=italic,bold
 hi StatusLine      guifg=#455354 guibg=fg
 hi StatusLineNC    guifg=#808080 guibg=#080808
 hi StorageClass    guifg=#FD971F               gui=italic
