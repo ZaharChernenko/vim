@@ -23,12 +23,13 @@ call plug#begin('~/.vim/bundle')
   Plug 'dense-analysis/ale'
   Plug 'ervandew/supertab'
   Plug 'sheerun/vim-polyglot'
+  " автоматические скобки
   Plug 'jiangmiao/auto-pairs'
+  Plug 'puremourning/vimspector'
    " you complete me
   Plug 'VundleVim/Vundle.vim'
   Plug 'tpope/vim-fugitive'
-  Plug 'git://git.wincent.com/command-t.git'
-  Plug 'file:///home/gmarik/path/to/plugin'
+  Plug 'git://git.wincent.com/command-t.git' 
   Plug 'rstacruz/sparkup', {'rtp': 'vim/'}
   Plug 'ycm-core/YouCompleteMe'
 call plug#end()
@@ -39,8 +40,17 @@ autocmd VimEnter * NERDTree | wincmd p
 " setup colorschemefunction start
 let g:molokai_original = 1
 colorscheme monokai_custom
-highlight Normal ctermbg=NONE
-highlight notText ctermbg=NONE
+set signcolumn=yes
+" JetBrainsMono doesn't support default vimspector signs
+sign define vimspectorBP text=o             texthl=WarningMsg
+sign define vimspectorBPCond text=o?        texthl=WarningMsg
+sign define vimspectorBPLog text=!!         texthl=SpellRare
+sign define vimspectorBPDisabled text=o!    texthl=LineNr
+sign define vimspectorPC text=\ >           texthl=MatchParen
+sign define vimspectorPCBP text=o>          texthl=MatchParen
+sign define vimspectorCurrentThread text=>  texthl=MatchParen
+sign define vimspectorCurrentFrame text=>   texthl=Special
+
 if has('macunix')
   set guifont=JetBrainsMono-Regular:h13
   set linespace=3
@@ -58,6 +68,8 @@ let g:ale_completion_enabled = 0
 let g:ale_linters = {'cpp': ['cc', 'clang', 'cppcheck']}
 let g:ale_cpp_cc_options = "-std=c++17 -Wall"
 let g:ale_cpp_clangd_options = "-std=c++17 -Wall"
+let g:ale_warn_about_trailing_whitespace = 0
+let g:ale_set_signs = 0
 
 let g:ycm_global_ycm_extra_conf = '/Users/zahar/.vim/bundle/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
 let g:ycm_confirm_extra_conf = 0
@@ -71,7 +83,7 @@ noremap F W
 
 let g:SuperTabMappingBackward = '<tab>'
 
-"moving in normal mode
+" moving in normal mode
 noremap ф <left>
 noremap Ф <left>
 noremap ц <up>
@@ -92,15 +104,24 @@ noremap D <right>
 
 noremap j a
 noremap J A
- autocmd FileType python map <buffer> <C-r> :w<CR>:exec '!python3-intel64' shellescape(@%, 1)<CR>
+
+" vimspector
+let g:vimspector_enable_mappings = 'HUMAN'
+noremap ;t :call vimspector#ToggleBreakpoint()<CR>
+noremap ;c :call vimspector#ClearBreakpoints()<CR>
+noremap ;r :call vimspector#Launch()<CR>
+" autocmd FileType python map <buffer> <C-r> :w<CR>:exec '!python3-intel64' shellescape(@%, 1)<CR>
 if has('macunix')
   " moving in insert mode
+  noremap <C-a> <left>
+  noremap <C-w> <up>
+  noremap <C-s> <down>
+  noremap <C-d> <right>
   inoremap <C-a> <left>
   inoremap <C-w> <up>
   inoremap <C-s> <down>
   inoremap <C-d> <right>
   let g:SuperTabMappingForward = '<C-tab>'
-
   " running python ctrl+r
   autocmd Filetype python noremap <buffer> <C-r> :w<CR> :cd %:p:h<CR> :ter python3-intel64 "%"<CR>
   autocmd Filetype python inoremap <buffer> <C-r> <esc>:w<CR> :cd %:p:h<CR> :ter python3-intel64 "%"<CR>
@@ -134,9 +155,11 @@ else
   noremap <C-c> "+yi<Esc>
   noremap <C-x> "+c<Esc>
   noremap <C-v> i<C-r><C-o>+
+  noremap <C-z> u
   noremap <C-s> :w<CR>
   inoremap <C-v> <C-r><C-o>+
   inoremap <C-s> <Esc>:w<CR>
+  inoremap <C-z> <Esc>ui
   " for gui
   autocmd FileType python noremap <buffer> <A-r> :w<CR> :cd %:p:h<CR> :ter python "%"<CR>
   autocmd FileType python inoremap <buffer> <A-r> <Esc>:w<CR> :cd %:p:h<CR> :ter python "%"<CR>
