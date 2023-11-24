@@ -22,7 +22,7 @@ def checkDirectory(path):
 def installVim():
     global PACKAGE_MANAGER
     os.system("echo installing vim")
-    if os.system(f"sudo {PACKAGE_MANAGER} install -y vim") == 0:
+    if os.system(f"sudo {PACKAGE_MANAGER} install -y vim curl") == 0:
         os.system("echo installing vim-plug")
         os.system("""curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim""")
@@ -83,6 +83,8 @@ def installYouCompleteMe():
                   sudo tee /etc/apt/sources.list.d/nodesource.list')
 
         os.system("sudo apt install -y mono-complete golang nodejs openjdk-17-jdk openjdk-17-jre npm")
+        os.system(f"cd {HOME_DIR}/.vim/bundle/YouCompleteMe")
+        os.system("git submodule update --init --recursive")
         if os.system("python3 ~/.vim/bundle/YouCompleteMe/install.py - all") == 0:
             os.system("echo success")
             os.system("echo")
