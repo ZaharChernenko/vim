@@ -1,9 +1,10 @@
 filetype plugin indent on
 filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
+" set rtp+=~/.vim/bundle/Vundle.vim
 set completeopt-=preview
 set encoding=utf-8
 set nocompatible
+set tabstop=4
 set number
 set mouse=a
 set t_Co=256
@@ -64,7 +65,7 @@ let g:ale_lint_on_save = 1
 let g:ale_completion_enabled = 0
 let g:ale_linters = {
     \'python': ['pylint'],
-    \'cpp': ['cc', 'clang', 'cppcheck'],
+    \'cpp': ['cc', 'clang'],
 \}
 let g:ale_fixers = {'*': ['trim_whitespace']}
 let g:ale_fix_on_save = 1

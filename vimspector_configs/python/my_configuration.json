@@ -61,24 +61,14 @@
         }
       }
     },
-    "run - no exception bp override": {
+    "run - debugpy-custom-python": {
       "adapter": "debugpy",
       "configuration": {
         "request": "launch",
+        "python": "${pathToPython:python}",
         "type": "python",
         "cwd": "${workspaceRoot}",
         "program": "${file}",
-        "stopOnEntry": false,
-        "console": "integratedTerminal"
-      }
-    },
-    "run - main.py": {
-      "adapter": "debugpy",
-      "configuration": {
-        "request": "launch",
-        "type": "python",
-        "cwd": "${workspaceRoot}",
-        "program": "${workspaceRoot}/main.py",
         "stopOnEntry": false,
         "console": "integratedTerminal"
       },
