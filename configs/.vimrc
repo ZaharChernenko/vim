@@ -1,6 +1,6 @@
 filetype plugin indent on
 filetype off
-" set rtp+=~/.vim/bundle/Vundle.vim
+
 set completeopt-=preview
 set encoding=utf-8
 set nocompatible
@@ -22,10 +22,6 @@ call plug#begin('~/.vim/bundle')
   Plug 'jiangmiao/auto-pairs'
   Plug 'puremourning/vimspector'
    " you complete me
-  Plug 'VundleVim/Vundle.vim'
-  Plug 'tpope/vim-fugitive'
-  Plug 'git://git.wincent.com/command-t.git'
-  Plug 'rstacruz/sparkup', {'rtp': 'vim/'}
   Plug 'ycm-core/YouCompleteMe'
 call plug#end()
 
@@ -47,9 +43,9 @@ sign define vimspectorCurrentFrame text=>   texthl=Special
 
 
 if has('macunix')
+  autocmd VimEnter * NERDTree | wincmd p
   set guifont=JetBrainsMono-Regular:h13
   set linespace=3
-  autocmd VimEnter * NERDTree | wincmd p
 else
   set guifont=JetBrainsMono\ Regular\ 11
   set guioptions-=m
@@ -76,9 +72,6 @@ let g:ale_set_signs = 1
 let g:ale_virtualtext_cursor = 'current'
 
 
-" i'm not sure that this one is important
-let g:ycm_global_ycm_extra_conf = '/Users/zahar/.vim/bundle/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
-let g:ycm_confirm_extra_conf = 0
 " changing vimspector signs priority
 let g:vimspector_sign_priority = {
     \    'vimspectorBP':          50,
@@ -123,11 +116,19 @@ noremap D <right>
 noremap j a
 noremap J A
 
+noremap ш i
+noremap Ш I
+noremap о a
+noremap О A
+
 " vimspector
 let g:vimspector_enable_mappings = 'HUMAN'
 noremap ;t :call vimspector#ToggleBreakpoint()<CR>
 noremap ;c :call vimspector#ClearBreakpoints()<CR>
 noremap ;r :call vimspector#Launch()<CR>
+
+noremap <F2> :YcmCompleter RefactorRename
+inoremap <F2> <Esc>:YcmCompleter RefactorRename
 " autocmd FileType python map <buffer> <C-r> :w<CR>:exec '!python3-intel64' shellescape(@%, 1)<CR>
 if has('macunix')
   " moving in insert mode
@@ -144,8 +145,8 @@ if has('macunix')
   autocmd Filetype python noremap <buffer> <C-r> :w<CR> :cd %:p:h<CR> :ter python3-intel64 "%"<CR>
   autocmd Filetype python inoremap <buffer> <C-r> <esc>:w<CR> :cd %:p:h<CR> :ter python3-intel64 "%"<CR>
   " running c++ ctrl+r
-  autocmd Filetype cpp noremap <buffer> <C-r> :w<CR> :cd %:p:h<CR> :!g++ -std=c++20 *.cpp<CR> :NERDTreeRefreshRoot<CR> :ter ./a.out<CR>
-  autocmd FileType cpp inoremap <buffer> <C-r> <Esc>:w<CR> :cd %:p:h<CR> :!g++ -std=c++20 *.cpp<CR> :NERDTreeRefreshRoot<CR> :ter ./a.out<CR>
+  autocmd Filetype cpp noremap <buffer> <C-r> :w<CR> :cd %:p:h<CR> :!g++ -std=c++2a *.cpp<CR> :NERDTreeRefreshRoot<CR> :ter ./a.out<CR>
+  autocmd FileType cpp inoremap <buffer> <C-r> <Esc>:w<CR> :cd %:p:h<CR> :!g++ -std=c++2a *.cpp<CR> :NERDTreeRefreshRoot<CR> :ter ./a.out<CR>
 
 else
   " movement in Gvim
@@ -179,11 +180,11 @@ else
   inoremap <C-s> <Esc>:w<CR>
   inoremap <C-z> <Esc>ui
   " for gui
-  autocmd FileType python noremap <buffer> <A-r> :w<CR> :cd %:p:h<CR> :ter python "%"<CR>
-  autocmd FileType python inoremap <buffer> <A-r> <Esc>:w<CR> :cd %:p:h<CR> :ter python "%"<CR>
+  autocmd FileType python noremap <buffer> <A-r> :w<CR> :cd %:p:h<CR> :ter python3 "%"<CR>
+  autocmd FileType python inoremap <buffer> <A-r> <Esc>:w<CR> :cd %:p:h<CR> :ter python3 "%"<CR>
   " running c++ alt+r
-  autocmd Filetype cpp noremap <buffer> <A-r> :w<CR> :cd %:p:h<CR> :!g++ -std=c++20 *.cpp<CR> :NERDTreeRefreshRoot<CR> :ter ./a.out<CR>
-  autocmd Filetype cpp inoremap <buffer> <A-r> <Esc>:w<CR> :cd %:p:h<CR> :!g++ -std=c++20 *.cpp<CR> :NERDTreeRefreshRoot<CR> :ter ./a.out<CR>
+  autocmd Filetype cpp noremap <buffer> <A-r> :w<CR> :cd %:p:h<CR> :!g++ -std=c++2a *.cpp<CR> :NERDTreeRefreshRoot<CR> :ter ./a.out<CR>
+  autocmd Filetype cpp inoremap <buffer> <A-r> <Esc>:w<CR> :cd %:p:h<CR> :!g++ -std=c++2a *.cpp<CR> :NERDTreeRefreshRoot<CR> :ter ./a.out<CR>
 
   " removing buffer
   noremap <C-w> :bd<CR>

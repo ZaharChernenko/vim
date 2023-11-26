@@ -22,7 +22,7 @@ def createDirectory(path: str):
 
 def installVim():
     vim_curl_dict = {"apt": "sudo apt install -y vim curl vim-gtk3",
-                     "dnf": "sudo dnf install -y vim curl",
+                     "dnf": "sudo dnf install -y vim curl vim-X11",
                      "brew": "brew install vim curl"}
     print("installing vim")
 
@@ -59,21 +59,34 @@ def installMonokai():
     if os.system("cp ./ui/monokai_custom.vim ~/.vim/colors/monokai_custom.vim") == 0:
         print(SUCCESS_MESSAGE.format("monokai colorsheme installed"))
 
+    print("installing fonts")
     fonts_dir_dict = {"apt": "/usr/share/fonts/truetype/JetBrainsMono",
                       "dnf": "/usr/share/fonts/JetBrainsMono"}
-    print("installing fonts")
+
     os.system(f"sudo mkdir {fonts_dir_dict[PACKAGE_MANAGER]}")
-    os.system(f"sudo cp ./ui/fonts/JetBrainsMono/fonts/ttf/* {fonts_dir_dict[PACKAGE_MANAGER]}")
+    if os.system(f"sudo cp ./ui/fonts/JetBrainsMono/fonts/ttf/* {fonts_dir_dict[PACKAGE_MANAGER]}") != 0:
+        raise OSError(ERROR_MESSAGE.format("copying fonts"))
     os.system("fc-cache -f -v")
+    print(SUCCESS_MESSAGE.format("fonts installed"))
+
+
+def installPip():
+    print("installing pip")
+    pip_dict = {"apt": "sudo apt install pip",
+                   "dnf": "sudo dnf install pip"}
+    if PACKAGE_MANAGER in pip_dict:
+        if os.system(pip_dict[PACKAGE_MANAGER]) != 0:
+            raise OSError(ERROR_MESSAGE.format("installing pip"))
+
+    #if platform == "linux":
+        #os.system("sudo chown -R $USER:$USER /etc/zshenv")
+        #os.system(f"echo \"path+=({HOME_DIR}/.local/bin)\" >> /etc/zshenv")
 
 
 def setupPylint():
-    pylint_dict = {"apt": "sudo apt install pylint",
-                   "dnf": "sudo dnf install pylint"}
     print("installing pylint")
-    os.system("python3 -m pip3 install pylint")
-    if PACKAGE_MANAGER in pylint_dict:
-        os.system(pylint_dict[PACKAGE_MANAGER])
+    if os.system("python3 -m pip install pylint") != 0:
+        raise OSError(ERROR_MESSAGE.format("installing pylint"))
 
     if not os.path.exists(f"{HOME_DIR}/.pylintrc"):
         os.system("pylint --generate-rcfile > ~/.pylintrc")
@@ -82,7 +95,9 @@ def setupPylint():
         os.system("cp ~/.pylintrc ~/temp/.pylintrc")
 
     if os.system("cp ./configs/.pylintrc ~/.pylintrc") != 0:
-        raise OSError(ERROR_MESSAGE.format("copying .pylintrc"))
+        print(ERROR_MESSAGE.format("pylint generate"))
+        print(f"Probably you need to add {HOME_DIR}/.local/bin to the PATH")
+        choice = int(input("type 1 to add to .zshenv\ntype 2 to add to .bashrc:"))
     print(SUCCESS_MESSAGE.format(".pylintrc setup completed"))
 
 
@@ -119,8 +134,13 @@ def setupVimspector():
         path_to_vimspector = path_to_vimspector.format("macos")
     else:
         path_to_vimspector = path_to_vimspector.format("linux")
-    os.system(f"cp -r {path_to_vimspector}/* {HOME_DIR}/temp")
-    print("dump current configs")
+
+    if os.path.exists(path_to_vimspector):
+        print("dump current configs")
+        os.system(f"cp -r {path_to_vimspector}/* {HOME_DIR}/temp")
+    else:
+        createDirectory(path_to_vimspector)
+
     if os.system(f"cp -r ./vimspector_configs/* {path_to_vimspector}") != 0:
         raise OSError(ERROR_MESSAGE.format("setup vimspector"))
     print(SUCCESS_MESSAGE.format("vimspector setup completed"))
@@ -137,6 +157,7 @@ if __name__ == "__main__":
         setupVimrc()
         if INSTALLATION_TYPE == InstallationType.FULL:
             installMonokai()
+            installPip()
             setupPylint()
             installYouCompleteMe()
             setupVimspector()
