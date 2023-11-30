@@ -48,8 +48,8 @@ if has('macunix')
   set linespace=3
 else
   set guifont=JetBrainsMono\ Regular\ 11
-  set guioptions-=m
-  set guioptions-=T
+  set guioptions-=L
+  set guioptions=r
   autocmd VimEnter * NERDTreeFind  | wincmd p
 endif
 " Ending setup ui

@@ -1,23 +1,7 @@
 # vim
 
-# installation
-1) install from terminal, then install MacVim for Mac or Gvim for Linux
-
-   
-2) install vim-plug:
-   curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-4) put in home directory (~) .vimrc
-5) launch vim and write :PlugInstall
-6) Put colorsheme in .vim/colors
-7) install pylint:
-   python3 -m pip install pylint
-8) create .pylintrc file:
-  pylint --generate-rcfile > ~/.pylintrc
-9) install YCM:
-   for fedora:
-   - sudo dnf install mono-complete java-17-openjdk java-17-openjdk-devel npm
-   - sudo dnf install nodejs golang
-   - cd ~/.vim/bundle/YouCompleteMe
-   - python3 install.py --all
+# installation (works for fedora and ubuntu)
+Run python3 install.py, and choose one variant of installation:
+   1) 1 - just updates .vimrc
+   2) 2 - main idea to install only shorcuts without GUI, but i forgot to add extra config for this
+   3) 3 - full setup, pylint will work after you logout

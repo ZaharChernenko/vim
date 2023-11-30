@@ -2,16 +2,15 @@ import enum
 import os
 from sys import platform
 
-
 HOME_DIR = os.path.expanduser('~')
 SUCCESS_MESSAGE = "\033[32m{:_^60}\n\033[0m"
-ERROR_MESSAGE = "\033[31m{} failed\033[0m"
+ERROR_MESSAGE = "\033[31m{}\033[0m"
 
 
 class InstallationType(enum.IntEnum):
     UPDATE_VIMRC = 1
     QUICK = 2
-    FULL  = 3
+    FULL = 3
 
 
 def createDirectory(path: str):
@@ -21,18 +20,18 @@ def createDirectory(path: str):
 
 
 def installVim():
+    print("installing vim")
     vim_curl_dict = {"apt": "sudo apt install -y vim curl vim-gtk3",
                      "dnf": "sudo dnf install -y vim curl vim-X11",
                      "brew": "brew install vim curl"}
-    print("installing vim")
 
     if os.system(vim_curl_dict[PACKAGE_MANAGER]) != 0:
-        raise OSError(ERROR_MESSAGE.format("vim and curl installation completed"))
+        raise OSError(ERROR_MESSAGE.format("unable to install vim, curl"))
 
     print("installing vim-plug")
     if os.system("curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim") != 0:
-        raise OSError(ERROR_MESSAGE.format("vim-plug installation"))
+        raise OSError(ERROR_MESSAGE.format("unable to install vim-plug"))
     print(SUCCESS_MESSAGE.format("vim-plug installed"))
 
 
@@ -45,7 +44,7 @@ def setupVimrc():
         os.system("cp ~/.vimrc ~/temp/.vimrc")
 
     if os.system("cp ./configs/.vimrc ~/.vimrc") != 0:
-        raise OSError(ERROR_MESSAGE.format("copying .vimrc"))
+        raise OSError(ERROR_MESSAGE.format("copying .vimrc failed"))
     print(SUCCESS_MESSAGE.format(".vimrc setup completed"))
 
     while not os.path.exists(f"{HOME_DIR}/.vim/bundle"):
@@ -65,28 +64,26 @@ def installMonokai():
 
     os.system(f"sudo mkdir {fonts_dir_dict[PACKAGE_MANAGER]}")
     if os.system(f"sudo cp ./ui/fonts/JetBrainsMono/fonts/ttf/* {fonts_dir_dict[PACKAGE_MANAGER]}") != 0:
-        raise OSError(ERROR_MESSAGE.format("copying fonts"))
+        raise OSError(ERROR_MESSAGE.format("copying fonts failed"))
     os.system("fc-cache -f -v")
     print(SUCCESS_MESSAGE.format("fonts installed"))
 
 
 def installPip():
     print("installing pip")
-    pip_dict = {"apt": "sudo apt install pip",
-                   "dnf": "sudo dnf install pip"}
+    pip_dict = {"apt": "sudo apt install -y pip",
+                "dnf": "sudo dnf install -y pip"}
+
     if PACKAGE_MANAGER in pip_dict:
         if os.system(pip_dict[PACKAGE_MANAGER]) != 0:
-            raise OSError(ERROR_MESSAGE.format("installing pip"))
-
-    #if platform == "linux":
-        #os.system("sudo chown -R $USER:$USER /etc/zshenv")
-        #os.system(f"echo \"path+=({HOME_DIR}/.local/bin)\" >> /etc/zshenv")
+            raise OSError(ERROR_MESSAGE.format("unable to install pip"))
 
 
 def setupPylint():
     print("installing pylint")
     if os.system("python3 -m pip install pylint") != 0:
-        raise OSError(ERROR_MESSAGE.format("installing pylint"))
+        raise OSError(ERROR_MESSAGE.format("unable to install pylint"))
+    os.system("source $HOME/.profile")
 
     if not os.path.exists(f"{HOME_DIR}/.pylintrc"):
         os.system("pylint --generate-rcfile > ~/.pylintrc")
@@ -95,20 +92,18 @@ def setupPylint():
         os.system("cp ~/.pylintrc ~/temp/.pylintrc")
 
     if os.system("cp ./configs/.pylintrc ~/.pylintrc") != 0:
-        print(ERROR_MESSAGE.format("pylint generate"))
         print(f"Probably you need to add {HOME_DIR}/.local/bin to the PATH")
-        choice = int(input("type 1 to add to .zshenv\ntype 2 to add to .bashrc:"))
+        raise OSError(ERROR_MESSAGE.format("unable to setup .pylinrc"))
     print(SUCCESS_MESSAGE.format(".pylintrc setup completed"))
 
 
 def installYouCompleteMe():
+    print("installing YCM")
     ycm_dict = {"apt": "sudo apt install -y build-essential cmake vim-nox python3-dev \
                 mono-complete golang nodejs openjdk-17-jdk openjdk-17-jre npm",
                 "dnf": "sudo dnf install -y cmake gcc-c++ make python3-devel \
                 mono-complete golang nodejs java-17-openjdk java-17-openjdk-devel npm",
                 "brew": "brew install cmake python go nodejs mono java"}
-
-    print("installing YCM")
 
     os.system(ycm_dict[PACKAGE_MANAGER])
     os.system("sudo mkdir -p /etc/apt/keyrings")
@@ -120,15 +115,15 @@ def installYouCompleteMe():
                   https://deb.nodesource.com/node_current.x nodistro main" | \
                   sudo tee /etc/apt/sources.list.d/nodesource.list')
 
-    os.system(f"git -C {HOME_DIR}/.vim/bundle/YouCompleteMe submodule update --init --recursive")
+    os.system("git -C ~/.vim/bundle/YouCompleteMe submodule update --init --recursive")
 
     if os.system("python3 ~/.vim/bundle/YouCompleteMe/install.py --clangd-completer") != 0:
-        raise OSError(ERROR_MESSAGE.format("installation ycm"))
+        raise OSError(ERROR_MESSAGE.format("installation ycm failed"))
     print(SUCCESS_MESSAGE.format("ycm installed"))
 
 
-
 def setupVimspector():
+    print("setup vimspector")
     path_to_vimspector = f"{HOME_DIR}/.vim/bundle/vimspector/configurations/{{}}/"
     if platform == "darwin":
         path_to_vimspector = path_to_vimspector.format("macos")
@@ -142,7 +137,7 @@ def setupVimspector():
         createDirectory(path_to_vimspector)
 
     if os.system(f"cp -r ./vimspector_configs/* {path_to_vimspector}") != 0:
-        raise OSError(ERROR_MESSAGE.format("setup vimspector"))
+        raise OSError(ERROR_MESSAGE.format("unable to setup vimspector"))
     print(SUCCESS_MESSAGE.format("vimspector setup completed"))
 
 
