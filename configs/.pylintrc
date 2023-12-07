@@ -165,7 +165,7 @@ class-naming-style=PascalCase
 
 # Regular expression matching correct class names. Overrides class-naming-
 # style. If left empty, class names will be checked with the set naming style.
-class-rgx=_{0,2}[A-Z][a-z]*[A-Z]?[a-z]*$
+class-rgx=_{0,2}[A-Z]*[a-z]*([A-Z]+[a-z]*)*$
 
 # Naming style matching correct constant names.
 const-naming-style=UPPER_CASE

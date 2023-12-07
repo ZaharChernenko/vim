@@ -19,27 +19,17 @@
     }
   },
   "configurations": {
-    "cpptools (lldb)": {
-      "adapter": "vscode-cpptools",
+    "CodeLLDB": {
+      "adapter": "CodeLLDB",
       "variables": {
         "BUILDME": {
-          "shell": "g++ -o ${workspaceRoot}/test -g -std=c++17 ${file}"
-        },
-        "arch": {
-          "shell": "uname -m"
+          "shell": "g++ -o ${workspaceRoot}/test -g -std=c++2a ${file}"
         }
       },
       "configuration": {
         "request": "launch",
-        "program": "${workspaceRoot}/test",
-        "stopAtEntry": true,
-        "console": "integratedTerminal",
-        "MIMode": "lldb",
-        "MIDebuggerPath": "$HOME/.vim/vimspector-conf/gadgets/macos/vscode-cpptools/debugAdapters/lldb-mi/bin/lldb-mi",
-        "logging": {
-          "engineLogging": true
-        },
-        "targetArchitecture": "${arch}"
+        "expressions": "native",
+        "program": "${workspaceRoot}/test"
       }
     }
   }

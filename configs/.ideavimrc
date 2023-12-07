@@ -1,0 +1,84 @@
+" Hotkeys
+" moving in normal mode
+noremap q ge
+noremap Q B
+
+" start of the next word
+noremap f w
+noremap F W
+
+" russian
+noremap ф <left>
+noremap Ф <left>
+noremap ц <up>
+noremap Ц <up>
+noremap ы <down>
+noremap ы <down>
+noremap в <right>
+noremap В <right>
+
+" english
+noremap a <left>
+noremap A <left>
+noremap w <up>
+noremap W <up>
+noremap s <down>
+noremap S <down>
+noremap d <right>
+noremap D <right>
+
+" inserting
+noremap ш i
+noremap Ш I
+noremap о a
+noremap О A
+
+noremap j a
+noremap J A
+
+
+if has('macunix')
+  " moving in insert mode
+  noremap <C-a> <left>
+  noremap <C-w> <up>
+  noremap <C-s> <down>
+  noremap <C-d> <right>
+  inoremap <C-a> <left>
+  inoremap <C-w> <up>
+  inoremap <C-s> <down>
+  inoremap <C-d> <right>
+else
+  " movement in Gvim
+  noremap <A-a> <left>
+  noremap <A-w> <up>
+  noremap <A-s> <down>
+  noremap <A-d> <right>
+  inoremap <A-a> <left>
+  inoremap <A-w> <up>
+  inoremap <A-s> <down>
+  inoremap <A-d> <right>
+  inoremap <A-c> <Esc>
+  " console insert mode movement
+  " alt in console is escaped seq ^], so this is why <Esc>key works like <A-key>
+  " sed -n l
+  inoremap <Esc>a <left>
+  inoremap <Esc>w <up>
+  inoremap <Esc>s <down>
+  inoremap <Esc>d <right>
+  inoremap <Esc>c <Esc>
+
+  " normal cut and copy
+  noremap <C-c> "+yi<Esc>
+  noremap <C-x> "+c<Esc>
+  noremap <C-v> i<C-r><C-o>+
+  noremap <C-z> u
+  noremap <C-s> :w<CR>
+  inoremap <C-v> <C-r><C-o>+
+  inoremap <C-s> <Esc>:w<CR>
+  inoremap <C-z> <Esc>ui
+
+
+  " removing buffer
+  noremap <C-w> :bd<CR>
+  inoremap <C-w> <Esc>:bd<CR>
+endif

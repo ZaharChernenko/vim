@@ -4,17 +4,26 @@ filetype off
 set completeopt-=preview
 set encoding=utf-8
 set nocompatible
+
 set tabstop=4
+set shiftwidth=4
+set expandtab
+set softtabstop=4
+set smarttab
+set smartindent
+
 set number
 set mouse=a
 set t_Co=256
-syntax enable
 
+set nobackup
+set noswapfile
+syntax enable
+autocmd BufNew,BufRead *.asm set ft=tasm
 
 " Plugins search
 call plug#begin('~/.vim/bundle')
   Plug 'preservim/nerdtree'
-  Plug 'Vimjas/vim-python-pep8-indent'
   Plug 'dense-analysis/ale'
   Plug 'ervandew/supertab'
   Plug 'sheerun/vim-polyglot'
@@ -47,10 +56,10 @@ if has('macunix')
   set guifont=JetBrainsMono-Regular:h13
   set linespace=3
 else
+  autocmd VimEnter * NERDTreeFind  | wincmd p
   set guifont=JetBrainsMono\ Regular\ 11
   set guioptions-=L
   set guioptions=r
-  autocmd VimEnter * NERDTreeFind  | wincmd p
 endif
 " Ending setup ui
 
@@ -84,8 +93,12 @@ let g:vimspector_sign_priority = {
     \ }
 
 
+" if this is disabled, cpp ycm doesn't work on mac
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
+let g:ycm_confirm_extra_conf = 0
 
-"" Hotkeys
+
+" Hotkeys
 noremap q ge
 noremap Q B
 " start of the next word
@@ -141,12 +154,14 @@ if has('macunix')
   inoremap <C-s> <down>
   inoremap <C-d> <right>
   let g:SuperTabMappingForward = '<C-tab>'
+  noremap <C-t> :NERDTreeToggle<CR>
+  inoremap <C-t> <Esc>:NERDTreeToggle<CR>i
   " running python ctrl+r
-  autocmd Filetype python noremap <buffer> <C-r> :w<CR> :cd %:p:h<CR> :ter python3-intel64 "%"<CR>
-  autocmd Filetype python inoremap <buffer> <C-r> <esc>:w<CR> :cd %:p:h<CR> :ter python3-intel64 "%"<CR>
+  autocmd Filetype python noremap <buffer> <C-r> :call RunPython()<CR>
+  autocmd Filetype python inoremap <buffer> <C-r> <Esc>:call RunPython()<CR>
   " running c++ ctrl+r
-  autocmd Filetype cpp noremap <buffer> <C-r> :w<CR> :cd %:p:h<CR> :!g++ -std=c++2a *.cpp<CR> :NERDTreeRefreshRoot<CR> :ter ./a.out<CR>
-  autocmd FileType cpp inoremap <buffer> <C-r> <Esc>:w<CR> :cd %:p:h<CR> :!g++ -std=c++2a *.cpp<CR> :NERDTreeRefreshRoot<CR> :ter ./a.out<CR>
+  autocmd Filetype cpp noremap <buffer> <C-r> :call RunCpp()<CR>
+  autocmd FileType cpp inoremap <buffer> <C-r> <Esc>:call RunCpp()<CR>
 
 else
   " movement in Gvim
@@ -169,6 +184,8 @@ else
   inoremap <Esc>c <Esc>
 
   let g:SuperTabMappingForward = '<A-tab>'
+  noremap <A-t> :NERDTreeToggle<CR>
+  inoremap <A-t> <Esc>:NERDTreeToggle<CR>i
 
   " normal cut and copy
   noremap <C-c> "+yi<Esc>
@@ -179,16 +196,48 @@ else
   inoremap <C-v> <C-r><C-o>+
   inoremap <C-s> <Esc>:w<CR>
   inoremap <C-z> <Esc>ui
-  " for gui
-  autocmd FileType python noremap <buffer> <A-r> :w<CR> :cd %:p:h<CR> :ter python3 "%"<CR>
-  autocmd FileType python inoremap <buffer> <A-r> <Esc>:w<CR> :cd %:p:h<CR> :ter python3 "%"<CR>
-  " running c++ alt+r
-  autocmd Filetype cpp noremap <buffer> <A-r> :w<CR> :cd %:p:h<CR> :!g++ -std=c++2a *.cpp<CR> :NERDTreeRefreshRoot<CR> :ter ./a.out<CR>
-  autocmd Filetype cpp inoremap <buffer> <A-r> <Esc>:w<CR> :cd %:p:h<CR> :!g++ -std=c++2a *.cpp<CR> :NERDTreeRefreshRoot<CR> :ter ./a.out<CR>
+
+  " running cpp and python on alt+r
+  " running python
+  " terminal
+  autocmd Filetype python noremap <buffer> <Esc>r :call RunPython()<CR>
+  autocmd filetype python inoremap <buffer> <Esc>r <Esc>:call RunPython()<CR>
+  " gvim
+  autocmd FileType python noremap <buffer> <A-r> :call RunPython()<CR>
+  autocmd FileType python inoremap <buffer> <A-r> <Esc>:call RunPython()<CR>
+
+  " running c++
+  " terminal
+  autocmd Filetype cpp noremap <buffer> <Esc>r :call RunCpp()<CR>
+  autocmd Filetype cpp inoremap <buffer> <Esc>r <Esc>:call RunCpp()<CR>
+  " gvim
+  autocmd Filetype cpp noremap <buffer> <A-r> :call RunCpp()<CR>
+  autocmd Filetype cpp inoremap <buffer> <A-r> <Esc>:call RunCpp()<CR>
 
   " removing buffer
   noremap <C-w> :bd<CR>
   inoremap <C-w> <Esc>:bd<CR>
 endif
 
+
+
+function RunPython()
+  :w
+  :cd %:p:h
+  if has("macunix")
+    :ter python3-intel64 "%"
+  else
+    :ter python3 "%"
+  endif
+endfunction
+
+
+
+function RunCpp()
+  :w
+  :cd %:p:h
+  :!g++ -std=c++2a *.cpp
+  :NERDTreeRefreshRoot
+  :ter ./a.out
+endfunction
 

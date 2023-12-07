@@ -142,12 +142,12 @@ def setupVimspector():
 
 
 if __name__ == "__main__":
-    PACKAGE_MANAGER = input("Enter: your package manager: ")
     INSTALLATION_TYPE = int(input("choose installation:\n1. update vimrc\n2. quick\n3. full\n"))
 
     if INSTALLATION_TYPE == InstallationType.UPDATE_VIMRC:
         setupVimrc()
     else:
+        PACKAGE_MANAGER = input("Enter: your package manager: ")
         installVim()
         setupVimrc()
         if INSTALLATION_TYPE == InstallationType.FULL:
