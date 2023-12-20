@@ -21,17 +21,14 @@ set noswapfile
 syntax enable
 autocmd BufNew,BufRead *.asm set ft=tasm
 
+
 " Plugins search
 call plug#begin('~/.vim/bundle')
   Plug 'preservim/nerdtree'
-  Plug 'dense-analysis/ale'
   Plug 'ervandew/supertab'
   Plug 'sheerun/vim-polyglot'
   " автоматические скобки
   Plug 'jiangmiao/auto-pairs'
-  Plug 'puremourning/vimspector'
-   " you complete me
-  Plug 'ycm-core/YouCompleteMe'
 call plug#end()
 
 
@@ -40,68 +37,10 @@ let g:molokai_original = 1
 colorscheme monokai_custom
 set signcolumn=yes
 
-" JetBrainsMono doesn't support default vimspector signs
-sign define vimspectorBP text=o             texthl=WarningMsg
-sign define vimspectorBPCond text=o?        texthl=WarningMsg
-sign define vimspectorBPLog text=!!         texthl=SpellRare
-sign define vimspectorBPDisabled text=o!    texthl=LineNr
-sign define vimspectorPC text=\ >           texthl=MatchParen
-sign define vimspectorPCBP text=o>          texthl=MatchParen
-sign define vimspectorCurrentThread text=>  texthl=MatchParen
-sign define vimspectorCurrentFrame text=>   texthl=Special
-
-
-if has('macunix')
-  autocmd VimEnter * NERDTree | wincmd p
-  set guifont=JetBrainsMono-Regular:h13
-  set linespace=3
-else
-  autocmd VimEnter * NERDTreeFind  | wincmd p
-  set guifont=JetBrainsMono\ Regular\ 11
-  set guioptions-=L
-  set guioptions=r
-endif
-" Ending setup ui
-
-
-" ALE
-" let g:ale_lint_on_text_changed = 1
-let g:ale_lint_on_save = 1
-let g:ale_completion_enabled = 0
-let g:ale_linters = {
-    \'python': ['pylint'],
-    \'cpp': ['cc', 'clang'],
-\}
-let g:ale_fixers = {'*': ['trim_whitespace']}
-let g:ale_fix_on_save = 1
-let g:ale_cpp_cc_options = "-std=c++17 -Wall"
-let g:ale_cpp_clangd_options = "-std=c++17 -Wall"
-let g:ale_warn_about_trailing_whitespace = 0
-let g:ale_set_signs = 1
-let g:ale_virtualtext_cursor = 'current'
-
-
-" changing vimspector signs priority
-let g:vimspector_sign_priority = {
-    \    'vimspectorBP':          50,
-    \    'vimspectorBPCond':      50,
-    \    'vimspectorBPLog':       50,
-    \    'vimspectorBPDisabled':  50,
-    \    'vimspectorNonActivePC': 50,
-    \    'vimspectorPC':          999,
-    \    'vimspectorPCBP':        999,
-    \ }
-
-
-" if this is disabled, cpp ycm doesn't work on mac
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
-let g:ycm_confirm_extra_conf = 0
-
 
 " Hotkeys
 noremap q ge
-noremap Q ^
-noremap E $
+noremap Q B
 " start of the next word
 noremap f w
 noremap F W
@@ -135,14 +74,7 @@ noremap Ш I
 noremap о a
 noremap О A
 
-" vimspector
-let g:vimspector_enable_mappings = 'HUMAN'
-noremap ;t :call vimspector#ToggleBreakpoint()<CR>
-noremap ;c :call vimspector#ClearBreakpoints()<CR>
-noremap ;r :call vimspector#Launch()<CR>
 
-noremap <F2> :YcmCompleter RefactorRename
-inoremap <F2> <Esc>:YcmCompleter RefactorRename
 " autocmd FileType python map <buffer> <C-r> :w<CR>:exec '!python3-intel64' shellescape(@%, 1)<CR>
 if has('macunix')
   " moving in insert mode
@@ -231,6 +163,7 @@ function RunPython()
     :ter python3 "%"
   endif
 endfunction
+
 
 
 function RunCpp()

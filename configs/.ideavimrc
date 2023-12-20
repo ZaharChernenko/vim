@@ -1,7 +1,8 @@
 " Hotkeys
 " moving in normal mode
 noremap q ge
-noremap Q B
+noremap Q ^
+noremap E $
 
 " start of the next word
 noremap f w
