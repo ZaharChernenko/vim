@@ -1,7 +1,7 @@
-import os
-from sys import platform
-from GlobalVars import PackageManagers, HOME_DIR, successPrint
 from exceptions import *
+from GlobalVars import PackageManagers, HOME_DIR, successPrint
+from sys import platform
+import os
 
 
 def createDirectory(path: str):
@@ -26,7 +26,7 @@ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim") != 0:
     successPrint("vim-plug installed")
 
 
-def setupVimrc(full: bool=True):
+def setupVimrc(full: bool = True):
     print("setup config for .vimrc")
 
     if os.path.exists(f"{HOME_DIR}/.vimrc"):
@@ -113,7 +113,8 @@ def installYouCompleteMe(package_manager: PackageManagers):
                   https://deb.nodesource.com/node_current.x nodistro main" | \
                   sudo tee /etc/apt/sources.list.d/nodesource.list')
 
-    os.system("git -C ~/.vim/bundle/YouCompleteMe submodule update --init --recursive")
+    os.system(
+        "git -C ~/.vim/bundle/YouCompleteMe submodule update --init --recursive")
 
     if os.system("python3 ~/.vim/bundle/YouCompleteMe/install.py --clangd-completer") != 0:
         raise YCMInstallationFailed

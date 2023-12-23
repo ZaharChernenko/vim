@@ -4,6 +4,7 @@ from os.path import expanduser
 
 HOME_DIR = expanduser('~')
 
+
 def successPrint(message):
     green_template = "\033[32m{:_^60}\n\033[0m"
     print(green_template.format(message))
@@ -25,4 +26,3 @@ class PackageManagers(Enum):
     DNF = "dnf"
     APT = "apt"
     BREW = "brew"
-

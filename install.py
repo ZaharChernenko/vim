@@ -8,7 +8,6 @@ if __name__ == "__main__":
         print("Sorry, your os is not supported yet :(\n")
         sys.exit()
 
-
     try:
         installation_type = InstallationTypes(input("""choose installation:
 1. update vimrc

@@ -72,11 +72,15 @@ let g:ale_linters = {
     \'python': ['pylint'],
     \'cpp': ['cc', 'clang'],
 \}
-let g:ale_fixers = {'*': ['trim_whitespace']}
+let g:ale_fixers = {
+    \'*': ['trim_whitespace'],
+    \'python': ['autoimport', 'autopep8'],
+\}
 let g:ale_fix_on_save = 1
 let g:ale_cpp_cc_options = "-std=c++17 -Wall"
 let g:ale_cpp_clangd_options = "-std=c++17 -Wall"
 let g:ale_warn_about_trailing_whitespace = 0
+let g:ale_warn_about_trailing_blank_lines = 0
 let g:ale_set_signs = 1
 let g:ale_virtualtext_cursor = 'current'
 
