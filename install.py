@@ -1,6 +1,9 @@
 import sys
 from GlobalVars import InstallationTypes, SupportedOS
 
+from Posix.posixInstaller import posix
+
+
 if __name__ == "__main__":
     try:
         os = SupportedOS(sys.platform)
@@ -20,5 +23,4 @@ type anything to quit\n"""))
 
     installation_type = InstallationTypes(installation_type)
     if os == SupportedOS.LINUX or os == SupportedOS.MACOS:
-        from Posix.posixInstaller import posix
         posix(installation_type)

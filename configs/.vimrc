@@ -36,6 +36,17 @@ call plug#end()
 
 
 " Setup ui
+if has('macunix')
+    set guifont=JetBrainsMono-Regular:h13
+    set linespace=3
+  else
+    set guifont=JetBrainsMono\ Regular\ 11
+    set guioptions-=L
+    set guioptions=r
+  endif
+
+autocmd VimEnter * :call RunVim()
+
 let g:molokai_original = 1
 colorscheme monokai_custom
 set signcolumn=yes
@@ -51,16 +62,6 @@ sign define vimspectorCurrentThread text=>  texthl=MatchParen
 sign define vimspectorCurrentFrame text=>   texthl=Special
 
 
-if has('macunix')
-  autocmd VimEnter * NERDTree | wincmd p
-  set guifont=JetBrainsMono-Regular:h13
-  set linespace=3
-else
-  autocmd VimEnter * NERDTreeFind  | wincmd p
-  set guifont=JetBrainsMono\ Regular\ 11
-  set guioptions-=L
-  set guioptions=r
-endif
 " Ending setup ui
 
 
@@ -74,7 +75,7 @@ let g:ale_linters = {
 \}
 let g:ale_fixers = {
     \'*': ['trim_whitespace'],
-    \'python': ['autoimport', 'autopep8'],
+    \'python': ['autoimport', 'autopep8', 'isort'],
 \}
 let g:ale_fix_on_save = 1
 let g:ale_cpp_cc_options = "-std=c++17 -Wall"
@@ -224,6 +225,11 @@ else
   inoremap <C-w> <Esc>:bd<CR>
 endif
 
+
+function RunVim()
+  :cd %:h
+  :NERDTree | wincmd p
+endfunction
 
 
 function RunPython()

@@ -79,7 +79,7 @@ def installPip(package_manager: PackageManagers):
 
 def setupPylint():
     print("installing pylint")
-    if os.system("python3 -m pip install pylint") != 0:
+    if os.system("python3 -m pip install pylint autopep8 isort") != 0:
         raise PylintInstallationFailed
     os.system("source $HOME/.profile")
 
