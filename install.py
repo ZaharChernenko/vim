@@ -1,8 +1,7 @@
 import sys
+
 from GlobalVars import InstallationTypes, SupportedOS
-
 from Posix.posixInstaller import posix
-
 
 if __name__ == "__main__":
     try:

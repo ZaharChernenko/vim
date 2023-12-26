@@ -11,6 +11,7 @@ set expandtab
 set softtabstop=4
 set smarttab
 set smartindent
+set autochdir
 
 set number
 set mouse=a

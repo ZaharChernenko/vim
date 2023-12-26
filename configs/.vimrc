@@ -11,6 +11,7 @@ set expandtab
 set softtabstop=4
 set smarttab
 set smartindent
+set autochdir
 
 set number
 set mouse=a
@@ -37,9 +38,11 @@ call plug#end()
 
 " Setup ui
 if has('macunix')
+    let g:os = 'macos'
     set guifont=JetBrainsMono-Regular:h13
     set linespace=3
-  else
+else
+    let g:os = 'linux'
     set guifont=JetBrainsMono\ Regular\ 11
     set guioptions-=L
     set guioptions=r
@@ -146,10 +149,11 @@ noremap ;t :call vimspector#ToggleBreakpoint()<CR>
 noremap ;c :call vimspector#ClearBreakpoints()<CR>
 noremap ;r :call vimspector#Launch()<CR>
 
+noremap gd :YcmCompleter GoTo<CR>
 noremap <F2> :YcmCompleter RefactorRename
 inoremap <F2> <Esc>:YcmCompleter RefactorRename
 " autocmd FileType python map <buffer> <C-r> :w<CR>:exec '!python3-intel64' shellescape(@%, 1)<CR>
-if has('macunix')
+if g:os == 'macos'
   " moving in insert mode
   noremap <C-a> <left>
   noremap <C-w> <up>
@@ -227,27 +231,61 @@ endif
 
 
 function RunVim()
-  :cd %:h
   :NERDTree | wincmd p
 endfunction
 
 
 function RunPython()
   :w
-  :cd %:p:h
-  if has("macunix")
+  let l:is_global = 1
+  let l:venv_dirs = ['./venv', './virtualenv', './myenv']
+  let l:dirs = globpath('.', '*', 0, 1)
+  call filter(l:dirs, 'isdirectory(v:val)')
+
+  for dir in l:venv_dirs
+    if index(l:dirs, l:dir) != -1
+      let l:is_global = 0
+      let l:venv_dir = dir
+      break
+    endif
+  endfor
+
+  if l:is_global
+    call RunGlobalPython()
+  else
+    call RunVenvPython(l:venv_dir)
+  endif
+
+endfunction
+
+
+function RunGlobalPython()
+  if g:os == 'macos'
     :ter python3-intel64 "%"
   else
     :ter python3 "%"
   endif
+  let b:ycm_largerfile = 0 "disable ycm for terminal
+endfunction
+
+
+function RunVenvPython(venv_dir)
+  if g:os == 'macos'
+    let l:path = $"{a:venv_dir}/bin/python3 "
+  else
+    let l:path = $"{a:venv_dir}/bin/python3 "
+  endif
+  execute $"ter {l:path}{expand('%:p')}"
+  let b:ycm_largerfile = 0 "disable ycm for terminal
 endfunction
 
 
 function RunCpp()
   :w
-  :cd %:p:h
   :!g++ -std=c++2a *.cpp
   :NERDTreeRefreshRoot
   :ter ./a.out
+  let b:ycm_largerfile = 0 "disable ycm for terminal
 endfunction
 
+":cd %:p:h - change dir to current buffer

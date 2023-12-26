@@ -1,5 +1,6 @@
+from GlobalVars import InstallationTypes, PackageManagers
+
 from Posix.posixTools import *
-from GlobalVars import PackageManagers, InstallationTypes
 
 
 def updateVimrc() -> None:
