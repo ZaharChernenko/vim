@@ -1,7 +1,6 @@
 from enum import Enum
 from os.path import expanduser
 
-
 HOME_DIR = expanduser('~')
 
 

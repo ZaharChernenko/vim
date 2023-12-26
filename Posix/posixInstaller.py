@@ -3,9 +3,11 @@ from GlobalVars import InstallationTypes, PackageManagers
 from Posix.posixTools import *
 
 
-def updateVimrc() -> None:
-    """Updates .vimrc"""
+def updateVim() -> None:
+    """Updates .vimrc, .pylintrc and .ycm_extra_conf.py"""
     setupVimrc()
+    setupPylintrc()
+    setupYCMExtraConf()
 
 
 def posixQuickInstall(package_manager: PackageManagers) -> None:
@@ -29,7 +31,7 @@ def posix(installation_type: InstallationTypes) -> None:
     """Supervisor function that makes installation for
     posix systems"""
     if installation_type == InstallationTypes.UPDATE_VIMRC:
-        updateVimrc()
+        updateVim()
         return
 
     package_manager = PackageManagers(input("Enter your package manager: "))

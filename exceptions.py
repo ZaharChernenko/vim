@@ -30,12 +30,20 @@ class PylintInstallationFailed(RedException):
     message = "Unable to install pylint"
 
 
+class CopyingPylintcFailed(RedException):
+    message = "Copying .pylintrc failed"
+
+
 class PylintSetupFailed(RedException):
     message = "Unable to setup .pylintrc"
 
 
 class YCMInstallationFailed(RedException):
     message = "Installation ycm failed"
+
+
+class CopyingYCMConfFailed(RedException):
+    message = "Failed to copy .ycm_extra_conf.py"
 
 
 class VimspectorSetupFailed(RedException):

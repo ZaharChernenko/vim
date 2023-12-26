@@ -105,8 +105,8 @@ let g:vimspector_sign_priority = {
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
 let g:ycm_confirm_extra_conf = 0
 
-
-" Hotkeys
+autocmd DirChanged * call GetPython()
+"Hotkeys
 noremap q ge
 noremap Q ^
 noremap E $
@@ -232,11 +232,17 @@ endif
 
 function RunVim()
   :NERDTree | wincmd p
+  :call GetPython()
 endfunction
 
 
 function RunPython()
   :w
+  execute $"ter {g:python} {expand('%')}"
+endfunction
+
+
+function GetPython()
   let l:is_global = 1
   let l:venv_dirs = ['./venv', './virtualenv', './myenv']
   let l:dirs = globpath('.', '*', 0, 1)
@@ -250,33 +256,17 @@ function RunPython()
     endif
   endfor
 
-  if l:is_global
-    call RunGlobalPython()
+  if l:is_global == 1
+    if g:os == 'macos'
+      let g:python = 'python3-intel64'
+    else
+      let g:python = 'python3'
+    endif
+
   else
-    call RunVenvPython(l:venv_dir)
+    let g:python = $"{l:venv_dir}/bin/python3"
   endif
 
-endfunction
-
-
-function RunGlobalPython()
-  if g:os == 'macos'
-    :ter python3-intel64 "%"
-  else
-    :ter python3 "%"
-  endif
-  let b:ycm_largerfile = 0 "disable ycm for terminal
-endfunction
-
-
-function RunVenvPython(venv_dir)
-  if g:os == 'macos'
-    let l:path = $"{a:venv_dir}/bin/python3 "
-  else
-    let l:path = $"{a:venv_dir}/bin/python3 "
-  endif
-  execute $"ter {l:path}{expand('%:p')}"
-  let b:ycm_largerfile = 0 "disable ycm for terminal
 endfunction
 
 
@@ -289,3 +279,4 @@ function RunCpp()
 endfunction
 
 ":cd %:p:h - change dir to current buffer
+":ter python3-intel64 "%" "

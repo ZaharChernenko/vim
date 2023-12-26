@@ -1,7 +1,8 @@
-from exceptions import *
-from GlobalVars import PackageManagers, HOME_DIR, successPrint
-from sys import platform
 import os
+from sys import platform
+
+from exceptions import *
+from GlobalVars import HOME_DIR, PackageManagers, successPrint
 
 
 def createDirectory(path: str):
@@ -77,6 +78,11 @@ def installPip(package_manager: PackageManagers):
     successPrint("pip installed")
 
 
+def setupPylintrc():
+    if os.system("cp ./configs/.pylintrc ~/.pylintrc") != 0:
+        raise CopyingPylintcFailed
+
+
 def setupPylint():
     print("installing pylint")
     if os.system("python3 -m pip install pylint autopep8 isort") != 0:
@@ -84,15 +90,20 @@ def setupPylint():
     os.system("source $HOME/.profile")
 
     if not os.path.exists(f"{HOME_DIR}/.pylintrc"):
-        os.system("pylint --generate-rcfile > ~/.pylintrc")
+        if os.system("pylint --generate-rcfile > ~/.pylintrc") != 0:
+            print(
+                f"Probably you need to add {HOME_DIR}/.local/bin to the PATH")
+            raise PylintSetupFailed
     else:
         print("dump current .pylintrc")
         os.system("cp ~/.pylintrc ~/temp/.pylintrc")
-
-    if os.system("cp ./configs/.pylintrc ~/.pylintrc") != 0:
-        print(f"Probably you need to add {HOME_DIR}/.local/bin to the PATH")
-        raise PylintSetupFailed
+    setupPylintrc()
     successPrint(".pylintrc setup completed")
+
+
+def setupYCMExtraConf():
+    if os.system("cp ./configs/.ycm_extra_conf.py ~/.vim/bundle/YouCompleteMe/third_party/ycmd/") != 0:
+        raise CopyingYCMConfFailed
 
 
 def installYouCompleteMe(package_manager: PackageManagers):
@@ -118,6 +129,7 @@ def installYouCompleteMe(package_manager: PackageManagers):
 
     if os.system("python3 ~/.vim/bundle/YouCompleteMe/install.py --clangd-completer") != 0:
         raise YCMInstallationFailed
+    setupYCMExtraConf()
     successPrint("ycm installed")
 
 
