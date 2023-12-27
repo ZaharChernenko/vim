@@ -23,7 +23,7 @@ def posixFullInstall(package_manager: PackageManagers) -> None:
     setupVimrc()
     installMonokai(package_manager)
     installPip(package_manager)
-    setupPylint()
+    setupLinters()
     setupAutopep()
     installYouCompleteMe(package_manager)
     setupVimspector()

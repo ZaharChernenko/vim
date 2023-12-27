@@ -81,13 +81,15 @@ def installPip(package_manager: PackageManagers):
 def setupPylintrc():
     if os.system("cp ./configs/.pylintrc ~/.pylintrc") != 0:
         raise CopyingPylintcFailed
+    successPrint(".pylintrc setup completed")
 
 
-def setupPylint():
-    print("installing pylint")
-    if os.system("python3 -m pip install pylint autopep8 isort") != 0:
-        raise PylintInstallationFailed
+def setupLinters():
+    print("installing linters")
+    if os.system("python3 -m pip install pylint autopep8 isort mypy") != 0:
+        raise LintersInstallationFailed
     os.system("source $HOME/.profile")
+    successPrint("linters installed successfully")
 
     if not os.path.exists(f"{HOME_DIR}/.pylintrc"):
         if os.system("pylint --generate-rcfile > ~/.pylintrc") != 0:
@@ -98,7 +100,6 @@ def setupPylint():
         print("dump current .pylintrc")
         os.system("cp ~/.pylintrc ~/temp/.pylintrc")
     setupPylintrc()
-    successPrint(".pylintrc setup completed")
 
 
 def setupAutopep():

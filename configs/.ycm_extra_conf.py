@@ -87,7 +87,7 @@ flags = [
     'cpp/ycm/tests/gmock/googletest/include',
     '-isystem',
     'cpp/ycm/benchmarks/benchmark/include',
-    '-std=c++17',
+    '-std=c++2a',
 ]
 
 # Set this to the absolute path to the folder (NOT the file!) containing the

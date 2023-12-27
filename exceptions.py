@@ -26,8 +26,8 @@ class PipInstallationFailed(RedException):
     message = "Unable to install pip"
 
 
-class PylintInstallationFailed(RedException):
-    message = "Unable to install pylint"
+class LintersInstallationFailed(RedException):
+    message = "Unable to install linters"
 
 
 class CopyingPylintcFailed(RedException):

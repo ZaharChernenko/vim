@@ -81,20 +81,21 @@ sign define vimspectorCurrentFrame text=>   texthl=Special
 let g:ale_lint_on_save = 1
 let g:ale_completion_enabled = 0
 let g:ale_linters = {
-    \'python': ['pylint'],
+    \'python': ['pylint', 'mypy'],
     \'cpp': ['cc', 'clang'],
 \}
 let g:ale_fixers = {
     \'*': ['trim_whitespace'],
-    \'python': ['autoimport', 'autopep8', 'isort'],
+    \'python': ['autopep8', 'isort'],
 \}
 let g:ale_fix_on_save = 1
-let g:ale_cpp_cc_options = "-std=c++17 -Wall"
-let g:ale_cpp_clangd_options = "-std=c++17 -Wall"
+let g:ale_cpp_cc_options = "-std=c++2a -Wall"
+let g:ale_cpp_clangd_options = "-std=c++2a -Wall"
 let g:ale_warn_about_trailing_whitespace = 0
 let g:ale_warn_about_trailing_blank_lines = 0
 let g:ale_set_signs = 1
 let g:ale_virtualtext_cursor = 'current'
+let g:ale_python_mypy_options = '--ignore-missing-imports'
 
 
 " changing vimspector signs priority
@@ -185,24 +186,25 @@ if g:os == 'macos'
   autocmd FileType cpp inoremap <buffer> <C-r> <Esc>:call RunCpp()<CR>
 
 else
-  " movement in Gvim
-  noremap <A-a> <left>
-  noremap <A-w> <up>
-  noremap <A-s> <down>
-  noremap <A-d> <right>
-  inoremap <A-a> <left>
-  inoremap <A-w> <up>
-  inoremap <A-s> <down>
-  inoremap <A-d> <right>
-  inoremap <A-c> <Esc>
-  " console insert mode movement
+  if has("gui_running")
+    noremap <A-a> <left>
+    noremap <A-w> <up>
+    noremap <A-s> <down>
+    noremap <A-d> <right>
+    inoremap <A-a> <left>
+    inoremap <A-w> <up>
+    inoremap <A-s> <down>
+    inoremap <A-d> <right>
+    inoremap <A-c> <Esc>
+  else
   " alt in console is escaped seq ^], so this is why <Esc>key works like <A-key>
   " sed -n l
-  inoremap <Esc>a <left>
-  inoremap <Esc>w <up>
-  inoremap <Esc>s <down>
-  inoremap <Esc>d <right>
-  inoremap <Esc>c <Esc>
+    inoremap <Esc>a <left>
+    inoremap <Esc>w <up>
+    inoremap <Esc>s <down>
+    inoremap <Esc>d <right>
+    inoremap <Esc>c <Esc>
+  endif
 
   let g:SuperTabMappingForward = '<A-tab>'
   noremap <A-t> :NERDTreeToggle<CR>
@@ -214,6 +216,7 @@ else
   noremap <C-v> i<C-r><C-o>+
   noremap <C-z> u
   noremap <C-s> :w<CR>
+  noremap <C-a> ggVG
   inoremap <C-v> <C-r><C-o>+
   inoremap <C-s> <Esc>:w<CR>
   inoremap <C-z> <Esc>ui
@@ -250,6 +253,7 @@ endfunction
 function RunPython()
   :w
   execute $"ter {g:python} {escape(expand('%'), ' \')}"
+  let b:ycm_largefile = 1
 endfunction
 
 
@@ -283,10 +287,10 @@ endfunction
 
 function RunCpp()
   :w
-  :!g++ -std=c++2a *.cpp
-  :NERDTreeRefreshRoot
-  :ter ./a.out
-  let b:ycm_largerfile = 0 "disable ycm for terminal
+  !g++ -std=c++2a *.cpp
+  NERDTreeRefreshRoot
+  ter ./a.out
+  let b:ycm_largefile = 1 "disable ycm for terminal
 endfunction
 
 
