@@ -20,7 +20,7 @@ set t_Co=256
 set nobackup
 set noswapfile
 syntax enable
-autocmd BufNew,BufRead *.asm set ft=tasm
+
 
 " Plugins search
 call plug#begin('~/.vim/bundle')
@@ -36,19 +36,27 @@ call plug#begin('~/.vim/bundle')
 call plug#end()
 
 
-" Setup ui
 if has('macunix')
     let g:os = 'macos'
+else
+    let g:os = 'linux'
+endif
+
+
+autocmd BufNew,BufRead *.asm set ft=tasm
+autocmd VimEnter * call RunVim()
+autocmd BufEnter *.py call GetPython()
+autocmd BufEnter *.py silent! YcmRestartServer
+
+" Setup ui
+if g:os == 'macos'
     set guifont=JetBrainsMono-Regular:h13
     set linespace=3
 else
-    let g:os = 'linux'
     set guifont=JetBrainsMono\ Regular\ 11
     set guioptions-=L
     set guioptions=r
-  endif
-
-autocmd VimEnter * :call RunVim()
+endif
 
 let g:molokai_original = 1
 colorscheme monokai_custom
@@ -104,8 +112,11 @@ let g:vimspector_sign_priority = {
 " if this is disabled, cpp ycm doesn't work on mac
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
 let g:ycm_confirm_extra_conf = 0
+let g:ycm_extra_conf_vim_data = [
+  \  'g:ycm_python_interpreter_path'
+  \]
 
-autocmd DirChanged * call GetPython()
+
 "Hotkeys
 noremap q ge
 noremap Q ^
@@ -238,25 +249,24 @@ endfunction
 
 function RunPython()
   :w
-  execute $"ter {g:python} {expand('%')}"
+  execute $"ter {g:python} {escape(expand('%'), ' \')}"
 endfunction
 
 
 function GetPython()
-  let l:is_global = 1
-  let l:venv_dirs = ['./venv', './virtualenv', './myenv']
-  let l:dirs = globpath('.', '*', 0, 1)
-  call filter(l:dirs, 'isdirectory(v:val)')
+  let is_global = 1
+  let venv_dirs = ['venv', 'virtualenv', 'myenv', 'env']
 
-  for dir in l:venv_dirs
-    if index(l:dirs, l:dir) != -1
-      let l:is_global = 0
-      let l:venv_dir = dir
+  for dir in venv_dirs
+    let check_dir = escape(finddir(dir . '/..', escape(expand('%:p:h').';', ' \')), ' \')
+    if check_dir != ''
+      let is_global = 0
+      let venv_dir = $"{check_dir}/{dir}"
       break
     endif
   endfor
 
-  if l:is_global == 1
+  if is_global == 1
     if g:os == 'macos'
       let g:python = 'python3-intel64'
     else
@@ -264,8 +274,9 @@ function GetPython()
     endif
 
   else
-    let g:python = $"{l:venv_dir}/bin/python3"
+    let g:python = $"{venv_dir}/bin/python3"
   endif
+  let g:ycm_python_interpreter_path = g:python
 
 endfunction
 
@@ -277,6 +288,7 @@ function RunCpp()
   :ter ./a.out
   let b:ycm_largerfile = 0 "disable ycm for terminal
 endfunction
+
 
 ":cd %:p:h - change dir to current buffer
 ":ter python3-intel64 "%" "

@@ -185,26 +185,28 @@ def Settings( **kwargs ):
         }
 
     if language == 'python':
+        client_data = kwargs["client_data"]
         return {
-          'interpreter_path': getPythonInterpreter(),
+            'interpreter_path': client_data["g:ycm_python_interpreter_path"].replace('\\', ''),
           'ls': {
-            'python': {
-              'analysis': {
-                'extraPaths': [
-                  p.join( DIR_OF_THIS_SCRIPT ),
-                  p.join( DIR_OF_THIRD_PARTY, 'bottle' ),
-                  p.join( DIR_OF_THIRD_PARTY, 'regex-build' ),
-                  p.join( DIR_OF_THIRD_PARTY, 'frozendict' ),
-                  p.join( DIR_OF_THIRD_PARTY, 'jedi_deps', 'jedi' ),
-                  p.join( DIR_OF_THIRD_PARTY, 'jedi_deps', 'parso' ),
-                  p.join( DIR_OF_WATCHDOG_DEPS, 'watchdog', 'build', 'lib3' ),
-                  p.join( DIR_OF_WATCHDOG_DEPS, 'pathtools' ),
-                  p.join( DIR_OF_THIRD_PARTY, 'waitress' ),
-                ],
-                'useLibraryCodeForTypes': True
-              }
+                'python': {
+                    'analysis': {
+                        'extraPaths': [
+                            p.join( DIR_OF_THIS_SCRIPT ),
+                            p.join( DIR_OF_THIRD_PARTY, 'bottle' ),
+                            p.join( DIR_OF_THIRD_PARTY, 'regex-build' ),
+                            p.join( DIR_OF_THIRD_PARTY, 'frozendict' ),
+                            p.join( DIR_OF_THIRD_PARTY, 'jedi_deps', 'jedi' ),
+                            p.join( DIR_OF_THIRD_PARTY, 'jedi_deps', 'parso' ),
+                            p.join( DIR_OF_WATCHDOG_DEPS,
+                                   'watchdog', 'build', 'lib3' ),
+                            p.join( DIR_OF_WATCHDOG_DEPS, 'pathtools' ),
+                            p.join( DIR_OF_THIRD_PARTY, 'waitress' ),
+                        ],
+                        'useLibraryCodeForTypes': True
+                    }
+                }
             }
-          }
         }
 
     return {}
@@ -228,6 +230,3 @@ def PythonSysPath( **kwargs ):
 
     sys_path.append( p.join( DIR_OF_THIRD_PARTY, 'jedi_deps', 'numpydoc' ) )
     return sys_path
-
-
-getPythonInterpreter()
