@@ -7,6 +7,7 @@ def updateVim() -> None:
     """Updates .vimrc, .pylintrc and .ycm_extra_conf.py"""
     setupVimrc()
     setupPylintrc()
+    setupAutopep()
     setupYCMExtraConf()
 
 
@@ -23,6 +24,7 @@ def posixFullInstall(package_manager: PackageManagers) -> None:
     installMonokai(package_manager)
     installPip(package_manager)
     setupPylint()
+    setupAutopep()
     installYouCompleteMe(package_manager)
     setupVimspector()
 

@@ -101,6 +101,13 @@ def setupPylint():
     successPrint(".pylintrc setup completed")
 
 
+def setupAutopep():
+    print("setup pycodestyle")
+    if os.system("cp ./configs/pycodestyle ~/.config/") != 0:
+        raise CopyingAutopepFailed
+    successPrint("autopep setup completed")
+
+
 def setupYCMExtraConf():
     if os.system("cp ./configs/.ycm_extra_conf.py ~/.vim/bundle/YouCompleteMe/third_party/ycmd/") != 0:
         raise CopyingYCMConfFailed

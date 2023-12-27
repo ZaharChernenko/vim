@@ -38,6 +38,10 @@ class PylintSetupFailed(RedException):
     message = "Unable to setup .pylintrc"
 
 
+class CopyingAutopepFailed(RedException):
+    message = "Copying pycodestyle failed"
+
+
 class YCMInstallationFailed(RedException):
     message = "Installation ycm failed"
 
