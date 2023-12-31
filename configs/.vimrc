@@ -12,6 +12,8 @@ set softtabstop=4
 set smarttab
 set smartindent
 set autochdir
+set colorcolumn=120
+highlight ColorColumn ctermfg=118 ctermbg=235
 
 set number
 set mouse=a
@@ -95,7 +97,10 @@ let g:ale_warn_about_trailing_whitespace = 0
 let g:ale_warn_about_trailing_blank_lines = 0
 let g:ale_set_signs = 1
 let g:ale_virtualtext_cursor = 'current'
-let g:ale_python_mypy_options = '--ignore-missing-imports'
+let g:ale_python_mypy_options = '--ignore-missing-imports --check-untyped-defs
+      \ --disable-error-code attr-defined
+      \ --disable-error-code import-untyped
+      \ --disable-error-code union-attr'
 
 
 " changing vimspector signs priority
@@ -251,9 +256,12 @@ endfunction
 
 
 function RunPython()
-  :w
+  if &readonly == 0
+    :w
+  endif
   execute $"ter {g:python} {escape(expand('%'), ' \')}"
   let b:ycm_largefile = 1
+  NERDTreeRefreshRoot
 endfunction
 
 
@@ -264,9 +272,11 @@ function GetPython()
   for dir in venv_dirs
     let check_dir = escape(finddir(dir . '/..', escape(expand('%:p:h').';', ' \')), ' \')
     if check_dir != ''
-      let is_global = 0
       let venv_dir = $"{check_dir}/{dir}"
-      break
+      if isdirectory($"{venv_dir}/bin")
+        let is_global = 0
+        break
+      endif
     endif
   endfor
 
@@ -286,7 +296,9 @@ endfunction
 
 
 function RunCpp()
-  :w
+  if &readonly == 0
+    :w
+  endif
   !g++ -std=c++2a *.cpp
   NERDTreeRefreshRoot
   ter ./a.out
