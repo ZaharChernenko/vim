@@ -56,8 +56,9 @@ if g:os == 'macos'
     set linespace=3
 else
     set guifont=JetBrainsMono\ Regular\ 11
-    set guioptions-=L
-    set guioptions=r
+    set guioptions=rl " egmrLtT - default value,
+                      " custom: right, left scroll always,
+                      " because of gvim bug
 endif
 
 let g:molokai_original = 1
@@ -124,14 +125,16 @@ let g:ycm_extra_conf_vim_data = [
 
 
 "Hotkeys
+let g:SuperTabMappingBackward = '<tab>'
+let g:NERDTreeMapOpenVSplit = 'v'
+
 noremap q ge
 noremap Q ^
 noremap E $
+
 " start of the next word
 noremap f w
 noremap F W
-
-let g:SuperTabMappingBackward = '<tab>'
 
 " moving in normal mode
 noremap ф <left>
@@ -165,10 +168,12 @@ let g:vimspector_enable_mappings = 'HUMAN'
 noremap ;t :call vimspector#ToggleBreakpoint()<CR>
 noremap ;c :call vimspector#ClearBreakpoints()<CR>
 noremap ;r :call vimspector#Launch()<CR>
-
+" ycm
 noremap gd :YcmCompleter GoTo<CR>
 noremap <F2> :YcmCompleter RefactorRename
 inoremap <F2> <Esc>:YcmCompleter RefactorRename
+
+noremap nf :NERDTreeFocus<CR>
 " autocmd FileType python map <buffer> <C-r> :w<CR>:exec '!python3-intel64' shellescape(@%, 1)<CR>
 if g:os == 'macos'
   " moving in insert mode

@@ -39,7 +39,6 @@ noremap J A
 
 
 if has('macunix')
-  " moving in insert mode
   noremap <C-a> <left>
   noremap <C-w> <up>
   noremap <C-s> <down>
@@ -49,7 +48,6 @@ if has('macunix')
   inoremap <C-s> <down>
   inoremap <C-d> <right>
 else
-  " movement in Gvim
   noremap <A-a> <left>
   noremap <A-w> <up>
   noremap <A-s> <down>
@@ -59,25 +57,6 @@ else
   inoremap <A-s> <down>
   inoremap <A-d> <right>
   inoremap <A-c> <Esc>
-  " console insert mode movement
-  " alt in console is escaped seq ^], so this is why <Esc>key works like <A-key>
-  " sed -n l
-  inoremap <Esc>a <left>
-  inoremap <Esc>w <up>
-  inoremap <Esc>s <down>
-  inoremap <Esc>d <right>
-  inoremap <Esc>c <Esc>
-
-  " normal cut and copy
-  noremap <C-c> "+yi<Esc>
-  noremap <C-x> "+c<Esc>
-  noremap <C-v> i<C-r><C-o>+
-  noremap <C-z> u
-  noremap <C-s> :w<CR>
-  inoremap <C-v> <C-r><C-o>+
-  inoremap <C-s> <Esc>:w<CR>
-  inoremap <C-z> <Esc>ui
-
 
   " removing buffer
   noremap <C-w> :bd<CR>
