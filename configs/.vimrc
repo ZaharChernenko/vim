@@ -157,6 +157,8 @@ noremap D <right>
 
 noremap j a
 noremap J A
+noremap о a
+noremap О A
 
 noremap ш i
 noremap Ш I
@@ -176,7 +178,7 @@ inoremap <F2> <Esc>:YcmCompleter RefactorRename
 noremap nf :NERDTreeFocus<CR>
 " autocmd FileType python map <buffer> <C-r> :w<CR>:exec '!python3-intel64' shellescape(@%, 1)<CR>
 if g:os == 'macos'
-  " moving in insert mode
+  " moving in buffer
   noremap <C-a> <left>
   noremap <C-w> <up>
   noremap <C-s> <down>
@@ -185,6 +187,11 @@ if g:os == 'macos'
   inoremap <C-w> <up>
   inoremap <C-s> <down>
   inoremap <C-d> <right>
+  " moving between windows
+  noremap <silent> <C-k> :wincmd k<CR>
+  noremap <silent> <C-h> :wincmd h<CR>
+  noremap <silent> <C-j> :wincmd j<CR>
+  noremap <silent> <C-l> :wincmd l<CR>
   let g:SuperTabMappingForward = '<C-tab>'
   noremap <C-t> :NERDTreeToggle<CR>
   inoremap <C-t> <Esc>:NERDTreeToggle<CR>i
@@ -206,6 +213,11 @@ else
     inoremap <A-s> <down>
     inoremap <A-d> <right>
     inoremap <A-c> <Esc>
+
+    noremap <silent> <A-k> :wincmd k<CR>
+    noremap <silent> <A-h> :wincmd h<CR>
+    noremap <silent> <A-j> :wincmd j<CR>
+    noremap <silent> <A-l> :wincmd l<CR>
   else
   " alt in console is escaped seq ^], so this is why <Esc>key works like <A-key>
   " sed -n l
@@ -214,6 +226,11 @@ else
     inoremap <Esc>s <down>
     inoremap <Esc>d <right>
     inoremap <Esc>c <Esc>
+
+    noremap <silent> <Esc>k :wincmd k<CR>
+    noremap <silent> <Esc>h :wincmd h<CR>
+    noremap <silent> <Esc>j :wincmd j<CR>
+    noremap <silent> <Esc>l :wincmd l<CR>
   endif
 
   let g:SuperTabMappingForward = '<A-tab>'
