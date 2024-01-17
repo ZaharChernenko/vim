@@ -21,10 +21,15 @@
   "configurations": {
     "CodeLLDB": {
       "adapter": "CodeLLDB",
+      "variables": {
+        "BUILDME": {
+          "shell": "g++ -o ${workspaceRoot}/test -g -std=c++2a ${file}"
+        }
+      },
       "configuration": {
         "request": "launch",
         "expressions": "native",
-        "program": "${workspaceRoot}/Debug/test"
+        "program": "${workspaceRoot}/test"
       }
     }
   }

@@ -35,6 +35,7 @@ call plug#begin('~/.vim/bundle')
   Plug 'puremourning/vimspector'
    " you complete me
   Plug 'ycm-core/YouCompleteMe'
+  Plug 'cdelledonne/vim-cmake'
 call plug#end()
 
 
@@ -124,6 +125,12 @@ let g:ycm_extra_conf_vim_data = [
   \]
 
 
+let g:cmake_console_position = 'horizontal'
+let g:cmake_jump_on_completion = 1
+let g:cmake_jump = 1
+let g:cmake_root_markers = []
+
+
 "Hotkeys
 let g:SuperTabMappingBackward = '<tab>'
 let g:NERDTreeMapOpenVSplit = 'v'
@@ -166,7 +173,7 @@ noremap о a
 noremap О A
 
 " vimspector
-let g:vimspector_enable_mappings = 'HUMAN'
+" let g:vimspector_enable_mappings = 'HUMAN'
 noremap ;t :call vimspector#ToggleBreakpoint()<CR>
 noremap ;c :call vimspector#ClearBreakpoints()<CR>
 noremap ;r :call vimspector#Launch()<CR>
@@ -192,15 +199,20 @@ if g:os == 'macos'
   noremap <silent> <C-h> :wincmd h<CR>
   noremap <silent> <C-j> :wincmd j<CR>
   noremap <silent> <C-l> :wincmd l<CR>
+  " removing buffer
+  noremap <silent> <D-w> :bd<CR>
+  inoremap <silent> <D-w> <Esc>:bd<CR>
   let g:SuperTabMappingForward = '<C-tab>'
   noremap <C-t> :NERDTreeToggle<CR>
   inoremap <C-t> <Esc>:NERDTreeToggle<CR>i
-  " running python ctrl+r
+  " python
   autocmd Filetype python noremap <buffer> <C-r> :call RunPython()<CR>
   autocmd Filetype python inoremap <buffer> <C-r> <Esc>:call RunPython()<CR>
-  " running c++ ctrl+r
-  autocmd Filetype cpp noremap <buffer> <C-r> :call RunCpp()<CR>
-  autocmd FileType cpp inoremap <buffer> <C-r> <Esc>:call RunCpp()<CR>
+  " cpp
+  autocmd Filetype cpp noremap <buffer> <C-r> :CMakeRun<Space>
+  autocmd FileType cpp inoremap <buffer> <C-r> <Esc>:CMakeRun<Space>
+  autocmd Filetype cpp noremap <buffer> <C-b> :call BuildCpp()<CR>
+  autocmd Filetype cpp inoremap <buffer> <C-b> <Esc>:call BuildCpp()<CR>
 
 else
   if has("gui_running")
@@ -218,6 +230,18 @@ else
     noremap <silent> <A-h> :wincmd h<CR>
     noremap <silent> <A-j> :wincmd j<CR>
     noremap <silent> <A-l> :wincmd l<CR>
+
+    noremap <A-t> :NERDTreeToggle<CR>
+    inoremap <A-t> <Esc>:NERDTreeToggle<CR>i
+    " python
+    autocmd FileType python noremap <buffer> <A-r> :call RunPython()<CR>
+    autocmd FileType python inoremap <buffer> <A-r> <Esc>:call RunPython()<CR>
+    " cpp
+    autocmd Filetype cpp noremap <buffer> <A-r> :CMakeRun<Space>
+    autocmd FileType cpp inoremap <buffer> <A-r> <Esc>:CMakeRun<Space>
+    autocmd Filetype cpp noremap <buffer> <A-b> :call BuildCpp()<CR>
+    autocmd Filetype cpp inoremap <buffer> <A-b> <Esc>:call BuildCpp()<CR>
+
   else
   " alt in console is escaped seq ^], so this is why <Esc>key works like <A-key>
   " sed -n l
@@ -231,11 +255,24 @@ else
     noremap <silent> <Esc>h :wincmd h<CR>
     noremap <silent> <Esc>j :wincmd j<CR>
     noremap <silent> <Esc>l :wincmd l<CR>
+
+    noremap <Esc>t :NERDTreeToggle<CR>
+    inoremap <Esc>t <Esc>:NERDTreeToggle<CR>i
+    " python
+    autocmd Filetype python noremap <buffer> <Esc>r :call RunPython()<CR>
+    autocmd filetype python inoremap <buffer> <Esc>r <Esc>:call RunPython()<CR>
+    " cpp
+    autocmd Filetype cpp noremap <buffer> <Esc>r :CMakeRun<Space>
+    autocmd FileType cpp inoremap <buffer> <Esc>r <Esc>:CMakeRun<Space>
+    autocmd Filetype cpp noremap <buffer> <Esc>b :call BuildCpp()<CR>
+    autocmd Filetype cpp inoremap <buffer> <Esc>b <Esc>:call BuildCpp()<CR>
+
+      noremap <A-t> :NERDTreeToggle<CR>
+  inoremap <A-t> <Esc>:NERDTreeToggle<CR>i
   endif
 
   let g:SuperTabMappingForward = '<A-tab>'
-  noremap <A-t> :NERDTreeToggle<CR>
-  inoremap <A-t> <Esc>:NERDTreeToggle<CR>i
+
 
   " normal cut and copy
   noremap <C-c> "+yi<Esc>
@@ -248,26 +285,9 @@ else
   inoremap <C-s> <Esc>:w<CR>
   inoremap <C-z> <Esc>ui
 
-  " running cpp and python on alt+r
-  " running python
-  " terminal
-  autocmd Filetype python noremap <buffer> <Esc>r :call RunPython()<CR>
-  autocmd filetype python inoremap <buffer> <Esc>r <Esc>:call RunPython()<CR>
-  " gvim
-  autocmd FileType python noremap <buffer> <A-r> :call RunPython()<CR>
-  autocmd FileType python inoremap <buffer> <A-r> <Esc>:call RunPython()<CR>
-
-  " running c++
-  " terminal
-  autocmd Filetype cpp noremap <buffer> <Esc>r :call RunCpp()<CR>
-  autocmd Filetype cpp inoremap <buffer> <Esc>r <Esc>:call RunCpp()<CR>
-  " gvim
-  autocmd Filetype cpp noremap <buffer> <A-r> :call RunCpp()<CR>
-  autocmd Filetype cpp inoremap <buffer> <A-r> <Esc>:call RunCpp()<CR>
-
   " removing buffer
-  noremap <C-w> :bd<CR>
-  inoremap <C-w> <Esc>:bd<CR>
+  noremap <silent> <C-w> :bd<CR>
+  inoremap <silent> <C-w> <Esc>:bd<CR>
 endif
 
 
@@ -279,7 +299,7 @@ endfunction
 
 function RunPython()
   if &readonly == 0
-    :w
+    :wall
   endif
   execute $"ter {g:python} {escape(expand('%'), ' \')}"
   let b:ycm_largefile = 1
@@ -317,16 +337,11 @@ function GetPython()
 endfunction
 
 
-function RunCpp()
+function BuildCpp()
   if &readonly == 0
-    :w
+    :wall
   endif
-  !g++ -std=c++2a *.cpp
-  NERDTreeRefreshRoot
-  ter ./a.out
-  let b:ycm_largefile = 1 "disable ycm for terminal
+  :CMakeBuild
 endfunction
-
-
 ":cd %:p:h - change dir to current buffer
 ":ter python3-intel64 "%" "
