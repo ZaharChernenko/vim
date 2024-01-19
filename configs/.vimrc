@@ -62,7 +62,7 @@ else
                       " because of gvim bug
 endif
 
-let g:molokai_original = 1
+let g:molokai_original = 1 " monokai background
 colorscheme monokai_custom
 set signcolumn=yes
 
@@ -194,15 +194,12 @@ if g:os == 'macos'
   inoremap <C-w> <up>
   inoremap <C-s> <down>
   inoremap <C-d> <right>
-  " moving between windows
+  " moving between buffers
   noremap <silent> <C-k> :wincmd k<CR>
   noremap <silent> <C-h> :wincmd h<CR>
   noremap <silent> <C-j> :wincmd j<CR>
   noremap <silent> <C-l> :wincmd l<CR>
-  " removing buffer
-  noremap <silent> <D-w> :bd<CR>
-  inoremap <silent> <D-w> <Esc>:bd<CR>
-  let g:SuperTabMappingForward = '<C-tab>'
+  " NerdTree
   noremap <C-t> :NERDTreeToggle<CR>
   inoremap <C-t> <Esc>:NERDTreeToggle<CR>i
   " python
@@ -213,7 +210,11 @@ if g:os == 'macos'
   autocmd FileType cpp inoremap <buffer> <C-r> <Esc>:CMakeRun<Space>
   autocmd Filetype cpp noremap <buffer> <C-b> :call BuildCpp()<CR>
   autocmd Filetype cpp inoremap <buffer> <C-b> <Esc>:call BuildCpp()<CR>
+  " removing buffer
+  noremap <silent> <D-w> :bd<CR>
+  inoremap <silent> <D-w> <Esc>:bd<CR>
 
+  let g:SuperTabMappingForward = '<C-tab>'
 else
   if has("gui_running")
     noremap <A-a> <left>
@@ -225,12 +226,12 @@ else
     inoremap <A-s> <down>
     inoremap <A-d> <right>
     inoremap <A-c> <Esc>
-
+    " moving between buffers
     noremap <silent> <A-k> :wincmd k<CR>
     noremap <silent> <A-h> :wincmd h<CR>
     noremap <silent> <A-j> :wincmd j<CR>
     noremap <silent> <A-l> :wincmd l<CR>
-
+    " NerdTree
     noremap <A-t> :NERDTreeToggle<CR>
     inoremap <A-t> <Esc>:NERDTreeToggle<CR>i
     " python
@@ -241,21 +242,21 @@ else
     autocmd FileType cpp inoremap <buffer> <A-r> <Esc>:CMakeRun<Space>
     autocmd Filetype cpp noremap <buffer> <A-b> :call BuildCpp()<CR>
     autocmd Filetype cpp inoremap <buffer> <A-b> <Esc>:call BuildCpp()<CR>
-
+    let g:SuperTabMappingForward = '<A-tab>'
   else
-  " alt in console is escaped seq ^], so this is why <Esc>key works like <A-key>
-  " sed -n l
+    " alt in console is escaped seq ^], so this is why <Esc>key works like <A-key>
+    " sed -n l
     inoremap <Esc>a <left>
     inoremap <Esc>w <up>
     inoremap <Esc>s <down>
     inoremap <Esc>d <right>
     inoremap <Esc>c <Esc>
-
+    " moving between buffers
     noremap <silent> <Esc>k :wincmd k<CR>
     noremap <silent> <Esc>h :wincmd h<CR>
     noremap <silent> <Esc>j :wincmd j<CR>
     noremap <silent> <Esc>l :wincmd l<CR>
-
+    " NerdTree
     noremap <Esc>t :NERDTreeToggle<CR>
     inoremap <Esc>t <Esc>:NERDTreeToggle<CR>i
     " python
@@ -266,13 +267,7 @@ else
     autocmd FileType cpp inoremap <buffer> <Esc>r <Esc>:CMakeRun<Space>
     autocmd Filetype cpp noremap <buffer> <Esc>b :call BuildCpp()<CR>
     autocmd Filetype cpp inoremap <buffer> <Esc>b <Esc>:call BuildCpp()<CR>
-
-      noremap <A-t> :NERDTreeToggle<CR>
-  inoremap <A-t> <Esc>:NERDTreeToggle<CR>i
   endif
-
-  let g:SuperTabMappingForward = '<A-tab>'
-
 
   " normal cut and copy
   noremap <C-c> "+yi<Esc>
@@ -284,10 +279,10 @@ else
   inoremap <C-v> <C-r><C-o>+
   inoremap <C-s> <Esc>:w<CR>
   inoremap <C-z> <Esc>ui
-
   " removing buffer
   noremap <silent> <C-w> :bd<CR>
   inoremap <silent> <C-w> <Esc>:bd<CR>
+  let g:SuperTabMappingForward = '<Esc><Tab>'
 endif
 
 
@@ -299,7 +294,7 @@ endfunction
 
 function RunPython()
   if &readonly == 0
-    :wall
+    :w
   endif
   execute $"ter {g:python} {escape(expand('%'), ' \')}"
   let b:ycm_largefile = 1
