@@ -1,27 +1,21 @@
 filetype plugin indent on
 filetype off
-
-set completeopt-=preview
-set encoding=utf-8
-set nocompatible
-
-set tabstop=4
-set shiftwidth=4
-set expandtab
-set softtabstop=4
-set smarttab
-set smartindent
-set autochdir
-set colorcolumn=120
-highlight ColorColumn ctermfg=118 ctermbg=235
-
-set number
-set mouse=a
-set t_Co=256
+syntax enable
 
 set nobackup
 set noswapfile
-syntax enable
+set nocompatible
+set encoding=utf-8
+
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set expandtab
+set smarttab
+set smartindent
+set autochdir
+
+set mouse=a
 
 
 " Plugins search
@@ -36,6 +30,7 @@ call plug#begin('~/.vim/bundle')
    " you complete me
   Plug 'ycm-core/YouCompleteMe'
   Plug 'cdelledonne/vim-cmake'
+  Plug 'mg979/vim-visual-multi'
 call plug#end()
 
 
@@ -62,9 +57,13 @@ else
                       " because of gvim bug
 endif
 
-let g:molokai_original = 1 " monokai background
-colorscheme monokai_custom
+" let g:molokai_original = 1 " monokai background
+colorscheme codedark "monokai_custom
 set signcolumn=yes
+set number
+set colorcolumn=120
+highlight ColorColumn ctermfg=118 ctermbg=235
+set t_Co=256
 
 " JetBrainsMono doesn't support default vimspector signs
 sign define vimspectorBP text=o             texthl=WarningMsg
@@ -103,7 +102,8 @@ let g:ale_python_mypy_options = '--ignore-missing-imports --check-untyped-defs
       \ --disable-error-code attr-defined
       \ --disable-error-code import-untyped
       \ --disable-error-code union-attr'
-
+highlight clear ALEErrorSign
+highlight clear ALEWarningSign
 
 " changing vimspector signs priority
 let g:vimspector_sign_priority = {
@@ -137,7 +137,7 @@ let g:NERDTreeMapOpenVSplit = 'v'
 
 noremap q ge
 noremap Q ^
-noremap E $
+noremap E g_
 
 " start of the next word
 noremap f w
@@ -211,10 +211,11 @@ if g:os == 'macos'
   autocmd Filetype cpp noremap <buffer> <C-b> :call BuildCpp()<CR>
   autocmd Filetype cpp inoremap <buffer> <C-b> <Esc>:call BuildCpp()<CR>
   " removing buffer
-  noremap <silent> <D-w> :bd<CR>
-  inoremap <silent> <D-w> <Esc>:bd<CR>
+  noremap <silent> <D-w> :bw<CR>
+  inoremap <silent> <D-w> <Esc>:bw<CR>
 
   let g:SuperTabMappingForward = '<C-tab>'
+
 else
   if has("gui_running")
     noremap <A-a> <left>
@@ -280,8 +281,8 @@ else
   inoremap <C-s> <Esc>:w<CR>
   inoremap <C-z> <Esc>ui
   " removing buffer
-  noremap <silent> <C-w> :bd<CR>
-  inoremap <silent> <C-w> <Esc>:bd<CR>
+  noremap <silent> <C-w> :bw<CR>
+  inoremap <silent> <C-w> <Esc>:bw<CR>
   let g:SuperTabMappingForward = '<Esc><Tab>'
 endif
 

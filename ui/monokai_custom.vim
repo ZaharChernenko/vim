@@ -36,7 +36,7 @@ hi Constant        guifg=#66D9EF               gui=none
 hi Cursor          guifg=#000000 guibg=#F8F8F0
 hi iCursor         guifg=#000000 guibg=#F8F8F0
 hi Debug           guifg=#BCA3A3               gui=bold
-hi Define          guifg=#A6E22E
+hi Define          guifg=#F92672
 hi Delimiter       guifg=#8F8F8F
 hi DiffAdd                       guibg=#13354A
 hi DiffChange      guifg=#89807D guibg=#4C4745
@@ -71,7 +71,7 @@ hi PmenuSel                      guibg=#808080
 hi PmenuSbar                     guibg=#080808
 hi PmenuThumb      guifg=#66D9EF
 
-hi PreCondit       guifg=#A6E22E               gui=bold
+hi PreCondit       guifg=#F92672               gui=bold
 hi PreProc         guifg=#F92672
 hi Question        guifg=#66D9EF
 hi Repeat          guifg=#F92672               gui=italic
@@ -109,8 +109,9 @@ hi WildMenu        guifg=#66D9EF guibg=#000000
 hi TabLineFill     guifg=#1B1D1E guibg=#1B1D1E
 hi TabLine         guibg=#1B1D1E guifg=#808080 gui=none
 
+
 if s:molokai_original == 1
-   hi Normal          guifg=#F8F8F2 guibg=#272822
+   hi Normal          guifg=#CCE0E1 guibg=#272822
    hi Comment         guifg=#75715E
    hi CursorLine                    guibg=#3E3D32
    hi CursorLineNr    guifg=#FD971F               gui=none
@@ -131,7 +132,16 @@ else
    hi SpecialKey      guifg=#465457
 end
 
-"
+
+hi cppStructure    guifg=#F92672               gui=none
+hi cppType         guifg=#B5B6E2
+hi cppModifier     guifg=#F92672               gui=none
+hi cppExceptions   guifg=#F92672
+hi cppOperator     guifg=#F92672
+hi cppConstant     guifg=#B5B6E2
+hi cppAccess       guifg=#F92672               gui=none
+
+
 " Support for 256-color terminal
 "
 if &t_Co > 255
