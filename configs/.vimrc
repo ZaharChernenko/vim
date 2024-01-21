@@ -6,6 +6,7 @@ set nobackup
 set noswapfile
 set nocompatible
 set encoding=utf-8
+set completeopt-=preview
 
 set tabstop=4
 set shiftwidth=4
@@ -57,13 +58,21 @@ else
                       " because of gvim bug
 endif
 
-" let g:molokai_original = 1 " monokai background
-colorscheme codedark "monokai_custom
+
+let g:molokai_original = 1 " monokai background
+let NERDTreeMinimalUI=1
+
+colorscheme monokai_custom
 set signcolumn=yes
 set number
-set colorcolumn=120
-highlight ColorColumn ctermfg=118 ctermbg=235
+set colorcolumn=100
+set nowrap
+set display+=lastline " for long lines
+set sidescroll=5
+set listchars+=precedes:<,extends:>
 set t_Co=256
+
+highlight ColorColumn ctermfg=118 ctermbg=235
 
 " JetBrainsMono doesn't support default vimspector signs
 sign define vimspectorBP text=o             texthl=WarningMsg
@@ -74,8 +83,6 @@ sign define vimspectorPC text=\ >           texthl=MatchParen
 sign define vimspectorPCBP text=o>          texthl=MatchParen
 sign define vimspectorCurrentThread text=>  texthl=MatchParen
 sign define vimspectorCurrentFrame text=>   texthl=Special
-
-
 " Ending setup ui
 
 
@@ -97,11 +104,13 @@ let g:ale_cpp_clangd_options = "-std=c++2a -Wall"
 let g:ale_warn_about_trailing_whitespace = 0
 let g:ale_warn_about_trailing_blank_lines = 0
 let g:ale_set_signs = 1
+let g:ale_set_highlights = 0
 let g:ale_virtualtext_cursor = 'current'
 let g:ale_python_mypy_options = '--ignore-missing-imports --check-untyped-defs
       \ --disable-error-code attr-defined
       \ --disable-error-code import-untyped
       \ --disable-error-code union-attr'
+
 highlight clear ALEErrorSign
 highlight clear ALEWarningSign
 
@@ -126,8 +135,8 @@ let g:ycm_extra_conf_vim_data = [
 
 
 let g:cmake_console_position = 'horizontal'
-let g:cmake_jump_on_completion = 1
-let g:cmake_jump = 1
+let g:cmake_jump_on_completion = 0
+let g:cmake_jump = 0
 let g:cmake_root_markers = []
 
 
@@ -179,8 +188,8 @@ noremap ;c :call vimspector#ClearBreakpoints()<CR>
 noremap ;r :call vimspector#Launch()<CR>
 " ycm
 noremap gd :YcmCompleter GoTo<CR>
-noremap <F2> :YcmCompleter RefactorRename
-inoremap <F2> <Esc>:YcmCompleter RefactorRename
+noremap <F2> :YcmCompleter RefactorRename<Space>
+inoremap <F2> <Esc>:YcmCompleter RefactorRename<Space>
 
 noremap nf :NERDTreeFocus<CR>
 " autocmd FileType python map <buffer> <C-r> :w<CR>:exec '!python3-intel64' shellescape(@%, 1)<CR>
@@ -206,18 +215,21 @@ if g:os == 'macos'
   autocmd Filetype python noremap <buffer> <C-r> :call RunPython()<CR>
   autocmd Filetype python inoremap <buffer> <C-r> <Esc>:call RunPython()<CR>
   " cpp
-  autocmd Filetype cpp noremap <buffer> <C-r> :CMakeRun<Space>
+  autocmd Filetype cpp noremap <buffer> <C-r> :call BuildCpp()<CR>:CMakeRun<Space>
   autocmd FileType cpp inoremap <buffer> <C-r> <Esc>:CMakeRun<Space>
   autocmd Filetype cpp noremap <buffer> <C-b> :call BuildCpp()<CR>
   autocmd Filetype cpp inoremap <buffer> <C-b> <Esc>:call BuildCpp()<CR>
   " removing buffer
-  noremap <silent> <D-w> :bw<CR>
-  inoremap <silent> <D-w> <Esc>:bw<CR>
+  noremap <silent> <D-w> :bd<CR>
+  inoremap <silent> <D-w> <Esc>:bd<CR>
 
   let g:SuperTabMappingForward = '<C-tab>'
 
 else
   if has("gui_running")
+    noremap <A-ScrollWheelUp> 3zh
+    noremap <A-ScrollWheelDown> 3zl
+
     noremap <A-a> <left>
     noremap <A-w> <up>
     noremap <A-s> <down>
@@ -281,8 +293,8 @@ else
   inoremap <C-s> <Esc>:w<CR>
   inoremap <C-z> <Esc>ui
   " removing buffer
-  noremap <silent> <C-w> :bw<CR>
-  inoremap <silent> <C-w> <Esc>:bw<CR>
+  noremap <silent> <C-w> :bd<CR>
+  inoremap <silent> <C-w> <Esc>:bd<CR>
   let g:SuperTabMappingForward = '<Esc><Tab>'
 endif
 
@@ -294,9 +306,7 @@ endfunction
 
 
 function RunPython()
-  if &readonly == 0
-    :w
-  endif
+  :wall
   execute $"ter {g:python} {escape(expand('%'), ' \')}"
   let b:ycm_largefile = 1
   NERDTreeRefreshRoot
@@ -334,9 +344,7 @@ endfunction
 
 
 function BuildCpp()
-  if &readonly == 0
-    :wall
-  endif
+  :wall
   :CMakeBuild
 endfunction
 ":cd %:p:h - change dir to current buffer
