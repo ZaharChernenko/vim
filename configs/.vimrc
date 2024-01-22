@@ -15,7 +15,7 @@ set expandtab
 set smarttab
 set smartindent
 set autochdir
-
+set virtualedit=all " cursor can be positioned where no char
 set mouse=a
 
 
@@ -140,28 +140,10 @@ let g:cmake_jump = 0
 let g:cmake_root_markers = []
 
 
-"Hotkeys
+" Hotkeys
 let g:SuperTabMappingBackward = '<tab>'
 let g:NERDTreeMapOpenVSplit = 'v'
-
-noremap q ge
-noremap Q ^
-noremap E g_
-
-" start of the next word
-noremap f w
-noremap F W
-
 " moving in normal mode
-noremap ф <left>
-noremap Ф <left>
-noremap ц <up>
-noremap Ц <up>
-noremap ы <down>
-noremap ы <down>
-noremap в <right>
-noremap В <right>
-
 noremap a <left>
 noremap A <left>
 noremap w <up>
@@ -170,12 +152,26 @@ noremap s <down>
 noremap S <down>
 noremap d <right>
 noremap D <right>
-
+" russian
+noremap ф <left>
+noremap Ф <left>
+noremap ц <up>
+noremap Ц <up>
+noremap ы <down>
+noremap ы <down>
+noremap в <right>
+noremap В <right>
+" complex navigation
+noremap q ge
+noremap Q ^
+noremap E g_
+" start of the next word
+noremap f w
+noremap F W
+" commands
 noremap j a
 noremap J A
-noremap о a
-noremap О A
-
+" russian
 noremap ш i
 noremap Ш I
 noremap о a
