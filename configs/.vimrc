@@ -30,7 +30,7 @@ call plug#begin('~/.vim/bundle')
   Plug 'puremourning/vimspector'
    " you complete me
   Plug 'ycm-core/YouCompleteMe'
-  Plug 'cdelledonne/vim-cmake'
+  " Plug 'cdelledonne/vim-cmake'
   Plug 'mg979/vim-visual-multi'
 call plug#end()
 
@@ -204,6 +204,9 @@ if g:os == 'macos'
   noremap <silent> <C-h> :wincmd h<CR>
   noremap <silent> <C-j> :wincmd j<CR>
   noremap <silent> <C-l> :wincmd l<CR>
+  " moving between tabs
+  noremap <silent> <D-h> :tabp<CR>
+  noremap <silent> <D-l> :tabn<CR>
   " NerdTree
   noremap <C-t> :NERDTreeToggle<CR>
   inoremap <C-t> <Esc>:NERDTreeToggle<CR>i
@@ -211,13 +214,13 @@ if g:os == 'macos'
   autocmd Filetype python noremap <buffer> <C-r> :call RunPython()<CR>
   autocmd Filetype python inoremap <buffer> <C-r> <Esc>:call RunPython()<CR>
   " cpp
-  autocmd Filetype cpp noremap <buffer> <C-r> :call BuildCpp()<CR>:CMakeRun<Space>
-  autocmd FileType cpp inoremap <buffer> <C-r> <Esc>:CMakeRun<Space>
+  autocmd Filetype cpp noremap <buffer> <C-r> :call RunCpp()<CR>
+  autocmd FileType cpp inoremap <buffer> <C-r> <Esc>:call RunCpp()<CR>
   autocmd Filetype cpp noremap <buffer> <C-b> :call BuildCpp()<CR>
   autocmd Filetype cpp inoremap <buffer> <C-b> <Esc>:call BuildCpp()<CR>
   " removing buffer
-  noremap <silent> <D-w> :bd<CR>
-  inoremap <silent> <D-w> <Esc>:bd<CR>
+  " noremap <silent> <D-w> :bd<CR>
+  " inoremap <silent> <D-w> <Esc>:bd<CR>
 
   let g:SuperTabMappingForward = '<C-tab>'
 
@@ -240,6 +243,9 @@ else
     noremap <silent> <A-h> :wincmd h<CR>
     noremap <silent> <A-j> :wincmd j<CR>
     noremap <silent> <A-l> :wincmd l<CR>
+    " moving between tabs
+    noremap <silent> <C-h> :tabp<CR>
+    noremap <silent> <C-l> :tabn<CR>
     " NerdTree
     noremap <A-t> :NERDTreeToggle<CR>
     inoremap <A-t> <Esc>:NERDTreeToggle<CR>i
@@ -247,8 +253,8 @@ else
     autocmd FileType python noremap <buffer> <A-r> :call RunPython()<CR>
     autocmd FileType python inoremap <buffer> <A-r> <Esc>:call RunPython()<CR>
     " cpp
-    autocmd Filetype cpp noremap <buffer> <A-r> :CMakeRun<Space>
-    autocmd FileType cpp inoremap <buffer> <A-r> <Esc>:CMakeRun<Space>
+    autocmd Filetype cpp noremap <buffer> <A-r> :call RunCpp()<CR>
+    autocmd FileType cpp inoremap <buffer> <A-r> <Esc>:call RunCpp()<CR>
     autocmd Filetype cpp noremap <buffer> <A-b> :call BuildCpp()<CR>
     autocmd Filetype cpp inoremap <buffer> <A-b> <Esc>:call BuildCpp()<CR>
     let g:SuperTabMappingForward = '<A-tab>'
@@ -272,8 +278,8 @@ else
     autocmd Filetype python noremap <buffer> <Esc>r :call RunPython()<CR>
     autocmd filetype python inoremap <buffer> <Esc>r <Esc>:call RunPython()<CR>
     " cpp
-    autocmd Filetype cpp noremap <buffer> <Esc>r :CMakeRun<Space>
-    autocmd FileType cpp inoremap <buffer> <Esc>r <Esc>:CMakeRun<Space>
+    autocmd Filetype cpp noremap <buffer> <Esc>r :call RunCpp()<CR>
+    autocmd FileType cpp inoremap <buffer> <Esc>r <Esc>:call RunCpp()<CR>
     autocmd Filetype cpp noremap <buffer> <Esc>b :call BuildCpp()<CR>
     autocmd Filetype cpp inoremap <buffer> <Esc>b <Esc>:call BuildCpp()<CR>
   endif
@@ -339,9 +345,33 @@ function GetPython()
 endfunction
 
 
+function RunCpp()
+  let recompile = 0
+  if filereadable("test") == 0
+    let recompile = 1
+
+  else
+    for buf in getbufinfo({'bufmodified': 1})
+      if buf.changed
+        let recompile = 1
+        break
+      endif
+    endfor
+  endif
+
+  if recompile == 1
+    wall
+    !g++ -o test -g -std=c++2a *.cpp
+  endif
+
+  NERDTreeRefreshRoot
+  ter ./test
+endfunction
+
+
 function BuildCpp()
-  :wall
-  :CMakeBuild
+  wall
+  CMakeBuild
 endfunction
 ":cd %:p:h - change dir to current buffer
 ":ter python3-intel64 "%" "

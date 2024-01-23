@@ -24,7 +24,7 @@
       "configuration": {
         "request": "launch",
         "expressions": "native",
-        "program": "${workspaceRoot}/Debug/test"
+        "program": "${workspaceRoot}/test"
       }
     }
   }
