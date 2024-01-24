@@ -25,8 +25,7 @@ if exists("g:molokai_original")
 else
     let s:molokai_original = 0
 endif
-
-
+highlight! link NERDTreeFlags NERDTreeDir
 hi Boolean         guifg=#AE81FF
 hi Character       guifg=#E6DB74
 hi Number          guifg=#AE81FF
@@ -100,7 +99,7 @@ hi Typedef         guifg=#66D9EF
 hi Type            guifg=#B5B6E2               gui=none
 hi Underlined      guifg=#808080               gui=underline
 
-hi VertSplit       guifg=#808080 guibg=#080808 gui=bold
+hi VertSplit       guifg=#808080               gui=bold
 hi VisualNOS                     guibg=#403D3D
 hi Visual                        guibg=#403D3D
 hi WarningMsg      guifg=#FFFFFF guibg=#333333 gui=bold

@@ -57,8 +57,8 @@ def installMonokai(package_manager: PackageManagers):
         successPrint("monokai colorsheme installed")
 
     print("installing fonts")
-    fonts_dir_dict = {PackageManagers.APT: "/usr/share/fonts/truetype/JetBrainsMono",
-                      PackageManagers.DNF: "/usr/share/fonts/JetBrainsMono"}
+    fonts_dir_dict = {PackageManagers.APT: r"/usr/share/fonts/truetype/JetBrainsMono\ Nerd\ Font",
+                      PackageManagers.DNF: r"/usr/share/fonts/JetBrainsMono\ Nerd\ Font"}
 
     os.system(f"sudo mkdir {fonts_dir_dict[package_manager]}")
     if os.system(f"sudo cp ./ui/fonts/JetBrainsMono/fonts/ttf/* {fonts_dir_dict[package_manager]}") != 0:

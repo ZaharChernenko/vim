@@ -16,3 +16,5 @@ good rep with vim syntax: https://gist.github.com/yegappan/16d964a37ead0979b05e6
 - remove ycm bug:
 
 ![image](https://github.com/ZaharChernenko/vim/assets/124883289/99b18a75-cf8b-40fb-b5b3-a347632d94c8)
+
+- patch your font: https://github.com/ryanoasis/nerd-fonts#option-9-patch-your-own-font

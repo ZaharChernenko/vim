@@ -15,7 +15,7 @@ set expandtab
 set smarttab
 set smartindent
 set autochdir
-set virtualedit=all " cursor can be positioned where no char
+" set virtualedit=all " cursor can be positioned where no char
 set mouse=a
 
 
@@ -32,13 +32,15 @@ call plug#begin('~/.vim/bundle')
   Plug 'ycm-core/YouCompleteMe'
   " Plug 'cdelledonne/vim-cmake'
   Plug 'mg979/vim-visual-multi'
+  Plug 'ryanoasis/vim-devicons'
+  Plug 'lambdalisue/glyph-palette.vim'
 call plug#end()
 
 
 if has('macunix')
-    let g:os = 'macos'
+  let g:os = 'macos'
 else
-    let g:os = 'linux'
+  let g:os = 'linux'
 endif
 
 
@@ -49,19 +51,25 @@ autocmd BufEnter *.py silent! YcmRestartServer
 
 " Setup ui
 if g:os == 'macos'
-    set guifont=JetBrainsMono-Regular:h13
-    set linespace=3
+  set guifont=JetBrainsMono\ Nerd\ Font\ Regular:h13
+  set linespace=3
+  set fillchars+=vert:\│
 else
-    set guifont=JetBrainsMono\ Regular\ 11
+  if has("gui_running")
+    set guifont=JetBrainsMono\ Nerd\ Font\ Regular\ 11
+    autocmd FileType nerdtree setlocal ambiwidth=double
     set guioptions=rl " egmrLtT - default value,
-                      " custom: right, left scroll always,
-                      " because of gvim bug
+                          " custom: right, left scroll always,
+                          " because of gvim bug
+  else
+    set fillchars+=vert:\│
+  endif
 endif
-
 
 let g:molokai_original = 1 " monokai background
 let NERDTreeMinimalUI=1
-
+let g:DevIconsDefaultFolderOpenSymbol=''
+let g:DevIconsEnableFoldersOpenClose = 1
 colorscheme monokai_custom
 set signcolumn=yes
 set number
@@ -70,19 +78,17 @@ set nowrap
 set display+=lastline " for long lines
 set sidescroll=5
 set listchars+=precedes:<,extends:>
+set fillchars+=eob:\-
 set t_Co=256
 
 highlight ColorColumn ctermfg=118 ctermbg=235
 
-" JetBrainsMono doesn't support default vimspector signs
-sign define vimspectorBP text=o             texthl=WarningMsg
-sign define vimspectorBPCond text=o?        texthl=WarningMsg
-sign define vimspectorBPLog text=!!         texthl=SpellRare
-sign define vimspectorBPDisabled text=o!    texthl=LineNr
-sign define vimspectorPC text=\ >           texthl=MatchParen
-sign define vimspectorPCBP text=o>          texthl=MatchParen
-sign define vimspectorCurrentThread text=>  texthl=MatchParen
-sign define vimspectorCurrentFrame text=>   texthl=Special
+augroup my-glyph-palette
+  autocmd! *
+  autocmd FileType fern call glyph_palette#apply()
+  autocmd FileType nerdtree,startify call glyph_palette#apply()
+augroup END
+
 " Ending setup ui
 
 
