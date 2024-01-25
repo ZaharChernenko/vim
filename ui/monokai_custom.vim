@@ -27,6 +27,25 @@ else
 endif
 highlight! link NERDTreeFlags NERDTreeDir
 highlight SyntasticWarningSign guibg = NONE
+" html
+hi htmlTag              guifg=#F8F8F0
+hi htmlEndTag           guifg=#F8F8F0
+hi htmlTagName          guifg=#F92672             gui=none
+hi htmlArg              guifg=#A6E22E
+
+
+" css
+hi cssBraces            guifg=#F8F8F0
+hi cssTagName           guifg=#F92672             gui=none
+hi cssProp              guifg=#66D9EF             gui=italic
+hi cssBoxProp           guifg=#FD971F             gui=italic
+hi cssBorderProp        guifg=#FD971F             gui=italic
+hi cssMediaProp         guifg=#FD971F             gui=italic
+hi cssFunctionName      guifg=#66D9EF
+hi cssUnitDecorators    guifg=#F92672
+hi cssValueLength       guifg=#AE81FF
+hi cssColor             guifg=#AE81FF
+
 hi Boolean         guifg=#AE81FF
 hi Character       guifg=#E6DB74
 hi Number          guifg=#AE81FF
@@ -66,10 +85,10 @@ hi MoreMsg         guifg=#E6DB74
 hi Operator        guifg=#F92672
 
 " complete menu
-hi Pmenu           guifg=#66D9EF guibg=#000000
+hi Pmenu           guifg=#8F8F8F guibg=#3B3A32
 hi PmenuSel                      guibg=#808080
-hi PmenuSbar                     guibg=#080808
-hi PmenuThumb      guifg=#66D9EF
+hi PmenuSbar                     guibg=#33332D
+hi PmenuThumb      guifg=#66D9EF guibg=#808080
 
 hi PreCondit       guifg=#F92672               gui=bold
 hi PreProc         guifg=#F92672
@@ -118,7 +137,7 @@ if s:molokai_original == 1
    hi CursorLineNr    guifg=#FD971F               gui=none
    hi CursorColumn                  guibg=#3E3D32
    hi ColorColumn                   guibg=#3B3A32
-   hi LineNr          guifg=#BCBCBC guibg=#3B3A32
+   hi LineNr          guifg=#BCBCBC guibg=#272822
    hi NonText         guifg=#75715E
    hi SpecialKey      guifg=#75715E
 else
@@ -133,13 +152,13 @@ else
    hi SpecialKey      guifg=#465457
 end
 
-
+" python
 hi pythonNone         guifg=#AE81FF
 hi pythonBuiltinFunc  guifg=#66D9EF
 hi pythonFunction     guifg=#66D9EF
 hi pythonFunctionCall guifg=#66D9EF
 
-
+" cpp
 hi cStructure      guifg=#F92672
 hi cppStructure    guifg=#F92672               gui=none
 hi cOperator       guifg=#F92672

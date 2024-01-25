@@ -50,11 +50,15 @@ def setupVimrc(full: bool = True):
         input()
 
 
-def installMonokai(package_manager: PackageManagers):
-    print("installing monokai colorsheme")
+def copyThemes():
+    print("copying themes")
     createDirectory(f"{HOME_DIR}/.vim/colors")
-    if os.system("cp ./ui/monokai_custom.vim ~/.vim/colors/monokai_custom.vim") == 0:
-        successPrint("monokai colorsheme installed")
+    if os.system("cp ./ui/*.vim ~/.vim/colors/") == 0:
+        successPrint("copied successfully")
+
+
+def setupUI(package_manager: PackageManagers):
+    copyThemes()
 
     print("installing fonts")
     fonts_dir_dict = {PackageManagers.APT: r"/usr/share/fonts/truetype/JetBrainsMono\ Nerd\ Font",

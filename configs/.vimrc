@@ -33,8 +33,9 @@ call plug#begin('~/.vim/bundle')
   Plug 'dense-analysis/ale'
   Plug 'ycm-core/YouCompleteMe'
   Plug 'puremourning/vimspector'
-  " Plug 'othree/html5.vim'
   " Plug 'cdelledonne/vim-cmake'
+  " Plug 'prabirshrestha/vim-lsp'
+  " Plug 'mattn/vim-lsp-settings'
 call plug#end()
 
 
@@ -49,9 +50,9 @@ autocmd BufNew,BufRead *.asm set ft=tasm
 autocmd VimEnter * call RunVim()
 autocmd BufEnter *.py call GetPython()
 autocmd BufEnter *.py silent! YcmRestartServer
-autocmd FileType css,scss set omnifunc=csscomplete#CompleteCSS
-autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
-" autocmd BufEnter *.html let b:html_omni_flavor = "html5"
+" autocmd FileType css,scss set omnifunc=csscomplete#CompleteCSS
+" autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+
 " Setup ui
 if g:os == 'macos'
   set guifont=JetBrainsMono\ Nerd\ Font\ Regular:h13
@@ -118,7 +119,10 @@ let g:ale_virtualtext_cursor = 'current'
 let g:ale_python_mypy_options = '--ignore-missing-imports --check-untyped-defs
       \ --disable-error-code attr-defined
       \ --disable-error-code import-untyped
-      \ --disable-error-code union-attr'
+      \ --disable-error-code union-attr
+      \ --cache-dir=/dev/null'
+let g:ale_python_auto_pipenv = 1
+
 
 highlight clear ALEErrorSign
 highlight clear ALEWarningSign
@@ -153,6 +157,7 @@ let g:ycm_filetype_blacklist={
   \}
 
 let g:ycm_semantic_triggers =  {
+  \   'scss,css': [ 're!^\s{2,4}', 're!:\s+' ],
   \   'objc' : ['->', '.'],
   \   'ocaml' : ['.', '#'],
   \   'perl' : ['->'],
@@ -163,9 +168,23 @@ let g:ycm_semantic_triggers =  {
   \   'lua' : ['.', ':'],
   \   'erlang' : [':'],
   \   'haskell' : ['.', 're!.'],
-  \   'scss,css': [ 're!^\s{2,4}', 're!:\s+' ],
   \ }
 
+" let g:ycm_language_server = []
+" let g:ycm_language_server += [
+"      \   {
+"      \     'name': 'css',
+"      \     'cmdline': [ expand('~/.local/share/vim-lsp-settings/servers/vscode-css-language-server/vscode-css-language-server'), '--stdio' ],
+"      \     'filetypes': ['css', 'sass'],
+"      \   },
+"      \ ]
+" let g:ycm_language_server += [
+"      \   {
+"      \     'name': 'html',
+"      \     'cmdline': [ expand('~/.local/share/vim-lsp-settings/servers/vscode-html-language-server/vscode-html-language-server'), '--stdio' ],
+"      \     'filetypes': ['html'],
+"      \   },
+"      \ ]
 
 let g:cmake_console_position = 'horizontal'
 let g:cmake_jump_on_completion = 0
@@ -249,8 +268,11 @@ if g:os == 'macos'
   " cpp
   autocmd Filetype cpp noremap <buffer> <C-r> :call RunCpp()<CR>
   autocmd FileType cpp inoremap <buffer> <C-r> <Esc>:call RunCpp()<CR>
-  autocmd Filetype cpp noremap <buffer> <C-b> :call BuildCpp()<CR>
-  autocmd Filetype cpp inoremap <buffer> <C-b> <Esc>:call BuildCpp()<CR>
+  " autocmd Filetype cpp noremap <buffer> <C-b> :call BuildCpp()<CR>
+  " autocmd Filetype cpp inoremap <buffer> <C-b> <Esc>:call BuildCpp()<CR>
+  " js
+  autocmd Filetype javascript noremap <buffer> <C-r> :call RunJS()<CR>
+  autocmd Filetype javascript inoremap <buffer> <C-r> <Esc>:call RunJS()<CR>
   " removing buffer
   " noremap <silent> <D-w> :bd<CR>
   " inoremap <silent> <D-w> <Esc>:bd<CR>
@@ -288,8 +310,11 @@ else
     " cpp
     autocmd Filetype cpp noremap <buffer> <A-r> :call RunCpp()<CR>
     autocmd FileType cpp inoremap <buffer> <A-r> <Esc>:call RunCpp()<CR>
-    autocmd Filetype cpp noremap <buffer> <A-b> :call BuildCpp()<CR>
-    autocmd Filetype cpp inoremap <buffer> <A-b> <Esc>:call BuildCpp()<CR>
+    " autocmd Filetype cpp noremap <buffer> <A-b> :call BuildCpp()<CR>
+    " autocmd Filetype cpp inoremap <buffer> <A-b> <Esc>:call BuildCpp()<CR>
+    " js
+    autocmd Filetype javascript noremap <buffer> <A-r> :call RunJS()<CR>
+    autocmd Filetype javascript inoremap <buffer> <A-r> <Esc>:call RunJS()<CR>
     let g:SuperTabMappingForward = '<A-tab>'
   else
     " alt in console is escaped seq ^], so this is why <Esc>key works like <A-key>
@@ -313,8 +338,12 @@ else
     " cpp
     autocmd Filetype cpp noremap <buffer> <Esc>r :call RunCpp()<CR>
     autocmd FileType cpp inoremap <buffer> <Esc>r <Esc>:call RunCpp()<CR>
-    autocmd Filetype cpp noremap <buffer> <Esc>b :call BuildCpp()<CR>
-    autocmd Filetype cpp inoremap <buffer> <Esc>b <Esc>:call BuildCpp()<CR>
+    " autocmd Filetype cpp noremap <buffer> <Esc>b :call BuildCpp()<CR>
+    " autocmd Filetype cpp inoremap <buffer> <Esc>b <Esc>:call BuildCpp()<CR>
+    " js
+    autocmd Filetype javascript noremap <buffer> <Esc>r :call RunJS()<CR>
+    autocmd Filetype javascript inoremap <buffer> <Esc>r <Esc>:call RunJS()<CR>
+    let g:SuperTabMappingForward = '<Esc><Tab>'
   endif
 
   " normal cut and copy
@@ -330,7 +359,6 @@ else
   " removing buffer
   noremap <silent> <C-w> :bd<CR>
   inoremap <silent> <C-w> <Esc>:bd<CR>
-  let g:SuperTabMappingForward = '<Esc><Tab>'
 endif
 
 
@@ -406,5 +434,14 @@ function BuildCpp()
   wall
   CMakeBuild
 endfunction
+
+
+function RunJS()
+  :wall
+  execute $"ter node {escape(expand('%'), ' \')}"
+  NERDTreeRefreshRoot
+endfunction
+
+
 ":cd %:p:h - change dir to current buffer
 ":ter python3-intel64 "%" "

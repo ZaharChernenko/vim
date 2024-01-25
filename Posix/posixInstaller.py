@@ -6,6 +6,7 @@ from Posix.posixTools import *
 def updateVim() -> None:
     """Updates .vimrc, .pylintrc and .ycm_extra_conf.py"""
     setupVimrc()
+    copyThemes()
     setupPylintrc()
     setupAutopep()
     setupYCMExtraConf()
@@ -21,7 +22,7 @@ def posixFullInstall(package_manager: PackageManagers) -> None:
     """Makes full install"""
     installVim(package_manager)
     setupVimrc()
-    installMonokai(package_manager)
+    setupUI(package_manager)
     installPip(package_manager)
     setupLinters()
     setupAutopep()
