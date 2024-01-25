@@ -18,22 +18,23 @@ set autochdir
 " set virtualedit=all " cursor can be positioned where no char
 set mouse=a
 
-
 " Plugins search
 call plug#begin('~/.vim/bundle')
+  " ui
   Plug 'preservim/nerdtree'
-  Plug 'dense-analysis/ale'
-  Plug 'ervandew/supertab'
   Plug 'sheerun/vim-polyglot'
-  " автоматические скобки
-  Plug 'jiangmiao/auto-pairs'
-  Plug 'puremourning/vimspector'
-   " you complete me
-  Plug 'ycm-core/YouCompleteMe'
-  " Plug 'cdelledonne/vim-cmake'
-  Plug 'mg979/vim-visual-multi'
   Plug 'ryanoasis/vim-devicons'
   Plug 'lambdalisue/glyph-palette.vim'
+  " bindings
+  Plug 'ervandew/supertab'
+  Plug 'jiangmiao/auto-pairs'
+  Plug 'mg979/vim-visual-multi'
+  " autocomplete, debug
+  Plug 'dense-analysis/ale'
+  Plug 'ycm-core/YouCompleteMe'
+  Plug 'puremourning/vimspector'
+  " Plug 'othree/html5.vim'
+  " Plug 'cdelledonne/vim-cmake'
 call plug#end()
 
 
@@ -48,7 +49,9 @@ autocmd BufNew,BufRead *.asm set ft=tasm
 autocmd VimEnter * call RunVim()
 autocmd BufEnter *.py call GetPython()
 autocmd BufEnter *.py silent! YcmRestartServer
-
+autocmd FileType css,scss set omnifunc=csscomplete#CompleteCSS
+autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+" autocmd BufEnter *.html let b:html_omni_flavor = "html5"
 " Setup ui
 if g:os == 'macos'
   set guifont=JetBrainsMono\ Nerd\ Font\ Regular:h13
@@ -70,7 +73,7 @@ let g:molokai_original = 1 " monokai background
 let NERDTreeMinimalUI=1
 let g:DevIconsDefaultFolderOpenSymbol=''
 let g:DevIconsEnableFoldersOpenClose = 1
-colorscheme monokai_custom
+colorscheme codedark
 set signcolumn=yes
 set number
 set colorcolumn=100
@@ -138,6 +141,30 @@ let g:ycm_confirm_extra_conf = 0
 let g:ycm_extra_conf_vim_data = [
   \  'g:ycm_python_interpreter_path'
   \]
+let g:ycm_enable_diagnostic_highlighting = 0
+let g:ycm_filepath_blacklist = {}
+let g:ycm_filetype_blacklist={
+  \   'tagbar' : 1,
+  \   'nerdtree' : 1,
+  \   'markdown' : 1,
+  \   'unite' : 1,
+  \   'text' : 1,
+  \   'csv' : 1,
+  \}
+
+let g:ycm_semantic_triggers =  {
+  \   'objc' : ['->', '.'],
+  \   'ocaml' : ['.', '#'],
+  \   'perl' : ['->'],
+  \   'php' : ['->', '::', '(', 'use ', 'namespace ', '\'],
+  \   'cs,java,typescript,d,perl6,scala,vb,elixir,go' : ['.', 're!(?=[a-zA-Z]{3,4})'],
+  \   'html': ['<', '"', '</', ' '],
+  \   'ruby' : ['.', '::'],
+  \   'lua' : ['.', ':'],
+  \   'erlang' : [':'],
+  \   'haskell' : ['.', 're!.'],
+  \   'scss,css': [ 're!^\s{2,4}', 're!:\s+' ],
+  \ }
 
 
 let g:cmake_console_position = 'horizontal'

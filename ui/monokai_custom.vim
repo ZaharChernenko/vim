@@ -26,6 +26,7 @@ else
     let s:molokai_original = 0
 endif
 highlight! link NERDTreeFlags NERDTreeDir
+highlight SyntasticWarningSign guibg = NONE
 hi Boolean         guifg=#AE81FF
 hi Character       guifg=#E6DB74
 hi Number          guifg=#AE81FF
