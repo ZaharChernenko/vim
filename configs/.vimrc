@@ -15,8 +15,17 @@ set expandtab
 set smarttab
 set smartindent
 set autochdir
-" set virtualedit=all " cursor can be positioned where no char
 set mouse=a
+
+
+if has('macunix')
+  let g:os = 'macos'
+  let g:ycm_python_interpreter_path = 'python3-intel64'
+else
+  let g:os = 'linux'
+  let g:ycm_python_interpreter_path = 'python3'
+endif
+
 
 " Plugins search
 call plug#begin('~/.vim/bundle')
@@ -33,25 +42,14 @@ call plug#begin('~/.vim/bundle')
   Plug 'dense-analysis/ale'
   Plug 'ycm-core/YouCompleteMe'
   Plug 'puremourning/vimspector'
-  " Plug 'cdelledonne/vim-cmake'
-  " Plug 'prabirshrestha/vim-lsp'
-  " Plug 'mattn/vim-lsp-settings'
 call plug#end()
 
 
-if has('macunix')
-  let g:os = 'macos'
-else
-  let g:os = 'linux'
-endif
-
-
 autocmd BufNew,BufRead *.asm set ft=tasm
-autocmd VimEnter * call RunVim()
-autocmd BufEnter *.py call GetPython()
-autocmd BufEnter *.py silent! YcmRestartServer
-" autocmd FileType css,scss set omnifunc=csscomplete#CompleteCSS
-" autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+autocmd VimEnter * NERDTree | wincmd p
+autocmd BufRead,BufNew *.py call GetPython()
+autocmd BufEnter *.py silent! call YcmRestartServerPython()
+
 
 " Setup ui
 if g:os == 'macos'
@@ -59,15 +57,10 @@ if g:os == 'macos'
   set linespace=3
   set fillchars+=vert:\│
 else
-  if has("gui_running")
-    set guifont=JetBrainsMono\ Nerd\ Font\ Regular\ 11
-    autocmd FileType nerdtree setlocal ambiwidth=double
-    set guioptions=rl " egmrLtT - default value,
-                          " custom: right, left scroll always,
-                          " because of gvim bug
-  else
-    set fillchars+=vert:\│
-  endif
+  set guifont=JetBrainsMono\ Nerd\ Font\ Regular\ 11
+  set guioptions=rl " egmrLtT - default value,
+                    " custom: right, left scroll always,
+                    " because of gvim bug
 endif
 
 let g:molokai_original = 1 " monokai background
@@ -83,6 +76,7 @@ set display+=lastline " for long lines
 set sidescroll=5
 set listchars+=precedes:<,extends:>
 set fillchars+=eob:\-
+set fillchars+=vert:\│
 set t_Co=256
 
 highlight ColorColumn ctermfg=118 ctermbg=235
@@ -92,12 +86,10 @@ augroup my-glyph-palette
   autocmd FileType fern call glyph_palette#apply()
   autocmd FileType nerdtree,startify call glyph_palette#apply()
 augroup END
-
-" Ending setup ui
+" Setup ui
 
 
 " ALE
-" let g:ale_lint_on_text_changed = 1
 let g:ale_lint_on_save = 1
 let g:ale_completion_enabled = 0
 let g:ale_linters = {
@@ -123,10 +115,11 @@ let g:ale_python_mypy_options = '--ignore-missing-imports --check-untyped-defs
       \ --cache-dir=/dev/null'
 let g:ale_python_auto_pipenv = 1
 
-
 highlight clear ALEErrorSign
 highlight clear ALEWarningSign
+" ALE
 
+" vimspector
 " changing vimspector signs priority
 let g:vimspector_sign_priority = {
     \    'vimspectorBP':          50,
@@ -137,7 +130,6 @@ let g:vimspector_sign_priority = {
     \    'vimspectorPC':          999,
     \    'vimspectorPCBP':        999,
     \ }
-
 
 " if this is disabled, cpp ycm doesn't work on mac
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
@@ -169,27 +161,6 @@ let g:ycm_semantic_triggers =  {
   \   'erlang' : [':'],
   \   'haskell' : ['.', 're!.'],
   \ }
-
-" let g:ycm_language_server = []
-" let g:ycm_language_server += [
-"      \   {
-"      \     'name': 'css',
-"      \     'cmdline': [ expand('~/.local/share/vim-lsp-settings/servers/vscode-css-language-server/vscode-css-language-server'), '--stdio' ],
-"      \     'filetypes': ['css', 'sass'],
-"      \   },
-"      \ ]
-" let g:ycm_language_server += [
-"      \   {
-"      \     'name': 'html',
-"      \     'cmdline': [ expand('~/.local/share/vim-lsp-settings/servers/vscode-html-language-server/vscode-html-language-server'), '--stdio' ],
-"      \     'filetypes': ['html'],
-"      \   },
-"      \ ]
-
-let g:cmake_console_position = 'horizontal'
-let g:cmake_jump_on_completion = 0
-let g:cmake_jump = 0
-let g:cmake_root_markers = []
 
 
 " Hotkeys
@@ -230,7 +201,6 @@ noremap о a
 noremap О A
 
 " vimspector
-" let g:vimspector_enable_mappings = 'HUMAN'
 noremap ;t :call vimspector#ToggleBreakpoint()<CR>
 noremap ;c :call vimspector#ClearBreakpoints()<CR>
 noremap ;r :call vimspector#Launch()<CR>
@@ -242,6 +212,7 @@ inoremap <F2> <Esc>:YcmCompleter RefactorRename<Space>
 noremap nf :NERDTreeFocus<CR>
 " autocmd FileType python map <buffer> <C-r> :w<CR>:exec '!python3-intel64' shellescape(@%, 1)<CR>
 if g:os == 'macos'
+  let g:SuperTabMappingForward = '<C-tab>'
   " moving in buffer
   noremap <C-a> <left>
   noremap <C-w> <up>
@@ -268,19 +239,13 @@ if g:os == 'macos'
   " cpp
   autocmd Filetype cpp noremap <buffer> <C-r> :call RunCpp()<CR>
   autocmd FileType cpp inoremap <buffer> <C-r> <Esc>:call RunCpp()<CR>
-  " autocmd Filetype cpp noremap <buffer> <C-b> :call BuildCpp()<CR>
-  " autocmd Filetype cpp inoremap <buffer> <C-b> <Esc>:call BuildCpp()<CR>
   " js
   autocmd Filetype javascript noremap <buffer> <C-r> :call RunJS()<CR>
   autocmd Filetype javascript inoremap <buffer> <C-r> <Esc>:call RunJS()<CR>
-  " removing buffer
-  " noremap <silent> <D-w> :bd<CR>
-  " inoremap <silent> <D-w> <Esc>:bd<CR>
-
-  let g:SuperTabMappingForward = '<C-tab>'
 
 else
   if has("gui_running")
+    let g:SuperTabMappingForward = '<A-tab>'
     noremap <A-ScrollWheelUp> 3zh
     noremap <A-ScrollWheelDown> 3zl
 
@@ -310,13 +275,12 @@ else
     " cpp
     autocmd Filetype cpp noremap <buffer> <A-r> :call RunCpp()<CR>
     autocmd FileType cpp inoremap <buffer> <A-r> <Esc>:call RunCpp()<CR>
-    " autocmd Filetype cpp noremap <buffer> <A-b> :call BuildCpp()<CR>
-    " autocmd Filetype cpp inoremap <buffer> <A-b> <Esc>:call BuildCpp()<CR>
     " js
     autocmd Filetype javascript noremap <buffer> <A-r> :call RunJS()<CR>
     autocmd Filetype javascript inoremap <buffer> <A-r> <Esc>:call RunJS()<CR>
-    let g:SuperTabMappingForward = '<A-tab>'
+
   else
+    let g:SuperTabMappingForward = '<Esc><Tab>'
     " alt in console is escaped seq ^], so this is why <Esc>key works like <A-key>
     " sed -n l
     inoremap <Esc>a <left>
@@ -338,12 +302,9 @@ else
     " cpp
     autocmd Filetype cpp noremap <buffer> <Esc>r :call RunCpp()<CR>
     autocmd FileType cpp inoremap <buffer> <Esc>r <Esc>:call RunCpp()<CR>
-    " autocmd Filetype cpp noremap <buffer> <Esc>b :call BuildCpp()<CR>
-    " autocmd Filetype cpp inoremap <buffer> <Esc>b <Esc>:call BuildCpp()<CR>
     " js
     autocmd Filetype javascript noremap <buffer> <Esc>r :call RunJS()<CR>
     autocmd Filetype javascript inoremap <buffer> <Esc>r <Esc>:call RunJS()<CR>
-    let g:SuperTabMappingForward = '<Esc><Tab>'
   endif
 
   " normal cut and copy
@@ -360,20 +321,6 @@ else
   noremap <silent> <C-w> :bd<CR>
   inoremap <silent> <C-w> <Esc>:bd<CR>
 endif
-
-
-function RunVim()
-  :NERDTree | wincmd p
-  :call GetPython()
-endfunction
-
-
-function RunPython()
-  :wall
-  execute $"ter {g:python} {escape(expand('%'), ' \')}"
-  let b:ycm_largefile = 1
-  NERDTreeRefreshRoot
-endfunction
 
 
 function GetPython()
@@ -393,16 +340,27 @@ function GetPython()
 
   if is_global == 1
     if g:os == 'macos'
-      let g:python = 'python3-intel64'
+      let b:python = 'python3-intel64'
     else
-      let g:python = 'python3'
+      let b:python = 'python3'
     endif
 
   else
-    let g:python = $"{venv_dir}/bin/python3"
+    let b:python = $"{venv_dir}/bin/python3"
   endif
-  let g:ycm_python_interpreter_path = g:python
+endfunction
 
+
+function RunPython()
+  wall
+  execute $"ter {b:python} {escape(expand('%'), ' \')}"
+  NERDTreeRefreshRoot
+endfunction
+
+
+function YcmRestartServerPython()
+  let g:ycm_python_interpreter_path = b:python
+  YcmRestartServer
 endfunction
 
 
@@ -430,18 +388,9 @@ function RunCpp()
 endfunction
 
 
-function BuildCpp()
-  wall
-  CMakeBuild
-endfunction
-
-
 function RunJS()
-  :wall
+  wall
   execute $"ter node {escape(expand('%'), ' \')}"
   NERDTreeRefreshRoot
 endfunction
 
-
-":cd %:p:h - change dir to current buffer
-":ter python3-intel64 "%" "
