@@ -24,6 +24,7 @@ if has('macunix')
 else
   let g:os = 'linux'
   let g:ycm_python_interpreter_path = 'python3'
+  set shell=/bin/zsh
 endif
 
 
@@ -317,6 +318,8 @@ else
   inoremap <C-v> <C-r><C-o>+
   inoremap <C-s> <Esc>:w<CR>
   inoremap <C-z> <Esc>ui
+  tnoremap <C-c> <C-W>N
+  tnoremap <C-v> <C-W>"+
   " buffers
   noremap <silent> <C-h> :call SwitchBuffer('bprev')<CR>
   noremap <silent> <C-l> :call SwitchBuffer('bnext')<CR>
