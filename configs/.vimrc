@@ -38,6 +38,8 @@ call plug#begin('~/.vim/bundle')
   Plug 'ervandew/supertab'
   Plug 'jiangmiao/auto-pairs'
   Plug 'mg979/vim-visual-multi'
+  " buffers
+  Plug 'ap/vim-buftabline'
   " autocomplete, debug
   Plug 'dense-analysis/ale'
   Plug 'ycm-core/YouCompleteMe'
@@ -227,9 +229,10 @@ if g:os == 'macos'
   noremap <silent> <C-h> :wincmd h<CR>
   noremap <silent> <C-j> :wincmd j<CR>
   noremap <silent> <C-l> :wincmd l<CR>
-  " moving between tabs
-  noremap <silent> <D-h> :tabp<CR>
-  noremap <silent> <D-l> :tabn<CR>
+  noremap <silent> <D-h> :call SwitchBuffer('bprev')<CR>
+  noremap <silent> <D-l> :call SwitchBuffer('bnext')<CR>
+  noremap <D-w> :bd<CR>
+  inoremap <D-w> <Esc>:bd<CR>
   " NerdTree
   noremap <C-t> :NERDTreeToggle<CR>
   inoremap <C-t> <Esc>:NERDTreeToggle<CR>i
@@ -263,9 +266,6 @@ else
     noremap <silent> <A-h> :wincmd h<CR>
     noremap <silent> <A-j> :wincmd j<CR>
     noremap <silent> <A-l> :wincmd l<CR>
-    " moving between tabs
-    noremap <silent> <C-h> :tabp<CR>
-    noremap <silent> <C-l> :tabn<CR>
     " NerdTree
     noremap <A-t> :NERDTreeToggle<CR>
     inoremap <A-t> <Esc>:NERDTreeToggle<CR>i
@@ -317,15 +317,27 @@ else
   inoremap <C-v> <C-r><C-o>+
   inoremap <C-s> <Esc>:w<CR>
   inoremap <C-z> <Esc>ui
-  " removing buffer
+  " buffers
+  noremap <silent> <C-h> :call SwitchBuffer('bprev')<CR>
+  noremap <silent> <C-l> :call SwitchBuffer('bnext')<CR>
   noremap <silent> <C-w> :bd<CR>
   inoremap <silent> <C-w> <Esc>:bd<CR>
 endif
 
 
+function SwitchBuffer(act)
+  if &filetype == 'nerdtree'
+    wincmd l
+    execute a:act
+  else
+    execute a:act
+  endif
+endfunction
+
+
 function GetPython()
   let is_global = 1
-  let venv_dirs = ['venv', 'virtualenv', 'myenv', 'env']
+  let venv_dirs = ['venv', 'virtualenv']
 
   for dir in venv_dirs
     let check_dir = escape(finddir(dir . '/..', escape(expand('%:p:h').';', ' \')), ' \')
