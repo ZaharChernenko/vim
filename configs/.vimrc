@@ -235,8 +235,8 @@ if g:os == 'macos'
   noremap <D-w> :bd<CR>
   inoremap <D-w> <Esc>:bd<CR>
   " NerdTree
-  noremap <C-t> :NERDTreeToggle<CR>
-  inoremap <C-t> <Esc>:NERDTreeToggle<CR>i
+  noremap <C-e> :NERDTreeToggle<CR>
+  inoremap <C-e> <Esc>:NERDTreeToggle<CR>i
   " python
   autocmd Filetype python noremap <buffer> <C-r> :call RunPython()<CR>
   autocmd Filetype python inoremap <buffer> <C-r> <Esc>:call RunPython()<CR>
@@ -268,8 +268,8 @@ else
     noremap <silent> <A-j> :wincmd j<CR>
     noremap <silent> <A-l> :wincmd l<CR>
     " NerdTree
-    noremap <A-t> :NERDTreeToggle<CR>
-    inoremap <A-t> <Esc>:NERDTreeToggle<CR>i
+    noremap <A-e> :NERDTreeToggle<CR>
+    inoremap <A-e> <Esc>:NERDTreeToggle<CR>i
     " python
     autocmd FileType python noremap <buffer> <A-r> :call RunPython()<CR>
     autocmd FileType python inoremap <buffer> <A-r> <Esc>:call RunPython()<CR>
@@ -295,8 +295,8 @@ else
     noremap <silent> <Esc>j :wincmd j<CR>
     noremap <silent> <Esc>l :wincmd l<CR>
     " NerdTree
-    noremap <Esc>t :NERDTreeToggle<CR>
-    inoremap <Esc>t <Esc>:NERDTreeToggle<CR>i
+    noremap <Esc>e :NERDTreeToggle<CR>
+    inoremap <Esc>e <Esc>:NERDTreeToggle<CR>i
     " python
     autocmd Filetype python noremap <buffer> <Esc>r :call RunPython()<CR>
     autocmd filetype python inoremap <buffer> <Esc>r <Esc>:call RunPython()<CR>
