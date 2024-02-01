@@ -60,7 +60,7 @@ if g:os == 'macos'
   set linespace=3
   set fillchars+=vert:\│
 else
-  set guifont=JetBrainsMono\ Nerd\ Font\ Regular\ 11
+  set guifont=JetBrainsMono\ Nerd\ Font\ Mono\ Regular\ 11
   set guioptions=rl " egmrLtT - default value,
                     " custom: right, left scroll always,
                     " because of gvim bug

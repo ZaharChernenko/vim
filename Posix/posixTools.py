@@ -61,11 +61,11 @@ def setupUI(package_manager: PackageManagers):
     copyThemes()
 
     print("installing fonts")
-    fonts_dir_dict = {PackageManagers.APT: r"/usr/share/fonts/truetype/JetBrainsMono\ Nerd\ Font",
-                      PackageManagers.DNF: r"/usr/share/fonts/JetBrainsMono\ Nerd\ Font"}
+    fonts_dir_dict = {PackageManagers.APT: r"/usr/share/fonts/truetype/JetBrainsMono\ Nerd\ Font\ Mono",
+                      PackageManagers.DNF: r"/usr/share/fonts/JetBrainsMono\ Nerd\ Font\ Mono"}
 
     os.system(f"sudo mkdir {fonts_dir_dict[package_manager]}")
-    if os.system(f"sudo cp ./ui/fonts/JetBrainsMono/fonts/ttf/* {fonts_dir_dict[package_manager]}") != 0:
+    if os.system(f"sudo cp ./ui/fonts/JetBrainsMonoLinux/* {fonts_dir_dict[package_manager]}") != 0:
         raise FontsInstallationFailed
     os.system("fc-cache -f -v")
     successPrint("fonts installed")
