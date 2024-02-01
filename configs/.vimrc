@@ -30,6 +30,10 @@ endif
 
 " Plugins search
 call plug#begin('~/.vim/bundle')
+  " autocomplete, debug
+  Plug 'dense-analysis/ale'
+  Plug 'ycm-core/YouCompleteMe'
+  Plug 'puremourning/vimspector'
   " ui
   Plug 'preservim/nerdtree'
   Plug 'sheerun/vim-polyglot'
@@ -41,15 +45,11 @@ call plug#begin('~/.vim/bundle')
   Plug 'mg979/vim-visual-multi'
   " buffers
   Plug 'ap/vim-buftabline'
-  " autocomplete, debug
-  Plug 'dense-analysis/ale'
-  Plug 'ycm-core/YouCompleteMe'
-  Plug 'puremourning/vimspector'
 call plug#end()
 
 
 autocmd BufNew,BufRead *.asm set ft=tasm
-autocmd VimEnter * NERDTree | wincmd p
+autocmd VimEnter * call RunVim()
 autocmd BufRead,BufNew *.py call GetPython()
 autocmd BufEnter *.py silent! call YcmRestartServerPython()
 
@@ -328,6 +328,15 @@ else
 endif
 
 
+function RunVim()
+  NERDTree | wincmd p
+  if g:os == 'linux'
+    call GetPython()
+    let g:ycm_python_interpreter_path = b:python
+  endif
+endfunction
+
+
 function SwitchBuffer(act)
   if &filetype == 'nerdtree'
     wincmd l
@@ -341,9 +350,8 @@ endfunction
 function GetPython()
   let is_global = 1
   let venv_dirs = ['venv', 'virtualenv']
-
   for dir in venv_dirs
-    let check_dir = escape(finddir(dir . '/..', escape(expand('%:p:h').';', ' \')), ' \')
+    let check_dir = finddir(dir . '/..', expand('%:p:h'))
     if check_dir != ''
       let venv_dir = $"{check_dir}/{dir}"
       if isdirectory($"{venv_dir}/bin")
@@ -361,7 +369,7 @@ function GetPython()
     endif
 
   else
-    let b:python = $"{venv_dir}/bin/python3"
+    let b:python = escape($"{venv_dir}/bin/python3", ' \')
   endif
 endfunction
 
