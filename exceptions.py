@@ -26,16 +26,20 @@ class PipInstallationFailed(RedException):
     message = "Unable to install pip"
 
 
-class LintersInstallationFailed(RedException):
+class PythonToolsInstallationFailed(RedException):
     message = "Unable to install linters"
 
 
-class CopyingPylintcFailed(RedException):
+class CopyingPylintrcFailed(RedException):
     message = "Copying .pylintrc failed"
 
 
 class PylintSetupFailed(RedException):
     message = "Unable to setup .pylintrc"
+
+
+class SetupJSFailed(RedException):
+    message = "Unable to setup JS"
 
 
 class CopyingAutopepFailed(RedException):

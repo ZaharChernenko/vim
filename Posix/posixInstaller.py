@@ -9,6 +9,7 @@ def updateVim() -> None:
     copyThemes()
     setupPylintrc()
     setupAutopep()
+    setupJS()
     setupYCMExtraConf()
 
 
@@ -24,8 +25,8 @@ def posixFullInstall(package_manager: PackageManagers) -> None:
     setupVimrc()
     setupUI(package_manager)
     installPip(package_manager)
-    setupLinters()
-    setupAutopep()
+    setupPythonTools()
+    setupJS()
     installYouCompleteMe(package_manager)
     setupVimspector()
 

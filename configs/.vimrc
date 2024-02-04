@@ -401,6 +401,15 @@ function RunCpp()
     endfor
   endif
 
+  if recompile == 0
+    for file in split(globpath('.', '*.cpp'), '\n') + split(globpath('.', '*.h'), '\n')
+      if strftime('%y%m%d %T', getftime('test')) < strftime('%y%m%d %T', getftime(file))
+        let recompile = 1
+        break
+      endif
+    endfor
+  endif
+
   if recompile == 1
     wall
     !g++ -o test -g -std=c++2a *.cpp
