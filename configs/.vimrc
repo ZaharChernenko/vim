@@ -26,7 +26,7 @@ else
   let g:ycm_python_interpreter_path = 'python3'
   set shell=/bin/zsh
 endif
-
+let g:home = $HOME
 
 " Plugins search
 call plug#begin('~/.vim/bundle')
@@ -412,11 +412,12 @@ function RunCpp()
 
   if recompile == 1
     wall
-    !g++ -o test -g -std=c++2a *.cpp
+    execute $"ter bash {g:home}/.vim/bundle/scripts/cpp.sh"
+  else
+    ter ./test
   endif
 
   NERDTreeRefreshRoot
-  ter ./test
 endfunction
 
 

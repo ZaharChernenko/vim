@@ -174,3 +174,10 @@ def setupVimspector():
     if os.system(f"cp -r ./vimspector_configs/* {path_to_vimspector}") != 0:
         raise VimspectorSetupFailed
     successPrint("vimspector setup completed")
+
+
+def copyScripts():
+    print("copying scripts")
+    if os.system(f"cp -r ./scripts {HOME_DIR}/.vim/bundle/") != 0:
+        raise CopyingScriptsFailed
+    successPrint("scripts copied")

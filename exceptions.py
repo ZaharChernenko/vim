@@ -56,3 +56,7 @@ class CopyingYCMConfFailed(RedException):
 
 class VimspectorSetupFailed(RedException):
     message = "Unable to setup vimspector"
+
+
+class CopyingScriptsFailed(RedException):
+    message = "Copying scripts failed"

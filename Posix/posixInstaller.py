@@ -11,12 +11,14 @@ def updateVim() -> None:
     setupAutopep()
     setupJS()
     setupYCMExtraConf()
+    copyScripts()
 
 
 def posixQuickInstall(package_manager: PackageManagers) -> None:
     """Makes fast install with short .vimrc"""
     installVim(package_manager)
     setupVimrc(full=False)
+    copyScripts()
 
 
 def posixFullInstall(package_manager: PackageManagers) -> None:
@@ -29,6 +31,7 @@ def posixFullInstall(package_manager: PackageManagers) -> None:
     setupJS()
     installYouCompleteMe(package_manager)
     setupVimspector()
+    copyScripts()
 
 
 def posix(installation_type: InstallationTypes) -> None:
