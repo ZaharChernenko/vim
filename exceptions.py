@@ -6,6 +6,10 @@ class RedException(Exception):
         return self.red_template.format(self.message)
 
 
+class CopyingFileFailed(RedException):
+    message = "Failed to copy file"
+
+
 class VimInstallationFailed(RedException):
     message = "Unable to install vim and curl"
 
@@ -30,20 +34,8 @@ class PythonToolsInstallationFailed(RedException):
     message = "Unable to install linters"
 
 
-class CopyingPylintrcFailed(RedException):
-    message = "Copying .pylintrc failed"
-
-
-class PylintSetupFailed(RedException):
-    message = "Unable to setup .pylintrc"
-
-
 class SetupJSFailed(RedException):
     message = "Unable to setup JS"
-
-
-class CopyingAutopepFailed(RedException):
-    message = "Copying pycodestyle failed"
 
 
 class YCMInstallationFailed(RedException):

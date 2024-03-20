@@ -11,6 +11,14 @@ def createDirectory(path: str):
         os.makedirs(path)
 
 
+def copyFile(source_path: str, target_path: str, filename: str):
+    if os.path.exists(f"{target_path}/{filename}"):
+        print(f"dump current {filename}")
+        os.system(f"cp {target_path}/{filename} ~/temp/{filename}")
+    if os.system(f"cp {source_path}/{filename} {target_path}/{filename}") != 0:
+        raise CopyingFileFailed
+
+
 def installVim(package_manager: PackageManagers):
     print("installing vim")
     vim_curl_dict = {PackageManagers.APT: "sudo apt install -y vim curl vim-gtk3",
@@ -84,24 +92,13 @@ def installPip(package_manager: PackageManagers):
 
 def setupPylintrc():
     print("setup pylintrc")
-    if not os.path.exists(f"{HOME_DIR}/.pylintrc"):
-        if os.system("pylint --generate-rcfile > ~/.pylintrc") != 0:
-            print(
-                f"Probably you need to add {HOME_DIR}/.local/bin to the PATH")
-            raise PylintSetupFailed
-    else:
-        print("dump current .pylintrc")
-        os.system("cp ~/.pylintrc ~/temp/.pylintrc")
-
-    if os.system("cp ./configs/.pylintrc ~/.pylintrc") != 0:
-        raise CopyingPylintrcFailed
+    copyFile("./configs/.pylintrc", HOME_DIR, ".pylintrc")
     successPrint(".pylintrc setup completed")
 
 
 def setupAutopep():
     print("setup pycodestyle")
-    if os.system("cp ./configs/pycodestyle ~/.config/") != 0:
-        raise CopyingAutopepFailed
+    copyFile("./configs", f"{HOME_DIR}/.config", "pycodestyle")
     successPrint("autopep setup completed")
 
 
@@ -117,12 +114,14 @@ def setupPythonTools():
 
 def setupJS():
     print("setup JS")
-    if os.path.exists(f"{HOME_DIR}/.tern-config"):
-        print("dump current .tern-config")
-        os.system("cp ~/.tern-config ~/temp/.tern-config")
-    if os.system("cp ./configs/.tern-config ~/.tern-config") != 0:
-        raise SetupJSFailed
+    copyFile("./configs", HOME_DIR, ".tern-config")
     successPrint("js setup completed")
+
+
+def setupCpp():
+    print("copying clang-format")
+    copyFile("./configs", HOME_DIR, ".clang-format")
+    successPrint("clang-format copied")
 
 
 def setupYCMExtraConf():
@@ -148,8 +147,7 @@ def installYouCompleteMe(package_manager: PackageManagers):
                   https://deb.nodesource.com/node_current.x nodistro main" | \
                   sudo tee /etc/apt/sources.list.d/nodesource.list')
 
-    os.system(
-        "git -C ~/.vim/bundle/YouCompleteMe submodule update --init --recursive")
+    os.system("git -C ~/.vim/bundle/YouCompleteMe submodule update --init --recursive")
 
     if os.system("python3 ~/.vim/bundle/YouCompleteMe/install.py --clangd-completer") != 0:
         raise YCMInstallationFailed
