@@ -102,6 +102,7 @@ let g:ale_linters = {
 let g:ale_fixers = {
     \'*': ['trim_whitespace'],
     \'python': ['autopep8', 'isort'],
+    \'cpp': ['clang-format']
 \}
 let g:ale_fix_on_save = 1
 let g:ale_cpp_cc_options = "-std=c++2a -Wall"
@@ -206,7 +207,8 @@ noremap О A
 " vimspector
 noremap ;t :call vimspector#ToggleBreakpoint()<CR>
 noremap ;c :call vimspector#ClearBreakpoints()<CR>
-noremap ;r :call vimspector#Launch()<CR>
+autocmd Filetype python noremap ;r :call vimspector#Launch()<CR>
+autocmd Filetype cpp noremap ;r :call DebugCpp()<CR>
 " ycm
 noremap gd :YcmCompleter GoTo<CR>
 noremap <F2> :YcmCompleter RefactorRename<Space>
@@ -387,29 +389,30 @@ function YcmRestartServerPython()
 endfunction
 
 
-function RunCpp()
+function CppCheckRecompile()
   let recompile = 0
   if filereadable("test") == 0
-    let recompile = 1
-
-  else
-    for buf in getbufinfo({'bufmodified': 1})
-      if buf.changed
-        let recompile = 1
-        break
-      endif
-    endfor
+    return 1
   endif
 
-  if recompile == 0
-    for file in split(globpath('.', '*.cpp'), '\n') + split(globpath('.', '*.h'), '\n')
-      if strftime('%y%m%d %T', getftime('test')) < strftime('%y%m%d %T', getftime(file))
-        let recompile = 1
-        break
-      endif
-    endfor
-  endif
+  for buf in getbufinfo({'bufmodified': 1})
+    if buf.changed
+      return 1
+    endif
+  endfor
 
+  for file in split(globpath('.', '*.cpp'), '\n') + split(globpath('.', '*.h'), '\n')
+    if strftime('%y%m%d %T', getftime('test')) < strftime('%y%m%d %T', getftime(file))
+      return 1
+    endif
+  endfor
+
+  return 0
+endfunction
+
+
+function RunCpp()
+  let recompile = CppCheckRecompile()
   if recompile == 1
     wall
     execute $"ter bash {g:home}/.vim/bundle/scripts/cpp.sh"
@@ -420,6 +423,18 @@ function RunCpp()
   NERDTreeRefreshRoot
 endfunction
 
+
+function DebugCpp()
+  let recompile = CppCheckRecompile()
+  if recompile == 1
+    wall
+    :!g++ -o test -g -std=c++2a *.cpp
+  endif
+
+  if v:shell_error == 0
+    call vimspector#Launch()
+  endif
+endfunction
 
 function RunJS()
   wall

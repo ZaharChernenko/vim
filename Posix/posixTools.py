@@ -92,7 +92,7 @@ def installPip(package_manager: PackageManagers):
 
 def setupPylintrc():
     print("setup pylintrc")
-    copyFile("./configs/.pylintrc", HOME_DIR, ".pylintrc")
+    copyFile("./configs", HOME_DIR, ".pylintrc")
     successPrint(".pylintrc setup completed")
 
 
