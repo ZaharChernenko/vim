@@ -1,16 +1,17 @@
 from GlobalVars import InstallationTypes, PackageManagers
 
+from Posix.cpp import installCppTools
+from Posix.formatters_linters import setupFormattersLinters
 from Posix.posixTools import *
+from Posix.python import installPip, installPythonTools
 
 
 def updateVim() -> None:
     """Updates .vimrc, .pylintrc and .ycm_extra_conf.py"""
     setupVimrc()
     copyThemes()
-    setupPylintrc()
-    setupAutopep()
-    setupCpp()
     setupJS()
+    setupFormattersLinters()
     setupYCMExtraConf()
     copyScripts()
 
@@ -27,10 +28,13 @@ def posixFullInstall(package_manager: PackageManagers) -> None:
     installVim(package_manager)
     setupVimrc()
     setupUI(package_manager)
+    # python
     installPip(package_manager)
-    setupPythonTools()
+    installPythonTools()
+    installCppTools(package_manager)
+    # cpp
     setupJS()
-    setupCpp()
+    setupFormattersLinters()
     installYouCompleteMe(package_manager)
     setupVimspector()
     copyScripts()

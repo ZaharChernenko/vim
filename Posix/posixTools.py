@@ -79,49 +79,10 @@ def setupUI(package_manager: PackageManagers):
     successPrint("fonts installed")
 
 
-def installPip(package_manager: PackageManagers):
-    print("installing pip")
-    pip_dict = {PackageManagers.APT: "sudo apt install -y pip",
-                PackageManagers.DNF: "sudo dnf install -y pip"}
-
-    if package_manager in pip_dict:
-        if os.system(pip_dict[package_manager]) != 0:
-            raise PipInstallationFailed
-    successPrint("pip installed")
-
-
-def setupPylintrc():
-    print("setup pylintrc")
-    copyFile("./configs", HOME_DIR, ".pylintrc")
-    successPrint(".pylintrc setup completed")
-
-
-def setupAutopep():
-    print("setup pycodestyle")
-    copyFile("./configs", f"{HOME_DIR}/.config", "pycodestyle")
-    successPrint("autopep setup completed")
-
-
-def setupPythonTools():
-    print("install python tools")
-    if os.system("python3 -m pip install pylint autopep8 isort mypy") != 0:
-        raise PythonToolsInstallationFailed
-    os.system("source $HOME/.profile")
-    successPrint("python tools installed successfully")
-    setupPylintrc()
-    setupAutopep()
-
-
 def setupJS():
     print("setup JS")
     copyFile("./configs", HOME_DIR, ".tern-config")
     successPrint("js setup completed")
-
-
-def setupCpp():
-    print("copying clang-format")
-    copyFile("./configs", HOME_DIR, ".clang-format")
-    successPrint("clang-format copied")
 
 
 def setupYCMExtraConf():

@@ -39,6 +39,7 @@ call plug#begin('~/.vim/bundle')
   Plug 'sheerun/vim-polyglot'
   Plug 'ryanoasis/vim-devicons'
   Plug 'lambdalisue/glyph-palette.vim'
+  Plug 'sainnhe/gruvbox-material'
   " bindings
   Plug 'ervandew/supertab'
   Plug 'jiangmiao/auto-pairs'
@@ -66,11 +67,16 @@ else
                     " because of gvim bug
 endif
 
-let g:molokai_original = 1 " monokai background
+
 let NERDTreeMinimalUI=1
 let g:DevIconsDefaultFolderOpenSymbol=''
 let g:DevIconsEnableFoldersOpenClose = 1
-colorscheme codedark
+
+" let g:molokai_original = 1 " monokai background
+set background=dark " for gruvbox
+let g:gruvbox_material_background = 'soft'
+colorscheme gruvbox-material
+
 set signcolumn=yes
 set number
 set colorcolumn=100

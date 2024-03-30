@@ -34,6 +34,10 @@ class PythonToolsInstallationFailed(RedException):
     message = "Unable to install linters"
 
 
+class CppToolsInstallationFailed(RedException):
+    message = "Unable to install cpp tools"
+
+
 class SetupJSFailed(RedException):
     message = "Unable to setup JS"
 
