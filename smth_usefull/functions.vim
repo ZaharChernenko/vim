@@ -76,6 +76,26 @@ function RunCpp()
 endfunction
 
 
+function DebugCpp()
+  let recompile = CppCheckRecompile()
+  if recompile == 1
+    wall
+    :!g++ -o test -g -std=c++2a *.cpp
+  endif
+
+  if v:shell_error == 0
+    call vimspector#Launch()
+  endif
+endfunction
+
+function RunJS()
+  wall
+  execute $"ter node {escape(expand('%'), ' \')}"
+  NERDTreeRefreshRoot
+endfunction
+
+
+
 ":cd %:p:h - change dir to current buffer
 ":ter python3-intel64 "%" "
 

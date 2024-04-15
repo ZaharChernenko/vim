@@ -72,9 +72,9 @@ let NERDTreeMinimalUI=1
 let g:DevIconsDefaultFolderOpenSymbol=''
 let g:DevIconsEnableFoldersOpenClose = 1
 
-" let g:molokai_original = 1 " monokai background
+let g:molokai_original = 1 " monokai background
 set background=dark " for gruvbox
-let g:gruvbox_material_background = 'soft'
+let g:gruvbox_material_background = 'medium'
 colorscheme gruvbox-material
 
 set signcolumn=yes
@@ -213,8 +213,7 @@ noremap О A
 " vimspector
 noremap ;t :call vimspector#ToggleBreakpoint()<CR>
 noremap ;c :call vimspector#ClearBreakpoints()<CR>
-autocmd Filetype python noremap ;r :call vimspector#Launch()<CR>
-autocmd Filetype cpp noremap ;r :call DebugCpp()<CR>
+noremap ;r :wa<CR>:call vimspector#Launch()<CR>
 " ycm
 noremap gd :YcmCompleter GoTo<CR>
 noremap <F2> :YcmCompleter RefactorRename<Space>
@@ -428,23 +427,3 @@ function RunCpp()
 
   NERDTreeRefreshRoot
 endfunction
-
-
-function DebugCpp()
-  let recompile = CppCheckRecompile()
-  if recompile == 1
-    wall
-    :!g++ -o test -g -std=c++2a *.cpp
-  endif
-
-  if v:shell_error == 0
-    call vimspector#Launch()
-  endif
-endfunction
-
-function RunJS()
-  wall
-  execute $"ter node {escape(expand('%'), ' \')}"
-  NERDTreeRefreshRoot
-endfunction
-

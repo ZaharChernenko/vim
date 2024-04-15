@@ -21,6 +21,11 @@
   "configurations": {
     "CodeLLDB": {
       "adapter": "CodeLLDB",
+      "variables": {
+        "BUILDME": {
+        "shell": ["sh", "-c", "g++ -o \"${fileDirname}/test\" -g -std=c++2a \"${fileDirname}\"/*.cpp"]
+        }
+      },
       "configuration": {
         "request": "launch",
         "expressions": "native",
