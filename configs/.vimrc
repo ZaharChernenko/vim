@@ -73,9 +73,10 @@ let g:DevIconsDefaultFolderOpenSymbol=''
 let g:DevIconsEnableFoldersOpenClose = 1
 
 let g:molokai_original = 1 " monokai background
-set background=dark " for gruvbox
-let g:gruvbox_material_background = 'medium'
-colorscheme gruvbox-material
+colorscheme codedark
+" set background=dark " for gruvbox
+" let g:gruvbox_material_background = 'medium'
+" colorscheme gruvbox-material
 
 set signcolumn=yes
 set number
@@ -194,13 +195,28 @@ noremap ы <down>
 noremap ы <down>
 noremap в <right>
 noremap В <right>
+noremap у e
+noremap м v
+noremap М V
+noremap пп gg
+noremap П G
+noremap Х {
+noremap Ъ }
+noremap Ж :
 " complex navigation
 noremap q ge
 noremap Q ^
 noremap E g_
+" russian
+noremap й ge
+noremap Й ^
+noremap У g_
 " start of the next word
 noremap f w
 noremap F W
+" russian
+noremap а w
+noremap А W
 " commands
 noremap j a
 noremap J A
