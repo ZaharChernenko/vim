@@ -285,20 +285,46 @@ else
     inoremap <A-s> <down>
     inoremap <A-d> <right>
     inoremap <A-c> <Esc>
+    vnoremap <A-c> <Esc>
+    " Russian
+    noremap <A-ф> <left>
+    noremap <A-ц> <up>
+    noremap <A-ы> <down>
+    noremap <A-в> <right>
+    inoremap <A-ф> <left>
+    inoremap <A-ц> <up>
+    inoremap <A-ы> <down>
+    inoremap <A-в> <right>
+    inoremap <A-с> <Esc>
+    vnoremap <A-с> <Esc>
     " moving between buffers
     noremap <silent> <A-k> :wincmd k<CR>
     noremap <silent> <A-h> :wincmd h<CR>
     noremap <silent> <A-j> :wincmd j<CR>
     noremap <silent> <A-l> :wincmd l<CR>
+    " Russian
+    noremap <silent> <A-л> :wincmd k<CR>
+    noremap <silent> <A-р> :wincmd h<CR>
+    noremap <silent> <A-о> :wincmd j<CR>
+    noremap <silent> <A-д> :wincmd l<CR>
     " NerdTree
     noremap <A-e> :NERDTreeToggle<CR>
     inoremap <A-e> <Esc>:NERDTreeToggle<CR>i
+    " Russian
+    noremap <A-у> :NERDTreeToggle<CR>
+    inoremap <A-у> <Esc>:NERDTreeToggle<CR>i
     " python
     autocmd FileType python noremap <buffer> <A-r> :call RunPython()<CR>
     autocmd FileType python inoremap <buffer> <A-r> <Esc>:call RunPython()<CR>
+    " Russian
+    autocmd FileType python noremap <buffer> <A-к> :call RunPython()<CR>
+    autocmd FileType python inoremap <buffer> <A-к> <Esc>:call RunPython()<CR>
     " cpp
     autocmd Filetype cpp noremap <buffer> <A-r> :call RunCpp()<CR>
     autocmd FileType cpp inoremap <buffer> <A-r> <Esc>:call RunCpp()<CR>
+    " Russian
+    autocmd Filetype cpp noremap <buffer> <A-к> :call RunCpp()<CR>
+    autocmd FileType cpp inoremap <buffer> <A-к> <Esc>:call RunCpp()<CR>
     " js
     autocmd Filetype javascript noremap <buffer> <A-r> :call RunJS()<CR>
     autocmd Filetype javascript inoremap <buffer> <A-r> <Esc>:call RunJS()<CR>
@@ -348,6 +374,11 @@ else
   noremap <silent> <C-l> :call SwitchBuffer('bnext')<CR>
   noremap <silent> <C-w> :bd<CR>
   inoremap <silent> <C-w> <Esc>:bd<CR>
+  " Russian
+  noremap <silent> <C-р> :call SwitchBuffer('bprev')<CR>
+  noremap <silent> <C-д> :call SwitchBuffer('bnext')<CR>
+  noremap <silent> <C-ц> :bd<CR>
+  inoremap <silent> <C-ц> <Esc>:bd<CR>
 endif
 
 
@@ -372,7 +403,7 @@ endfunction
 
 function GetPython()
   let is_global = 1
-  let venv_dirs = ['venv', 'virtualenv']
+  let venv_dirs = ['.venv', 'venv', 'virtualenv']
   for dir in venv_dirs
     let check_dir = finddir(dir . '/..', expand('%:p:h'))
     if check_dir != ''
