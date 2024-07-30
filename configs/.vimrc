@@ -108,7 +108,7 @@ let g:ale_linters = {
 \}
 let g:ale_fixers = {
     \'*': ['trim_whitespace'],
-    \'python': ['autopep8', 'isort'],
+    \'python': ['black', 'isort'],
     \'cpp': ['clang-format']
 \}
 let g:ale_fix_on_save = 1
@@ -119,11 +119,13 @@ let g:ale_warn_about_trailing_blank_lines = 0
 let g:ale_set_signs = 1
 let g:ale_set_highlights = 0
 let g:ale_virtualtext_cursor = 'current'
+let g:ale_python_black_options = '--line-length 100'
 let g:ale_python_mypy_options = '--ignore-missing-imports --check-untyped-defs
       \ --disable-error-code attr-defined
       \ --disable-error-code import-untyped
       \ --disable-error-code union-attr
       \ --cache-dir=/dev/null'
+let g:ale_python_isort_options = '--profile black'
 let g:ale_python_auto_pipenv = 1
 
 highlight clear ALEErrorSign

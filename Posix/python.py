@@ -8,8 +8,10 @@ from Posix.posixTools import copyFile
 
 def installPip(package_manager: PackageManagers):
     print("installing pip")
-    pip_dict = {PackageManagers.APT: "sudo apt install -y pip",
-                PackageManagers.DNF: "sudo dnf install -y pip"}
+    pip_dict = {
+        PackageManagers.APT: "sudo apt install -y pip",
+        PackageManagers.DNF: "sudo dnf install -y pip",
+    }
 
     if os.system(pip_dict[package_manager]) != 0:
         raise PipInstallationFailed
@@ -18,7 +20,7 @@ def installPip(package_manager: PackageManagers):
 
 def installPythonTools():
     print("install python tools")
-    if os.system("python3 -m pip install pylint autopep8 isort mypy") != 0:
+    if os.system("python3 -m pip install pylint black isort mypy") != 0:
         raise PythonToolsInstallationFailed
     os.system("source $HOME/.profile")
     successPrint("python tools installed")
