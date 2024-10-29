@@ -1,30 +1,57 @@
 filetype plugin indent on
 filetype off
+
 syntax enable
 
-set nobackup
-set noswapfile
-set nocompatible
-set encoding=utf-8
-set completeopt-=preview
-
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
-set expandtab
-set smarttab
-set smartindent
 set autochdir
+set autochdir
+set colorcolumn=100
+set completeopt-=preview
+set display+=lastline " for long lines
+set encoding=utf-8
+set expandtab
+set fillchars+=eob:\-
+set fillchars+=vert:\│
+set history=1000
+set listchars+=precedes:<,extends:>
 set mouse=a
+set nobackup
+set nocompatible  " отключаем совместимость с vi
+set nohlsearch " отключаем подсветку после поиска
+set noswapfile
+set nowrap
+set number
+set shiftwidth=4
+set sidescroll=5
+set signcolumn=yes
+set smartindent
+set smarttab
+set softtabstop=4
+set t_Co=256
+set tabstop=4
+set undolevels=1000 " изменяем размер истории последних изменений
+set whichwrap+=<,>,h,l,[,] " перемещение на следующую строку после достижения конца
+set wildchar=<Tab>
+set wildmenu " автодополнение в командном режиме
+if has('unnamedplus')
+    set clipboard=unnamedplus
+endif
 
 
 if has('macunix')
+  set guifont=JetBrainsMono\ Nerd\ Font\ Regular:h13
+  set linespace=3
+  set fillchars+=vert:\│
   let g:os = 'macos'
   let g:ycm_python_interpreter_path = 'python3-intel64'
 else
+  set shell=/bin/zsh
+  set guifont=JetBrainsMono\ Nerd\ Font\ Mono\ Regular\ 11
+  set guioptions=rl " egmrLtT - default value,
+                    " custom: right, left scroll always,
+                    " because of gvim bug
   let g:os = 'linux'
   let g:ycm_python_interpreter_path = 'python3'
-  set shell=/bin/zsh
 endif
 let g:home = $HOME
 
@@ -46,6 +73,7 @@ call plug#begin('~/.vim/bundle')
   Plug 'mg979/vim-visual-multi'
   " buffers
   Plug 'ap/vim-buftabline'
+  Plug 'moll/vim-bbye'
 call plug#end()
 
 
@@ -54,40 +82,16 @@ autocmd VimEnter * call RunVim()
 autocmd BufRead,BufNew *.py call GetPython()
 autocmd BufEnter *.py silent! call YcmRestartServerPython()
 
-
-" Setup ui
-if g:os == 'macos'
-  set guifont=JetBrainsMono\ Nerd\ Font\ Regular:h13
-  set linespace=3
-  set fillchars+=vert:\│
-else
-  set guifont=JetBrainsMono\ Nerd\ Font\ Mono\ Regular\ 11
-  set guioptions=rl " egmrLtT - default value,
-                    " custom: right, left scroll always,
-                    " because of gvim bug
-endif
-
-
 let NERDTreeMinimalUI=1
+let g:NERDTreeAutoDeleteBuffer = 1
 let g:DevIconsDefaultFolderOpenSymbol=''
 let g:DevIconsEnableFoldersOpenClose = 1
-
 let g:molokai_original = 1 " monokai background
 colorscheme codedark
 " set background=dark " for gruvbox
 " let g:gruvbox_material_background = 'medium'
 " colorscheme gruvbox-material
 
-set signcolumn=yes
-set number
-set colorcolumn=100
-set nowrap
-set display+=lastline " for long lines
-set sidescroll=5
-set listchars+=precedes:<,extends:>
-set fillchars+=eob:\-
-set fillchars+=vert:\│
-set t_Co=256
 
 highlight ColorColumn ctermfg=118 ctermbg=235
 
@@ -96,7 +100,6 @@ augroup my-glyph-palette
   autocmd FileType fern call glyph_palette#apply()
   autocmd FileType nerdtree,startify call glyph_palette#apply()
 augroup END
-" Setup ui
 
 
 " ALE
@@ -119,7 +122,7 @@ let g:ale_warn_about_trailing_blank_lines = 0
 let g:ale_set_signs = 1
 let g:ale_set_highlights = 0
 let g:ale_virtualtext_cursor = 'current'
-let g:ale_python_black_options = '--line-length 100'
+let g:ale_python_black_options = '--line-length 120'
 let g:ale_python_mypy_options = '--ignore-missing-imports --check-untyped-defs
       \ --disable-error-code attr-defined
       \ --disable-error-code import-untyped
@@ -188,56 +191,60 @@ noremap s <down>
 noremap S <down>
 noremap d <right>
 noremap D <right>
-" russian
-noremap ф <left>
-noremap Ф <left>
-noremap ц <up>
-noremap Ц <up>
-noremap ы <down>
-noremap ы <down>
-noremap в <right>
-noremap В <right>
-noremap у e
-noremap м v
-noremap М V
-noremap пп gg
-noremap П G
-noremap Х {
-noremap Ъ }
-noremap Ж :
-" complex navigation
 noremap q ge
 noremap Q ^
 noremap E g_
-" russian
-noremap й ge
-noremap Й ^
-noremap У g_
 " start of the next word
 noremap f w
 noremap F W
-" russian
-noremap а w
-noremap А W
 " commands
 noremap j a
 noremap J A
-" russian
-noremap ш i
-noremap Ш I
+" передвижение в нормальном режиме русские клавиши, почти везде map, чтобы
+" можно было использовать кириллицу в nerdtree, не nmap, т.к. иначе не будет
+" ничего работать в визуальном режиме
+map ф a
+map Ф A
+map ц w
+map Ц W
+map ы s
+map Ы S
+map в d
+map В D
+map у e
+map пп gg
+map П G
+map Х {
+map Ъ }
+map Ж :
+map щ o
+map й ge
+map Й ^
+map У g_
+" здесь без map, т.к. иначе русская а будет стрелкой вверх
+noremap а w
+noremap А W
+" commands
+map ч x
+map Ч X
+map м v
+map М V
+map ш i
+map Ш I
 noremap о a
 noremap О A
-
 " vimspector
 noremap ;t :call vimspector#ToggleBreakpoint()<CR>
 noremap ;c :call vimspector#ClearBreakpoints()<CR>
 noremap ;r :wa<CR>:call vimspector#Launch()<CR>
+noremap же :call vimspector#ToggleBreakpoint()<CR>
+noremap жс :call vimspector#ClearBreakpoints()<CR>
+noremap жк :wa<CR>:call vimspector#Launch()<CR>
 " ycm
 noremap gd :YcmCompleter GoTo<CR>
 noremap <F2> :YcmCompleter RefactorRename<Space>
 inoremap <F2> <Esc>:YcmCompleter RefactorRename<Space>
 
-noremap nf :NERDTreeFocus<CR>
 " autocmd FileType python map <buffer> <C-r> :w<CR>:exec '!python3-intel64' shellescape(@%, 1)<CR>
 if g:os == 'macos'
   let g:SuperTabMappingForward = '<C-tab>'
@@ -257,8 +264,8 @@ if g:os == 'macos'
   noremap <silent> <C-l> :wincmd l<CR>
   noremap <silent> <D-h> :call SwitchBuffer('bprev')<CR>
   noremap <silent> <D-l> :call SwitchBuffer('bnext')<CR>
-  noremap <D-w> :bd<CR>
-  inoremap <D-w> <Esc>:bd<CR>
+  noremap <D-w> :Bdelete<CR>
+  inoremap <D-w> <Esc>:Bdelete<CR>
   " NerdTree
   noremap <C-e> :NERDTreeToggle<CR>
   inoremap <C-e> <Esc>:NERDTreeToggle<CR>i
@@ -374,13 +381,13 @@ else
   " buffers
   noremap <silent> <C-h> :call SwitchBuffer('bprev')<CR>
   noremap <silent> <C-l> :call SwitchBuffer('bnext')<CR>
-  noremap <silent> <C-w> :bd<CR>
-  inoremap <silent> <C-w> <Esc>:bd<CR>
+  noremap <silent> <C-w> :Bdelete<CR>
+  inoremap <silent> <C-w> <Esc>:Bdelete<CR>
   " Russian
   noremap <silent> <C-р> :call SwitchBuffer('bprev')<CR>
   noremap <silent> <C-д> :call SwitchBuffer('bnext')<CR>
-  noremap <silent> <C-ц> :bd<CR>
-  inoremap <silent> <C-ц> <Esc>:bd<CR>
+  noremap <silent> <C-ц> :Bdelete<CR>
+  inoremap <silent> <C-ц> <Esc>:Bdelete<CR>
 endif
 
 
