@@ -100,7 +100,8 @@ augroup my-glyph-palette
   autocmd FileType nerdtree,startify call glyph_palette#apply()
 augroup END
 
-
+" wintabs
+let g:wintabs_autoclose=2
 " ALE
 let g:ale_lint_on_save = 1
 let g:ale_completion_enabled = 0
@@ -263,11 +264,14 @@ if g:os == 'macos'
   noremap <silent> <C-l> :wincmd l<CR>
   noremap <silent> <D-h> :WintabsPrevious<CR>
   noremap <silent> <D-l> :WintabsNext<CR>
-  noremap <D-w> :bd<CR>
-  inoremap <D-w> <Esc>:bd<CR>
+  noremap <silent> <D-w> :WintabsClose<CR>
+  inoremap <silent> <D-w> <Esc>:WintabsClose<CR>
+  " terminal
+  tnoremap <silent> <C-t> <C-\><C-n>:resize 1<CR>:wincmd j<CR>
+  noremap <silent> <C-t> :call OpenOrToggleTerminal()<CR><C-\><C-n>i
   " NerdTree
-  noremap <C-e> :NERDTreeToggle<CR>
-  inoremap <C-e> <Esc>:NERDTreeToggle<CR>i
+  noremap <silent> <C-e> :NERDTreeToggle<CR>
+  inoremap <silent> <C-e> <Esc>:NERDTreeToggle<CR>i
   " python
   autocmd Filetype python noremap <buffer> <C-r> :call RunPython()<CR>
   autocmd Filetype python inoremap <buffer> <C-r> <Esc>:call RunPython()<CR>
@@ -316,11 +320,11 @@ else
     noremap <silent> <A-о> :wincmd j<CR>
     noremap <silent> <A-д> :wincmd l<CR>
     " NerdTree
-    noremap <A-e> :NERDTreeToggle<CR>
-    inoremap <A-e> <Esc>:NERDTreeToggle<CR>i
+    noremap <silent> <A-e> :NERDTreeToggle<CR>
+    inoremap <silent> <A-e> <Esc>:NERDTreeToggle<CR>i
     " Russian
-    noremap <A-у> :NERDTreeToggle<CR>
-    inoremap <A-у> <Esc>:NERDTreeToggle<CR>i
+    noremap <silent> <A-у> :NERDTreeToggle<CR>
+    inoremap <silent> <A-у> <Esc>:NERDTreeToggle<CR>i
     " python
     autocmd FileType python noremap <buffer> <A-r> :call RunPython()<CR>
     autocmd FileType python inoremap <buffer> <A-r> <Esc>:call RunPython()<CR>
@@ -352,8 +356,8 @@ else
     noremap <silent> <Esc>j :wincmd j<CR>
     noremap <silent> <Esc>l :wincmd l<CR>
     " NerdTree
-    noremap <Esc>e :NERDTreeToggle<CR>
-    inoremap <Esc>e <Esc>:NERDTreeToggle<CR>i
+    noremap <silent> <Esc>e :NERDTreeToggle<CR>
+    inoremap <silent> <Esc>e <Esc>:NERDTreeToggle<CR>i
     " python
     autocmd Filetype python noremap <buffer> <Esc>r :call RunPython()<CR>
     autocmd filetype python inoremap <buffer> <Esc>r <Esc>:call RunPython()<CR>
@@ -375,18 +379,21 @@ else
   inoremap <C-v> <C-r><C-o>+
   inoremap <C-s> <Esc>:w<CR>
   inoremap <C-z> <Esc>ui
+  " terminal
   tnoremap <C-c> <C-W>N
   tnoremap <C-v> <C-W>"+
+  tnoremap <silent> <A-t> <C-\><C-n>:resize 1<CR>:wincmd j<CR>
+  noremap <silent> <A-t> :call OpenOrToggleTerminal()<CR><C-\><C-n>i
   " buffers
   noremap <silent> <C-h> :WintabsPrevious<CR>
   noremap <silent> <C-l> :WintabsNext<CR>
-  noremap <silent> <C-w> :bd<CR>
-  inoremap <silent> <C-w> <Esc>:bd<CR>
+  noremap <silent> <C-w> :WintabsClose<CR>
+  inoremap <silent> <C-w> <Esc>:WintabsClose<CR>
   " Russian
   noremap <silent> <C-р> :WintabsPrevious<CR>
   noremap <silent> <C-д> :WintabsNext<CR>
-  noremap <silent> <C-ц> :bd<CR>
-  inoremap <silent> <C-ц> <Esc>:bd<CR>
+  noremap <silent> <C-ц> :WintabsClose<CR>
+  inoremap <silent> <C-ц> <Esc>:WintabsClose<CR>
 endif
 
 
@@ -472,3 +479,21 @@ function RunCpp()
 
   NERDTreeRefreshRoot
 endfunction
+
+
+function OpenOrToggleTerminal()
+    " Проверяем, есть ли уже открытый терминал
+    if winnr('$') > 1 && bufwinnr('!/bin/zsh') != -1
+      " Если терминал открыт, переключаемся на него
+      let term_win = bufwinnr('!/bin/zsh')
+      execute term_win . 'wincmd w'
+    else
+      if &filetype == 'nerdtree'
+        wincmd l
+      endif
+      " Если терминал не открыт, открываем его
+      ter
+    endif
+    resize 15
+endfunction
+
