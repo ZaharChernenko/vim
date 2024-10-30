@@ -94,6 +94,14 @@ function RunJS()
   NERDTreeRefreshRoot
 endfunction
 
+function SwitchBuffer(act)
+  if &filetype == 'nerdtree'
+    wincmd l
+    execute a:act
+  else
+    execute a:act
+  endif
+endfunction
 
 
 ":cd %:p:h - change dir to current buffer

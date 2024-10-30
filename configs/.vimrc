@@ -4,7 +4,8 @@ filetype off
 syntax enable
 
 set autochdir
-set autochdir
+" set clipboard^=unnamed,unnamedplus после этого x будет копировать в
+" системный буффер, что мне не очень нужно
 set colorcolumn=100
 set completeopt-=preview
 set display+=lastline " for long lines
@@ -33,9 +34,7 @@ set undolevels=1000 " изменяем размер истории послед�
 set whichwrap+=<,>,h,l,[,] " перемещение на следующую строку после достижения конца
 set wildchar=<Tab>
 set wildmenu " автодополнение в командном режиме
-if has('unnamedplus')
-    set clipboard=unnamedplus
-endif
+
 
 
 if has('macunix')
@@ -72,8 +71,8 @@ call plug#begin('~/.vim/bundle')
   Plug 'jiangmiao/auto-pairs'
   Plug 'mg979/vim-visual-multi'
   " buffers
-  Plug 'ap/vim-buftabline'
-  Plug 'moll/vim-bbye'
+  Plug 'zefei/vim-wintabs'
+  Plug 'zefei/vim-wintabs-powerline'
 call plug#end()
 
 
@@ -262,10 +261,10 @@ if g:os == 'macos'
   noremap <silent> <C-h> :wincmd h<CR>
   noremap <silent> <C-j> :wincmd j<CR>
   noremap <silent> <C-l> :wincmd l<CR>
-  noremap <silent> <D-h> :call SwitchBuffer('bprev')<CR>
-  noremap <silent> <D-l> :call SwitchBuffer('bnext')<CR>
-  noremap <D-w> :Bdelete<CR>
-  inoremap <D-w> <Esc>:Bdelete<CR>
+  noremap <silent> <D-h> :WintabsPrevious<CR>
+  noremap <silent> <D-l> :WintabsNext<CR>
+  noremap <D-w> :bd<CR>
+  inoremap <D-w> <Esc>:bd<CR>
   " NerdTree
   noremap <C-e> :NERDTreeToggle<CR>
   inoremap <C-e> <Esc>:NERDTreeToggle<CR>i
@@ -379,15 +378,15 @@ else
   tnoremap <C-c> <C-W>N
   tnoremap <C-v> <C-W>"+
   " buffers
-  noremap <silent> <C-h> :call SwitchBuffer('bprev')<CR>
-  noremap <silent> <C-l> :call SwitchBuffer('bnext')<CR>
-  noremap <silent> <C-w> :Bdelete<CR>
-  inoremap <silent> <C-w> <Esc>:Bdelete<CR>
+  noremap <silent> <C-h> :WintabsPrevious<CR>
+  noremap <silent> <C-l> :WintabsNext<CR>
+  noremap <silent> <C-w> :bd<CR>
+  inoremap <silent> <C-w> <Esc>:bd<CR>
   " Russian
-  noremap <silent> <C-р> :call SwitchBuffer('bprev')<CR>
-  noremap <silent> <C-д> :call SwitchBuffer('bnext')<CR>
-  noremap <silent> <C-ц> :Bdelete<CR>
-  inoremap <silent> <C-ц> <Esc>:Bdelete<CR>
+  noremap <silent> <C-р> :WintabsPrevious<CR>
+  noremap <silent> <C-д> :WintabsNext<CR>
+  noremap <silent> <C-ц> :bd<CR>
+  inoremap <silent> <C-ц> <Esc>:bd<CR>
 endif
 
 
@@ -396,16 +395,6 @@ function RunVim()
   if g:os == 'linux'
     call GetPython()
     let g:ycm_python_interpreter_path = b:python
-  endif
-endfunction
-
-
-function SwitchBuffer(act)
-  if &filetype == 'nerdtree'
-    wincmd l
-    execute a:act
-  else
-    execute a:act
   endif
 endfunction
 
