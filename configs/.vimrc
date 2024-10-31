@@ -470,7 +470,7 @@ endfunction
 
 function CppCheckRecompile()
   let recompile = 0
-  if filereadable("test") == 0
+  if filereadable("output") == 0
     return 1
   endif
 
@@ -481,7 +481,7 @@ function CppCheckRecompile()
   endfor
 
   for file in split(globpath('.', '*.cpp'), '\n') + split(globpath('.', '*.h'), '\n')
-    if strftime('%y%m%d %T', getftime('test')) < strftime('%y%m%d %T', getftime(file))
+    if strftime('%y%m%d %T', getftime('output')) < strftime('%y%m%d %T', getftime(file))
       return 1
     endif
   endfor
@@ -496,7 +496,7 @@ function RunCpp()
     wall
     execute $"ter bash {g:home}/.vim/bundle/scripts/cpp.sh"
   else
-    ter ./test
+    ter ./output
   endif
 
   NERDTreeRefreshRoot
