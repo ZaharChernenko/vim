@@ -36,7 +36,6 @@ set wildchar=<Tab>
 set wildmenu " автодополнение в командном режиме
 
 
-
 if has('macunix')
   set guifont=JetBrainsMono\ Nerd\ Font\ Regular:h13
   set linespace=3
@@ -56,9 +55,11 @@ let g:home = $HOME
 
 " Plugins search
 call plug#begin('~/.vim/bundle')
-  " autocomplete, debug
+  " linter
   Plug 'dense-analysis/ale'
+  " autocompleter
   Plug 'ycm-core/YouCompleteMe'
+  " debugger
   Plug 'puremourning/vimspector'
   " ui
   Plug 'preservim/nerdtree'
@@ -66,6 +67,15 @@ call plug#begin('~/.vim/bundle')
   Plug 'ryanoasis/vim-devicons'
   Plug 'lambdalisue/glyph-palette.vim'
   Plug 'sainnhe/gruvbox-material'
+  Plug 'vim-airline/vim-airline'
+  Plug 'vim-airline/vim-airline-themes'
+  " colorshemes
+  Plug 'tomasiser/vim-code-dark'
+  Plug 'ErichDonGubler/vim-sublime-monokai'
+  Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+  Plug 'morhetz/gruvbox'
+  " git
+  Plug 'tpope/vim-fugitive'
   " bindings
   Plug 'ervandew/supertab'
   Plug 'jiangmiao/auto-pairs'
@@ -81,18 +91,13 @@ autocmd VimEnter * call RunVim()
 autocmd BufRead,BufNew *.py call GetPython()
 autocmd BufEnter *.py silent! call YcmRestartServerPython()
 
-let NERDTreeMinimalUI=1
-let g:NERDTreeAutoDeleteBuffer = 1
-let g:DevIconsDefaultFolderOpenSymbol=''
-let g:DevIconsEnableFoldersOpenClose = 1
-let g:molokai_original = 1 " monokai background
-colorscheme codedark
+colorscheme catppuccin-macchiato
+" let g:python_highlight_all = 1
+highlight ColorColumn ctermfg=118 ctermbg=235
 " set background=dark " for gruvbox
 " let g:gruvbox_material_background = 'medium'
 " colorscheme gruvbox-material
 
-
-highlight ColorColumn ctermfg=118 ctermbg=235
 
 augroup my-glyph-palette
   autocmd! *
@@ -100,6 +105,17 @@ augroup my-glyph-palette
   autocmd FileType nerdtree,startify call glyph_palette#apply()
 augroup END
 
+" airline
+let g:airline_section_x='' " remove the filetype part
+let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
+let g:airline_skip_empty_sections = 1 " remove separators for empty sections
+let g:airline_powerline_fonts = 1
+" devicons
+let g:DevIconsDefaultFolderOpenSymbol=''
+let g:DevIconsEnableFoldersOpenClose = 1
+" NERDTree
+let NERDTreeMinimalUI=1
+let g:NERDTreeAutoDeleteBuffer = 1
 " wintabs
 let g:wintabs_autoclose=2
 " ALE
@@ -133,8 +149,6 @@ let g:ale_python_auto_pipenv = 1
 
 highlight clear ALEErrorSign
 highlight clear ALEWarningSign
-" ALE
-
 " vimspector
 " changing vimspector signs priority
 let g:vimspector_sign_priority = {
