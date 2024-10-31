@@ -88,8 +88,11 @@ call plug#end()
 
 autocmd BufNew,BufRead *.asm set ft=tasm
 autocmd VimEnter * call RunVim()
-autocmd BufRead,BufNew *.py call GetPython()
-autocmd BufEnter *.py silent! call YcmRestartServerPython()
+
+augroup python
+  autocmd!
+  autocmd BufEnter *.py silent! call GetPython()
+augroup END
 
 colorscheme catppuccin-macchiato
 " let g:python_highlight_all = 1
@@ -110,6 +113,7 @@ let g:airline_section_x='' " remove the filetype part
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 let g:airline_skip_empty_sections = 1 " remove separators for empty sections
 let g:airline_powerline_fonts = 1
+let g:airline_theme = 'catppuccin'
 " devicons
 let g:DevIconsDefaultFolderOpenSymbol=''
 let g:DevIconsEnableFoldersOpenClose = 1
@@ -420,30 +424,40 @@ function RunVim()
 endfunction
 
 
-function GetPython()
-  let is_global = 1
+function GetPythonPath()
   let venv_dirs = ['.venv', 'venv', 'virtualenv']
   for dir in venv_dirs
-    let check_dir = finddir(dir . '/..', expand('%:p:h'))
+    " если папка была найдена в текущей директории, то путь будет
+    " относительный, иначе абсолютный
+    let check_dir = finddir(dir, ';')
     if check_dir != ''
-      let venv_dir = $"{check_dir}/{dir}"
+      if check_dir == dir
+        let venv_dir = $"{getcwd()}/{dir}"
+      else
+        let venv_dir = check_dir
+      endif
       if isdirectory($"{venv_dir}/bin")
-        let is_global = 0
-        break
+        return escape($"{venv_dir}/bin/python3", ' \')
       endif
     endif
   endfor
 
-  if is_global == 1
-    if g:os == 'macos'
-      let b:python = 'python3-intel64'
-    else
-      let b:python = 'python3'
+  if g:os == 'macos'
+      return 'python3-intel64'
+  endif
+      return 'python3'
+endfunction
+
+
+function GetPython()
+    if exists("b:python") == 0
+      let b:python = GetPythonPath()
     endif
 
-  else
-    let b:python = escape($"{venv_dir}/bin/python3", ' \')
-  endif
+    if g:ycm_python_interpreter_path != b:python
+      let g:ycm_python_interpreter_path = b:python
+      YcmRestartServer
+    endif
 endfunction
 
 
@@ -451,12 +465,6 @@ function RunPython()
   wall
   execute $"ter {b:python} {escape(expand('%'), ' \')}"
   NERDTreeRefreshRoot
-endfunction
-
-
-function YcmRestartServerPython()
-  let g:ycm_python_interpreter_path = b:python
-  YcmRestartServer
 endfunction
 
 
