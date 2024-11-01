@@ -66,7 +66,6 @@ call plug#begin('~/.vim/bundle')
   Plug 'sheerun/vim-polyglot'
   Plug 'ryanoasis/vim-devicons'
   Plug 'lambdalisue/glyph-palette.vim'
-  Plug 'sainnhe/gruvbox-material'
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
   " colorshemes
@@ -86,6 +85,7 @@ call plug#begin('~/.vim/bundle')
 call plug#end()
 
 
+colorscheme catppuccin-macchiato
 autocmd BufNew,BufRead *.asm set ft=tasm
 autocmd VimEnter * call RunVim()
 
@@ -94,19 +94,12 @@ augroup python
   autocmd BufEnter *.py silent! call GetPython()
 augroup END
 
-colorscheme catppuccin-macchiato
-" let g:python_highlight_all = 1
-highlight ColorColumn ctermfg=118 ctermbg=235
-" set background=dark " for gruvbox
-" let g:gruvbox_material_background = 'medium'
-" colorscheme gruvbox-material
-
-
 augroup my-glyph-palette
   autocmd! *
   autocmd FileType fern call glyph_palette#apply()
   autocmd FileType nerdtree,startify call glyph_palette#apply()
 augroup END
+
 
 " airline
 let g:airline_section_x='' " remove the filetype part
