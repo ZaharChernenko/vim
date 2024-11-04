@@ -1,11 +1,3 @@
-class RedException(Exception):
-    red_template = "\033[31m{}\033[0m"
-    message = "RedException"
-
-    def __str__(self):
-        return self.red_template.format(self.message)
-
-
 class CopyingFileFailed(RedException):
     message = "Failed to copy file"
 

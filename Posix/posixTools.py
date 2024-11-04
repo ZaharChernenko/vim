@@ -5,32 +5,25 @@ from exceptions import *
 from GlobalVars import HOME_DIR, PackageManagers, successPrint
 
 
-def createDirectory(path: str):
-    """Creates dir if it doesn't exist, else nothing"""
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-
-def copyFile(source_path: str, target_path: str, filename: str):
-    if os.path.exists(f"{target_path}/{filename}"):
-        print(f"dump current {filename}")
-        os.system(f"cp {target_path}/{filename} ~/temp/{filename}")
-    if os.system(f"cp {source_path}/{filename} {target_path}/{filename}") != 0:
-        raise CopyingFileFailed
-
-
 def installVim(package_manager: PackageManagers):
     print("installing vim")
-    vim_curl_dict = {PackageManagers.APT: "sudo apt install -y vim curl vim-gtk3",
-                     PackageManagers.DNF: "sudo dnf install -y vim curl vim-X11",
-                     PackageManagers.BREW: "brew install vim curl"}
+    vim_curl_dict = {
+        PackageManagers.APT: "sudo apt install -y vim curl vim-gtk3",
+        PackageManagers.DNF: "sudo dnf install -y vim curl vim-X11",
+        PackageManagers.BREW: "brew install vim curl",
+    }
 
     if os.system(vim_curl_dict[package_manager]) != 0:
         raise VimInstallationFailed
 
     print("installing vim-plug")
-    if os.system("curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim") != 0:
+    if (
+        os.system(
+            "curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+        )
+        != 0
+    ):
         raise VimPlugInstallationFailed
     successPrint("vim-plug installed")
 
@@ -54,7 +47,7 @@ def setupVimrc(full: bool = True):
         successPrint(".vimrc setup completed")
 
     while not os.path.exists(f"{HOME_DIR}/.vim/bundle"):
-        print("run vim and type \":PlugInstall\", then enter anything")
+        print('run vim and type ":PlugInstall", then enter anything')
         input()
 
 
@@ -69,8 +62,10 @@ def setupUI(package_manager: PackageManagers):
     copyThemes()
 
     print("installing fonts")
-    fonts_dir_dict = {PackageManagers.APT: r"/usr/share/fonts/truetype/JetBrainsMono\ Nerd\ Font\ Mono",
-                      PackageManagers.DNF: r"/usr/share/fonts/JetBrainsMono\ Nerd\ Font\ Mono"}
+    fonts_dir_dict = {
+        PackageManagers.APT: r"/usr/share/fonts/truetype/JetBrainsMono\ Nerd\ Font\ Mono",
+        PackageManagers.DNF: r"/usr/share/fonts/JetBrainsMono\ Nerd\ Font\ Mono",
+    }
 
     os.system(f"sudo mkdir {fonts_dir_dict[package_manager]}")
     if os.system(f"sudo cp ./ui/fonts/JetBrainsMonoLinux/* {fonts_dir_dict[package_manager]}") != 0:
@@ -92,21 +87,27 @@ def setupYCMExtraConf():
 
 def installYouCompleteMe(package_manager: PackageManagers):
     print("installing YCM")
-    ycm_dict = {PackageManagers.APT: "sudo apt install -y build-essential cmake vim-nox \
+    ycm_dict = {
+        PackageManagers.APT: "sudo apt install -y build-essential cmake vim-nox \
                 python3-dev mono-complete golang nodejs openjdk-17-jdk openjdk-17-jre npm",
-                PackageManagers.DNF: "sudo dnf install -y cmake gcc-c++ make python3-devel \
+        PackageManagers.DNF: "sudo dnf install -y cmake gcc-c++ make python3-devel \
                 mono-complete golang nodejs java-17-openjdk java-17-openjdk-devel npm",
-                PackageManagers.BREW: "brew install cmake python go nodejs mono java"}
+        PackageManagers.BREW: "brew install cmake python go nodejs mono java",
+    }
 
     os.system(ycm_dict[package_manager])
     os.system("sudo mkdir -p /etc/apt/keyrings")
 
-    os.system("curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | \
-                  sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg")
+    os.system(
+        "curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | \
+                  sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg"
+    )
 
-    os.system('echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] \
+    os.system(
+        'echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] \
                   https://deb.nodesource.com/node_current.x nodistro main" | \
-                  sudo tee /etc/apt/sources.list.d/nodesource.list')
+                  sudo tee /etc/apt/sources.list.d/nodesource.list'
+    )
 
     os.system("git -C ~/.vim/bundle/YouCompleteMe submodule update --init --recursive")
 
