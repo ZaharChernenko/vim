@@ -47,4 +47,4 @@ if __name__ == "__main__":
         sys.exit(1)
 
     vim_installer: VimInstaller = VimInstaller(mode)
-    vim_installer()
+    vim_installer.run()

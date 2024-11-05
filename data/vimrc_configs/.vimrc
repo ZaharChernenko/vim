@@ -282,6 +282,7 @@ if g:os == 'macos'
   " terminal
   tnoremap <silent> <C-t> <C-\><C-n>:resize 1<CR>:wincmd j<CR>
   noremap <silent> <C-t> :call OpenOrToggleTerminal()<CR><C-\><C-n>i
+  inoremap <silent> <C-t> <Esc>:call OpenOrToggleTerminal()<CR><C-\><C-n>i
   " NerdTree
   noremap <silent> <C-e> :NERDTreeToggle<CR>
   inoremap <silent> <C-e> <Esc>:NERDTreeToggle<CR>i
@@ -371,6 +372,10 @@ else
     " NerdTree
     noremap <silent> <Esc>e :NERDTreeToggle<CR>
     inoremap <silent> <Esc>e <Esc>:NERDTreeToggle<CR>i
+    " terminal
+    tnoremap <silent> <Esc>t <C-\><C-n>:resize 1<CR>:wincmd j<CR>
+    noremap <silent> <Esc>t :call OpenOrToggleTerminal()<CR><C-\><C-n>i
+    inoremap <silent> <Esc>t <Esc>:call OpenOrToggleTerminal()<CR><C-\><C-n>i
     " python
     autocmd Filetype python noremap <buffer> <Esc>r :call RunPython()<CR>
     autocmd filetype python inoremap <buffer> <Esc>r <Esc>:call RunPython()<CR>
@@ -397,6 +402,7 @@ else
   tnoremap <C-v> <C-W>"+
   tnoremap <silent> <A-t> <C-\><C-n>:resize 1<CR>:wincmd j<CR>
   noremap <silent> <A-t> :call OpenOrToggleTerminal()<CR><C-\><C-n>i
+  inoremap <silent> <A-t> <Esc>:call OpenOrToggleTerminal()<CR><C-\><C-n>i
   " buffers
   noremap <silent> <C-h> :WintabsPrevious<CR>
   noremap <silent> <C-l> :WintabsNext<CR>

@@ -3,14 +3,7 @@ import shutil
 import subprocess
 from typing import Optional
 
-from .common import (
-    HOME_DIR,
-    RED_TEMPLATE,
-    YELLOW_TEMPLATE,
-    VimInstallerException,
-    startPrint,
-    successPrint,
-)
+from .common import HOME_DIR, RED_TEMPLATE, startPrint, successPrint
 
 
 def copyFile(source_path: str, target_path: str, source_filename: str, target_filename: Optional[str] = None):
@@ -38,6 +31,31 @@ def copyDirectory(source_dir: str, target_dir: str):
 
 def runCommand(command: list[str], definition: str):
     startPrint(definition)
+    # запускаем программу в дочернем процессе
+    subprocess.run(
+        command,
+        check=True,  # выбрасывает исключение при ненулевом коде возврата
+        stdout=subprocess.PIPE,  # захватывает стандартный вывод
+        stderr=subprocess.PIPE,  # захватывает стандартный вывод ошибок
+        text=True,
+    )
+    successPrint("completed")
+
+
+def installPlugins():
+    startPrint("installing plugins")
+    # перенаправляем вывод в devnull, вместо текущей консоли
+    with open("/dev/null", "w") as devnull:
+        # запускаем программу в дочернем процессе
+        return subprocess.Popen(
+            ["vim", "--cmd", f"silent! source {HOME_DIR}/.vimrc", "--cmd", "PlugInstall", "--cmd", "qa!"],
+            stdout=devnull,
+            stderr=devnull,
+        )
+
+
+"""def runCommand(command: list[str], definition: str):
+    startPrint(definition)
     try:
         subprocess.run(
             command,
@@ -49,7 +67,5 @@ def runCommand(command: list[str], definition: str):
         successPrint("completed")
 
     except subprocess.CalledProcessError as e:
-        print(RED_TEMPLATE.format(f"Error executing command: {e}"))
-        print(f"Return code: {e.returncode}")
-        print(f"Error output: {e.stderr}")
-        raise VimInstallerException from e
+        
+"""
