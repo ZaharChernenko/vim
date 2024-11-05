@@ -27,6 +27,11 @@ def createDirectory(path: str):
     successPrint(f"{path} directory was created")
 
 
+def copyDirectory(source_dir: str, target_dir: str):
+    """Copies directory if it doesn't exists, otherwise adds and rewrites new files"""
+    shutil.copytree(source_dir, target_dir, dirs_exist_ok=True)
+
+
 def runCommand(command: list[str], definition: str):
     print(YELLOW_TEMPLATE.format(definition))
     try:
