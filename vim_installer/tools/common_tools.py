@@ -1,23 +1,26 @@
 import os
 import shutil
 import subprocess
+from typing import Optional
 
 from .common import (
     HOME_DIR,
     RED_TEMPLATE,
     YELLOW_TEMPLATE,
     VimInstallerException,
+    startPrint,
     successPrint,
 )
 
 
-def copyFile(source_path: str, target_path: str, filename: str):
+def copyFile(source_path: str, target_path: str, source_filename: str, target_filename: Optional[str] = None):
     """Copies file, if it exists then dumps it to the temp dir"""
-    if os.path.exists(f"{target_path}/{filename}"):
-        print(f"dump current {filename}")
-        shutil.copy(f"{target_path}/{filename}", f"{HOME_DIR}/temp/{filename}")
-    shutil.copy(f"{source_path}/{filename}", f"{target_path}/{filename}")
-    successPrint(f"{filename} was copied")
+    target_filename = target_filename or source_filename
+    if os.path.exists(f"{target_path}/{target_filename}"):
+        print(f"dump current {target_filename}")
+        shutil.copy(f"{target_path}/{target_filename}", f"{HOME_DIR}/temp/{target_filename}")
+    shutil.copy(f"{source_path}/{source_filename}", f"{target_path}/{target_filename}")
+    successPrint(f"{target_filename} was copied")
 
 
 def createDirectory(path: str):
@@ -30,10 +33,11 @@ def createDirectory(path: str):
 def copyDirectory(source_dir: str, target_dir: str):
     """Copies directory if it doesn't exists, otherwise adds and rewrites new files"""
     shutil.copytree(source_dir, target_dir, dirs_exist_ok=True)
+    successPrint(f"{target_dir} directory was copied")
 
 
 def runCommand(command: list[str], definition: str):
-    print(YELLOW_TEMPLATE.format(definition))
+    startPrint(definition)
     try:
         subprocess.run(
             command,

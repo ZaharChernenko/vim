@@ -74,12 +74,6 @@ def setupUI(package_manager: PackageManagers):
     successPrint("fonts installed")
 
 
-def setupJS():
-    print("setup JS")
-    copyFile("./configs", HOME_DIR, ".tern-config")
-    successPrint("js setup completed")
-
-
 def setupYCMExtraConf():
     if os.system("cp ./configs/.ycm_extra_conf.py ~/.vim/bundle/YouCompleteMe/third_party/ycmd/") != 0:
         raise CopyingYCMConfFailed

@@ -353,7 +353,7 @@ function RunCpp()
   let recompile = CppCheckRecompile()
   if recompile == 1
     wall
-    execute $"ter bash {g:home}/.vim/bundle/scripts/cpp.sh"
+    execute $"ter bash {g:home}/.vim/scripts/cpp.sh"
   else
     ter ./output
   endif

@@ -85,7 +85,8 @@ call plug#begin('~/.vim/bundle')
 call plug#end()
 
 
-colorscheme catppuccin-macchiato
+" colorscheme catppuccin-macchiato
+colorscheme sublimemonokai
 autocmd BufNew,BufRead *.asm set ft=tasm
 autocmd VimEnter * call RunVim()
 
@@ -106,7 +107,8 @@ let g:airline_section_x='' " remove the filetype part
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 let g:airline_skip_empty_sections = 1 " remove separators for empty sections
 let g:airline_powerline_fonts = 1
-let g:airline_theme = 'catppuccin'
+" let g:airline_theme = 'catppuccin'
+let g:airline_theme = 'molokai'
 " devicons
 let g:DevIconsDefaultFolderOpenSymbol=''
 let g:DevIconsEnableFoldersOpenClose = 1
@@ -487,7 +489,7 @@ function RunCpp()
   let recompile = CppCheckRecompile()
   if recompile == 1
     wall
-    execute $"ter bash {g:home}/.vim/bundle/scripts/cpp.sh"
+    execute $"ter bash {g:home}/.vim/scripts/cpp.sh"
   else
     ter ./output
   endif
