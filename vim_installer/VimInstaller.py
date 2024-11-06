@@ -1,17 +1,24 @@
 import abc
 import subprocess
-import sys
-from enum import Enum, IntEnum
+from enum import IntEnum
 from typing import Optional
 
 from tools import (
     HOME_DIR,
     RED_TEMPLATE,
+    PlatformSetup,
     copyDirectory,
     copyFile,
     createDirectory,
+    getPlatformSetup,
+    installCpp,
+    installFonts,
     installPlugins,
+    installPython,
+    installVimFull,
+    installVimMinimal,
     installVimPlug,
+    installYCM,
     runCommand,
     startPrint,
     successPrint,
@@ -28,19 +35,6 @@ class InstallationTypes(IntEnum):
     SYNC_MINIMAL = 0b1000
 
 
-class PackageManagers(Enum):
-    DNF = "dnf"
-    APT = "apt"
-    BREW = "brew"
-
-
-class SupportedOS(Enum):
-    """Enum class of supported OS (macOS, linux)"""
-
-    MACOS = "darwin"
-    LINUX = "linux"
-
-
 class VimInstallerException(Exception):
     def __init__(self, message: Optional[str] = None):
         self._message: Optional[str] = message
@@ -51,47 +45,20 @@ class VimInstallerException(Exception):
 
 class VimInstaller:
     def __init__(self, installation_type: InstallationTypes):
+        self._platform_setup: Optional[PlatformSetup] = getPlatformSetup()
+        if self._platform_setup is None:
+            raise VimInstallerException("Unsupported OS or package manager")
+
         self._installer: Optional[InstallerBase] = None
         # in some verstions of OS there is not match/case, because of lower python versions
-        if installation_type == InstallationTypes.SYNC_FULL:
-            self._installer = VimSyncFullInstaller()
-            return
-        if installation_type == InstallationTypes.SYNC_MINIMAL:
-            self._installer = VimSyncMinimalInstaller()
-            return
-
-        # other installation types are platform dependable
-        try:
-            os = SupportedOS(sys.platform)
-        except ValueError as e:
-            raise VimInstallerException("OS doesn't supported") from e
-
-        system_manager: Optional[PackageManagers] = None
-        if os == SupportedOS.MACOS:
-            system_manager = PackageManagers.BREW
-        else:
-            for manager in PackageManagers:
-                try:
-                    startPrint(f"Trying to call {manager.value}")
-                    runCommand([manager.value, "--version"])
-                    system_manager = manager
-                    break
-                except subprocess.CalledProcessError:
-                    print(f"{manager} not installed")
-                except FileNotFoundError:
-                    print(f"{manager} not installed")
-
-            if system_manager is None:
-                raise VimInstallerException("No support package manager")
-
-        successPrint(f"found {system_manager.value} package manager")
         if installation_type == InstallationTypes.FULL:
-            if system_manager == PackageManagers.DNF:
-                self._installer = VimDnfFullInstaller()
-                return
-
-        if installation_type == InstallationTypes.MINIMAL:
-            self._installer = VimPosixMinimalInstaller(system_manager)
+            self._installer = VimFullInstaller()
+        elif installation_type == InstallationTypes.MINIMAL:
+            self._installer = VimPosixMinimalInstaller()
+        elif installation_type == InstallationTypes.SYNC_FULL:
+            self._installer = VimSyncFullInstaller()
+        elif installation_type == InstallationTypes.SYNC_MINIMAL:
+            self._installer = VimSyncMinimalInstaller()
 
     def run(self):
         self._installer.run()
@@ -103,11 +70,11 @@ class InstallerBase(abc.ABC):
         raise NotImplementedError
 
 
-class VimDnfFullInstaller(InstallerBase):
+class VimFullInstaller(InstallerBase):
     def run(self):
         try:
             startPrint("installing git, curl, vim")
-            runCommand(["sudo", "dnf", "install", "-y", "git", "curl", "vim", "vim-X11"], True)
+            installVimFull()
             installVimPlug()
             createDirectory(f"{HOME_DIR}/temp")
             # vim config
@@ -115,61 +82,21 @@ class VimDnfFullInstaller(InstallerBase):
             plug_install_result: subprocess.Popen = installPlugins()
             # fonts
             startPrint("installing fonts")
-            copyDirectory("./data/ui/fonts/JetBrainsMonoLinux", r"/usr/share/fonts/JetBrainsMono Nerd Font Mono")
-            runCommand(["fc-cache", "-f", "-v"])
+            installFonts()
 
             # ycm
             startPrint("installing tools for ycm")
-            runCommand(
-                [
-                    "sudo",
-                    "dnf",
-                    "install",
-                    "-y",
-                    "cmake",
-                    "gcc-c++",
-                    "make",
-                    "python3-devel",
-                    "mono-complete",
-                    "golang",
-                    "nodejs",
-                    "java-17-openjdk",
-                    "java-17-openjdk-devel",
-                    "npm",
-                ],
-                True,
-            )
-            copyFile(
-                "./data/tools_configs", f"{HOME_DIR}/.vim/bundle/YouCompleteMe/third_party/ycmd", ".ycm_extra_conf.py"
-            )
+            installYCM()
             plug_install_result.wait()
             createDirectory("/etc/apt/keyrings")
-            runCommand(
-                [
-                    "curl",
-                    "-fsSL",
-                    "https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key",
-                ],
-            )
-            runCommand(
-                [
-                    "sudo",
-                    "gpg",
-                    "--dearmor",
-                    "-o",
-                    "/etc/apt/keyrings/nodesource.gpg",
-                ],
-                True,
-            )
-            runCommand(
-                'echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] \
-                  https://deb.nodesource.com/node_current.x nodistro main" | \
-                  sudo tee /etc/apt/sources.list.d/nodesource.list',
-            )
+
             startPrint("ycm updating submodules")
             runCommand(
                 ["git", "-C", f"{HOME_DIR}/.vim/bundle/YouCompleteMe", "submodule", "update", "--init", "--recursive"],
                 True,
+            )
+            copyFile(
+                "./data/tools_configs", f"{HOME_DIR}/.vim/bundle/YouCompleteMe/third_party/ycmd", ".ycm_extra_conf.py"
             )
             ycm_compilation_result: subprocess.Popen = subprocess.Popen(
                 ["python3", f"{HOME_DIR}/.vim/bundle/YouCompleteMe/install.py", "--clangd-completer"]
@@ -178,14 +105,13 @@ class VimDnfFullInstaller(InstallerBase):
             # js tools
             copyFile("./data/tools_configs", HOME_DIR, ".tern-config")  # for autocompletion
             # python tools
-            startPrint("installing pip")
-            runCommand(["sudo", "dnf", "install", "-y", "pip", "black", "pylint"], True)
-            runCommand(["python3", "-m", "install", "pylint", "isort", "mypy", "black"])
+            startPrint("installing python tools")
+            installPython()
             copyFile("./data/tools_configs", f"{HOME_DIR}/.config", "pycodestyle")  # autopep8
             copyFile("./data/tools_configs", HOME_DIR, ".pylintrc")
             # cpp tools
             startPrint("installing clang-formatter")
-            runCommand(["sudo", "dnf", "install", "-y", "clang-tools-extra"], True)
+            installCpp()
             copyFile("./data/tools_configs", HOME_DIR, ".clang-format")
             # running scripts
             copyDirectory("./data/scripts", f"{HOME_DIR}/.vim/scripts")
@@ -202,36 +128,10 @@ class VimDnfFullInstaller(InstallerBase):
 
 
 class VimPosixMinimalInstaller(InstallerBase):
-    def __init__(self, package_manager: PackageManagers):
-        self._package_manager: PackageManagers = package_manager
-
     def run(self):
         try:
             startPrint("installing git, curl, vim")
-            if self._package_manager == PackageManagers.BREW:
-                runCommand(
-                    [
-                        self._package_manager.value,
-                        "install",
-                        "git",
-                        "curl",
-                        "vim",
-                    ],
-                    True,
-                )
-            else:
-                runCommand(
-                    [
-                        "sudo",
-                        self._package_manager.value,
-                        "install",
-                        "-y",
-                        "git",
-                        "curl",
-                        "vim",
-                    ],
-                    True,
-                )
+            installVimMinimal()
             installVimPlug()
             createDirectory(f"{HOME_DIR}/temp")
             # vim config

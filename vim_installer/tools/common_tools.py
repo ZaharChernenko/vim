@@ -1,9 +1,39 @@
 import os
 import shutil
 import subprocess
-from typing import Optional, Union
+import sys
+from typing import Optional
 
-from .common import HOME_DIR, RED_TEMPLATE, startPrint, successPrint
+from .common import (
+    HOME_DIR,
+    PackageManagers,
+    PlatformSetup,
+    SupportedOS,
+    startPrint,
+    successPrint,
+)
+
+
+def getPlatformSetup() -> Optional[PlatformSetup]:
+    try:
+        platform = SupportedOS(sys.platform)
+    except ValueError:
+        return None
+
+    if platform == SupportedOS.MACOS:
+        return PlatformSetup(SupportedOS.MACOS, PackageManagers.BREW)
+
+    if platform == SupportedOS.LINUX:
+        for manager in PackageManagers:
+            try:
+                runCommand([manager.value, "--version"])
+                return PlatformSetup(SupportedOS.LINUX, manager)
+            except subprocess.CalledProcessError:
+                pass
+            except FileNotFoundError:
+                pass
+
+    return None
 
 
 def copyFile(source_path: str, target_path: str, source_filename: str, target_filename: Optional[str] = None):
