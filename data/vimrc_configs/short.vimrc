@@ -37,16 +37,10 @@ set wildmenu " автодополнение в командном режиме
 
 
 if has('macunix')
-  set guifont=JetBrainsMono\ Nerd\ Font\ Regular:h13
   set linespace=3
   set fillchars+=vert:\│
   let g:os = 'macos'
 else
-  set shell=/bin/zsh
-  set guifont=JetBrainsMono\ Nerd\ Font\ Mono\ Regular\ 11
-  set guioptions=rl " egmrLtT - default value,
-                    " custom: right, left scroll always,
-                    " because of gvim bug
   let g:os = 'linux'
 endif
 let g:home = $HOME
@@ -66,10 +60,8 @@ call plug#begin('~/.vim/bundle')
   Plug 'zefei/vim-wintabs-powerline'
 call plug#end()
 
-
 colorscheme codedark
 autocmd BufNew,BufRead *.asm set ft=tasm
-" autocmd VimEnter * call RunVim()
 
 augroup python
   autocmd!

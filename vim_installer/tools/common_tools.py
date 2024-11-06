@@ -1,7 +1,7 @@
 import os
 import shutil
 import subprocess
-from typing import Optional
+from typing import Optional, Union
 
 from .common import HOME_DIR, RED_TEMPLATE, startPrint, successPrint
 
@@ -29,17 +29,27 @@ def copyDirectory(source_dir: str, target_dir: str):
     successPrint(f"{target_dir} directory was copied")
 
 
-def runCommand(command: list[str], definition: str):
-    startPrint(definition)
-    # запускаем программу в дочернем процессе
-    subprocess.run(
-        command,
-        check=True,  # выбрасывает исключение при ненулевом коде возврата
-        stdout=subprocess.PIPE,  # захватывает стандартный вывод
-        stderr=subprocess.PIPE,  # захватывает стандартный вывод ошибок
-        text=True,
-    )
-    successPrint("completed")
+def runCommand(command, is_print: bool = False):
+    if not is_print:
+        # запускаем программу в дочернем процессе
+        subprocess.run(
+            command,
+            check=True,  # выбрасывает исключение при ненулевом коде возврата
+            stdout=subprocess.PIPE,  # захватывает стандартный вывод
+            stderr=subprocess.PIPE,  # захватывает стандартный вывод ошибок
+            text=True,
+            encoding="utf-8",
+        )
+    else:
+        with subprocess.Popen(
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            encoding="utf-8",
+        ) as process:
+            output, error = process.communicate()
+            print(output, error)
 
 
 def installPlugins():
@@ -52,20 +62,3 @@ def installPlugins():
             stdout=devnull,
             stderr=devnull,
         )
-
-
-"""def runCommand(command: list[str], definition: str):
-    startPrint(definition)
-    try:
-        subprocess.run(
-            command,
-            check=True,  # выбрасывает исключение при ненулевом коде возврата
-            stdout=subprocess.PIPE,  # захватывает стандартный вывод
-            stderr=subprocess.PIPE,  # захватывает стандартный вывод ошибок
-            text=True,
-        )
-        successPrint("completed")
-
-    except subprocess.CalledProcessError as e:
-        
-"""

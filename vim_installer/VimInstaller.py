@@ -9,7 +9,9 @@ from tools import (
     RED_TEMPLATE,
     copyDirectory,
     copyFile,
+    createDirectory,
     installPlugins,
+    installVimPlug,
     runCommand,
     startPrint,
     successPrint,
@@ -70,8 +72,10 @@ class VimInstaller:
         else:
             for manager in PackageManagers:
                 try:
-                    runCommand([manager.value, "--version"], f"Trying to call {manager.value}")
+                    startPrint(f"Trying to call {manager.value}")
+                    runCommand([manager.value, "--version"])
                     system_manager = manager
+                    break
                 except subprocess.CalledProcessError:
                     print(f"{manager} not installed")
                 except FileNotFoundError:
@@ -82,7 +86,9 @@ class VimInstaller:
 
         successPrint(f"found {system_manager.value} package manager")
         if installation_type == InstallationTypes.FULL:
-            self._installer = InstallerBase()
+            if system_manager == PackageManagers.DNF:
+                self._installer = VimDnfFullInstaller()
+                return
 
         if installation_type == InstallationTypes.MINIMAL:
             self._installer = VimPosixMinimalInstaller(system_manager)
@@ -97,12 +103,111 @@ class InstallerBase(abc.ABC):
         raise NotImplementedError
 
 
+class VimDnfFullInstaller(InstallerBase):
+    def run(self):
+        try:
+            startPrint("installing git, curl, vim")
+            runCommand(["sudo", "dnf", "install", "-y", "git", "curl", "vim", "vim-X11"], True)
+            installVimPlug()
+            createDirectory(f"{HOME_DIR}/temp")
+            # vim config
+            copyFile("./data/vimrc_configs", HOME_DIR, ".vimrc")
+            plug_install_result: subprocess.Popen = installPlugins()
+            # fonts
+            startPrint("installing fonts")
+            copyDirectory("./data/ui/fonts/JetBrainsMonoLinux", r"/usr/share/fonts/JetBrainsMono Nerd Font Mono")
+            runCommand(["fc-cache", "-f", "-v"])
+
+            # ycm
+            startPrint("installing tools for ycm")
+            runCommand(
+                [
+                    "sudo",
+                    "dnf",
+                    "install",
+                    "-y",
+                    "cmake",
+                    "gcc-c++",
+                    "make",
+                    "python3-devel",
+                    "mono-complete",
+                    "golang",
+                    "nodejs",
+                    "java-17-openjdk",
+                    "java-17-openjdk-devel",
+                    "npm",
+                ],
+                True,
+            )
+            copyFile(
+                "./data/tools_configs", f"{HOME_DIR}/.vim/bundle/YouCompleteMe/third_party/ycmd", ".ycm_extra_conf.py"
+            )
+            plug_install_result.wait()
+            createDirectory("/etc/apt/keyrings")
+            runCommand(
+                [
+                    "curl",
+                    "-fsSL",
+                    "https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key",
+                ],
+            )
+            runCommand(
+                [
+                    "sudo",
+                    "gpg",
+                    "--dearmor",
+                    "-o",
+                    "/etc/apt/keyrings/nodesource.gpg",
+                ],
+                True,
+            )
+            runCommand(
+                'echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] \
+                  https://deb.nodesource.com/node_current.x nodistro main" | \
+                  sudo tee /etc/apt/sources.list.d/nodesource.list',
+            )
+            startPrint("ycm updating submodules")
+            runCommand(
+                ["git", "-C", f"{HOME_DIR}/.vim/bundle/YouCompleteMe", "submodule", "update", "--init", "--recursive"],
+                True,
+            )
+            ycm_compilation_result: subprocess.Popen = subprocess.Popen(
+                ["python3", f"{HOME_DIR}/.vim/bundle/YouCompleteMe/install.py", "--clangd-completer"]
+            )
+
+            # js tools
+            copyFile("./data/tools_configs", HOME_DIR, ".tern-config")  # for autocompletion
+            # python tools
+            startPrint("installing pip")
+            runCommand(["sudo", "dnf", "install", "-y", "pip", "black", "pylint"], True)
+            runCommand(["python3", "-m", "install", "pylint", "isort", "mypy", "black"])
+            copyFile("./data/tools_configs", f"{HOME_DIR}/.config", "pycodestyle")  # autopep8
+            copyFile("./data/tools_configs", HOME_DIR, ".pylintrc")
+            # cpp tools
+            startPrint("installing clang-formatter")
+            runCommand(["sudo", "dnf", "install", "-y", "clang-tools-extra"], True)
+            copyFile("./data/tools_configs", HOME_DIR, ".clang-format")
+            # running scripts
+            copyDirectory("./data/scripts", f"{HOME_DIR}/.vim/scripts")
+
+            ycm_compilation_result.wait()
+
+            successPrint("Full installation completed")
+
+        except subprocess.CalledProcessError as e:
+            print(RED_TEMPLATE.format(f"Error executing command: {e}"))
+            print(f"Return code: {e.returncode}")
+            print(f"Error output: {e.stderr}")
+            raise e from e
+
+
 class VimPosixMinimalInstaller(InstallerBase):
     def __init__(self, package_manager: PackageManagers):
         self._package_manager: PackageManagers = package_manager
 
     def run(self):
         try:
+            startPrint("installing git, curl, vim")
             if self._package_manager == PackageManagers.BREW:
                 runCommand(
                     [
@@ -112,7 +217,7 @@ class VimPosixMinimalInstaller(InstallerBase):
                         "curl",
                         "vim",
                     ],
-                    "installing git, curl, vim",
+                    True,
                 )
             else:
                 runCommand(
@@ -125,18 +230,10 @@ class VimPosixMinimalInstaller(InstallerBase):
                         "curl",
                         "vim",
                     ],
-                    "installing git, curl, vim",
+                    True,
                 )
-            runCommand(
-                [
-                    "curl",
-                    "-fLo",
-                    "~/.vim/autoload/plug.vim",
-                    "--create-dirs",
-                    "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim",
-                ],
-                "installing vim-plug",
-            )
+            installVimPlug()
+            createDirectory(f"{HOME_DIR}/temp")
             # vim config
             copyFile("./data/vimrc_configs", f"{HOME_DIR}", "short.vimrc", ".vimrc")
             plug_install_result: subprocess.Popen = installPlugins()
@@ -154,6 +251,7 @@ class VimPosixMinimalInstaller(InstallerBase):
 class VimSyncFullInstaller(InstallerBase):
     def run(self):
         startPrint("Running full sync")
+        createDirectory(f"{HOME_DIR}/temp")
         # vim config
         copyFile("./data/vimrc_configs", HOME_DIR, ".vimrc")
         plug_install_result: subprocess.Popen = installPlugins()
@@ -165,9 +263,7 @@ class VimSyncFullInstaller(InstallerBase):
         # cpp tools
         copyFile("./data/tools_configs", HOME_DIR, ".clang-format")
         # ycm extra conf
-        copyFile(
-            "./data/tools_configs", f"{HOME_DIR}/.vim/bundle/YouCompleteMe/third_party/ycmd/", ".ycm_extra_conf.py"
-        )
+        copyFile("./data/tools_configs", f"{HOME_DIR}/.vim/bundle/YouCompleteMe/third_party/ycmd", ".ycm_extra_conf.py")
         # running scripts
         copyDirectory("./data/scripts", f"{HOME_DIR}/.vim/scripts")
         plug_install_result.wait()
@@ -177,6 +273,7 @@ class VimSyncFullInstaller(InstallerBase):
 class VimSyncMinimalInstaller(InstallerBase):
     def run(self):
         startPrint("Running minimal sync")
+        createDirectory(f"{HOME_DIR}/temp")
         # vim config
         copyFile("./data/vimrc_configs", f"{HOME_DIR}", "short.vimrc", ".vimrc")
         plug_install_result: subprocess.Popen = installPlugins()
