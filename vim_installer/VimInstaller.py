@@ -3,7 +3,7 @@ import subprocess
 from enum import IntEnum
 from typing import Optional
 
-from tools import (
+from .tools import (
     HOME_DIR,
     RED_TEMPLATE,
     PlatformSetup,

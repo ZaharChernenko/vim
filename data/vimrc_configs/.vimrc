@@ -43,7 +43,7 @@ if has('macunix')
   let g:os = 'macos'
   let g:ycm_python_interpreter_path = 'python3-intel64'
 else
-  set shell=/bin/zsh
+  " set shell=/bin/zsh
   set guifont=JetBrainsMono\ Nerd\ Font\ Mono\ Regular\ 11
   set guioptions=rl " egmrLtT - default value,
                     " custom: right, left scroll always,

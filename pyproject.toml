@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+[tool.setuptools.packages.find]
+where = ["."]  # директория с кодом
+include = ["vim_installer*"]  # модули, которые нужно установить, * для рекурсии
+exclude = ["data"]
+[project]
+name = "vim_installer"
+version = "1.0"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{email = "zaharchernenko35@gmail.com"}]
+
