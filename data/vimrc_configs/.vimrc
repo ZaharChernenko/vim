@@ -548,18 +548,18 @@ endfunction
 
 
 function OpenOrToggleTerminal()
-    " Проверяем, есть ли уже открытый терминал
-    if winnr('$') > 1 && bufwinnr('!/bin/zsh') != -1
-      " Если терминал открыт, переключаемся на него
-      let term_win = bufwinnr('!/bin/zsh')
-      execute term_win . 'wincmd w'
-    else
-      if &filetype == 'nerdtree'
-        wincmd l
-      endif
-      " Если терминал не открыт, открываем его
-      ter
+  " Проверяем, есть ли уже открытый терминал
+  if winnr('$') > 1 && bufwinnr($"!{$SHELL}") != -1
+    " Если терминал открыт, переключаемся на него
+    let term_win = bufwinnr($"!{$SHELL}")
+    execute term_win . 'wincmd w'
+  else
+    if &filetype == 'nerdtree'
+      wincmd l
     endif
-    resize 15
+    " Если терминал не открыт, открываем его
+    ter
+  endif
+  resize 15
 endfunction
 

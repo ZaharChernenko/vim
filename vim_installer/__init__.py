@@ -45,6 +45,10 @@ if __name__ == "__main__":
         print("Error, only one flag must be chosen")
         parser.print_help()
         sys.exit(1)
+    if mode == InstallationTypes.NO_ACTION:
+        print("Error, only one flag must be chosen")
+        parser.print_help()
+        sys.exit(1)
 
     vim_installer: VimInstaller = VimInstaller(mode)
     vim_installer.run()
