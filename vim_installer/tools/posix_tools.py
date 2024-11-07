@@ -123,8 +123,8 @@ def installCppDnf():
 
 
 def installFontsApt():
-    os.system(f"sudo mkdir '/usr/share/fonts/truetype/JetBrainsMono Nerd Font Mono'")
-    os.system(f"sudo cp ./data/ui/fonts/JetBrainsMonoLinux/* '/usr/share/fonts/truetype/JetBrainsMono Nerd Font Mono'")
+    os.system("sudo mkdir '/usr/share/fonts/truetype/JetBrainsMono Nerd Font Mono'")
+    os.system("sudo cp ./data/ui/fonts/JetBrainsMonoLinux/* '/usr/share/fonts/truetype/JetBrainsMono Nerd Font Mono'")
     runCommand(["fc-cache", "-f", "-v"])
 
 
@@ -136,3 +136,11 @@ def installFontsDnf():
     os.system("sudo mkdir '/usr/share/fonts/JetBrainsMono Nerd Font Mono'")
     os.system("sudo cp ./data/ui/fonts/JetBrainsMonoLinux/* '/usr/share/fonts/JetBrainsMono Nerd Font Mono'")
     runCommand(["fc-cache", "-f", "-v"])
+
+
+def setupVimspectorMac():
+    copyDirectory("./data/tools_configs/vimspector_configs", f"{HOME_DIR}/.vim/bundle/vimspector/configurations/macos")
+
+
+def setupVimspectorLinux():
+    copyDirectory("./data/tools_configs/vimspector_configs", f"{HOME_DIR}/.vim/bundle/vimspector/configurations/linux")

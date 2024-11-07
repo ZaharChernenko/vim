@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Optional
 
 from .common import (
@@ -17,6 +16,11 @@ if __platform_setup is None:
 
 if __platform_setup.os in (SupportedOS.MACOS, SupportedOS.LINUX):
     from .posix_tools import installVimPlug
+
+    if __platform_setup.os == SupportedOS.MACOS:
+        from .posix_tools import setupVimspectorMac as setupVimspector
+    elif __platform_setup.os == SupportedOS.LINUX:
+        from .posix_tools import setupVimspectorLinux as setupVimspector
 
     if __platform_setup.package_manager == PackageManagers.APT:
         from .posix_tools import installCppApt as installCpp

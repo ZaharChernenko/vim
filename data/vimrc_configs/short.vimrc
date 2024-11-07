@@ -40,8 +40,13 @@ if has('macunix')
   set linespace=3
   set fillchars+=vert:\│
   let g:os = 'macos'
+  let g:ycm_python_interpreter_path = 'python3-intel64'
 else
+  set guioptions=rl " egmrLtT - default value,
+                    " custom: right, left scroll always,
+                    " because of gvim bug
   let g:os = 'linux'
+  let g:ycm_python_interpreter_path = 'python3'
 endif
 let g:home = $HOME
 
@@ -61,6 +66,7 @@ call plug#begin('~/.vim/bundle')
 call plug#end()
 
 colorscheme codedark
+autocmd VimEnter * call RunVim()
 autocmd BufNew,BufRead *.asm set ft=tasm
 
 augroup python
@@ -127,8 +133,11 @@ map м v
 map М V
 map ш i
 map Ш I
+map г u
+map Г U
 noremap о a
 noremap О A
+
 if g:os == 'macos'
   let g:SuperTabMappingForward = '<C-tab>'
   " moving in buffer
@@ -198,11 +207,31 @@ else
     noremap <silent> <A-h> :wincmd h<CR>
     noremap <silent> <A-j> :wincmd j<CR>
     noremap <silent> <A-l> :wincmd l<CR>
+    noremap <silent> <C-h> :WintabsPrevious<CR>
+    noremap <silent> <C-l> :WintabsNext<CR>
+    noremap <silent> <C-w> :WintabsClose<CR>
+    inoremap <silent> <C-w> <Esc>:WintabsClose<CR>
     " Russian
     noremap <silent> <A-л> :wincmd k<CR>
     noremap <silent> <A-р> :wincmd h<CR>
     noremap <silent> <A-о> :wincmd j<CR>
     noremap <silent> <A-д> :wincmd l<CR>
+    noremap <silent> <C-р> :WintabsPrevious<CR>
+    noremap <silent> <C-д> :WintabsNext<CR>
+    noremap <silent> <C-ц> :WintabsClose<CR>
+    inoremap <silent> <C-ц> <Esc>:WintabsClose<CR>
+    " terminal
+    tnoremap <C-c> <C-W>N
+    tnoremap <C-v> <C-W>"+
+    tnoremap <silent> <A-t> <C-\><C-n>:resize 1<CR>:wincmd j<CR>
+    noremap <silent> <A-t> :call OpenOrToggleTerminal()<CR><C-\><C-n>i
+    inoremap <silent> <A-t> <Esc>:call OpenOrToggleTerminal()<CR><C-\><C-n>i
+    " Russian
+    tnoremap <C-с> <C-W>N
+    tnoremap <C-м> <C-W>"+
+    tnoremap <silent> <A-е> <C-\><C-n>:resize 1<CR>:wincmd j<CR>
+    noremap <silent> <A-е> :call OpenOrToggleTerminal()<CR><C-\><C-n>i
+    inoremap <silent> <A-е> <Esc>:call OpenOrToggleTerminal()<CR><C-\><C-n>i
     " NerdTree
     noremap <silent> <A-e> :NERDTreeToggle<CR>
     inoremap <silent> <A-e> <Esc>:NERDTreeToggle<CR>i
@@ -224,6 +253,9 @@ else
     " js
     autocmd Filetype javascript noremap <buffer> <A-r> :call RunJS()<CR>
     autocmd Filetype javascript inoremap <buffer> <A-r> <Esc>:call RunJS()<CR>
+    " Russian
+    autocmd Filetype javascript noremap <buffer> <A-к> :call RunJS()<CR>
+    autocmd Filetype javascript inoremap <buffer> <A-к> <Esc>:call RunJS()<CR>
 
   else
     let g:SuperTabMappingForward = '<Esc><Tab>'
@@ -239,22 +271,43 @@ else
     noremap <silent> <Esc>h :wincmd h<CR>
     noremap <silent> <Esc>j :wincmd j<CR>
     noremap <silent> <Esc>l :wincmd l<CR>
+    " Russian
+    noremap <silent> <Esc>л :wincmd k<CR>
+    noremap <silent> <Esc>р :wincmd h<CR>
+    noremap <silent> <Esc>о :wincmd j<CR>
+    noremap <silent> <Esc>д :wincmd l<CR>
     " NerdTree
     noremap <silent> <Esc>e :NERDTreeToggle<CR>
     inoremap <silent> <Esc>e <Esc>:NERDTreeToggle<CR>i
+    " Russian
+    noremap <silent> <Esc>у :NERDTreeToggle<CR>
+    inoremap <silent> <Esc>у <Esc>:NERDTreeToggle<CR>i
     " terminal
     tnoremap <silent> <Esc>t <C-\><C-n>:resize 1<CR>:wincmd j<CR>
     noremap <silent> <Esc>t :call OpenOrToggleTerminal()<CR><C-\><C-n>i
     inoremap <silent> <Esc>t <Esc>:call OpenOrToggleTerminal()<CR><C-\><C-n>i
+    " Russian
+    tnoremap <silent> <Esc>е <C-\><C-n>:resize 1<CR>:wincmd j<CR>
+    noremap <silent> <Esc>е :call OpenOrToggleTerminal()<CR><C-\><C-n>i
+    inoremap <silent> <Esc>е <Esc>:call OpenOrToggleTerminal()<CR><C-\><C-n>i
     " python
     autocmd Filetype python noremap <buffer> <Esc>r :call RunPython()<CR>
     autocmd filetype python inoremap <buffer> <Esc>r <Esc>:call RunPython()<CR>
+    " Russian
+    autocmd Filetype python noremap <buffer> <Esc>к :call RunPython()<CR>
+    autocmd filetype python inoremap <buffer> <Esc>к <Esc>:call RunPython()<CR>
     " cpp
     autocmd Filetype cpp noremap <buffer> <Esc>r :call RunCpp()<CR>
     autocmd FileType cpp inoremap <buffer> <Esc>r <Esc>:call RunCpp()<CR>
+    " Russian
+    autocmd Filetype cpp noremap <buffer> <Esc>к :call RunCpp()<CR>
+    autocmd FileType cpp inoremap <buffer> <Esc>к <Esc>:call RunCpp()<CR>
     " js
     autocmd Filetype javascript noremap <buffer> <Esc>r :call RunJS()<CR>
     autocmd Filetype javascript inoremap <buffer> <Esc>r <Esc>:call RunJS()<CR>
+    " Russian
+    autocmd Filetype javascript noremap <buffer> <Esc>к :call RunJS()<CR>
+    autocmd Filetype javascript inoremap <buffer> <Esc>к <Esc>:call RunJS()<CR>
   endif
 
   " normal cut and copy
@@ -267,23 +320,26 @@ else
   inoremap <C-v> <C-r><C-o>+
   inoremap <C-s> <Esc>:w<CR>
   inoremap <C-z> <Esc>ui
-  " terminal
-  tnoremap <C-c> <C-W>N
-  tnoremap <C-v> <C-W>"+
-  tnoremap <silent> <A-t> <C-\><C-n>:resize 1<CR>:wincmd j<CR>
-  noremap <silent> <A-t> :call OpenOrToggleTerminal()<CR><C-\><C-n>i
-  inoremap <silent> <A-t> <Esc>:call OpenOrToggleTerminal()<CR><C-\><C-n>i
-  " buffers
-  noremap <silent> <C-h> :WintabsPrevious<CR>
-  noremap <silent> <C-l> :WintabsNext<CR>
-  noremap <silent> <C-w> :WintabsClose<CR>
-  inoremap <silent> <C-w> <Esc>:WintabsClose<CR>
   " Russian
-  noremap <silent> <C-р> :WintabsPrevious<CR>
-  noremap <silent> <C-д> :WintabsNext<CR>
-  noremap <silent> <C-ц> :WintabsClose<CR>
-  inoremap <silent> <C-ц> <Esc>:WintabsClose<CR>
+  noremap <C-с> "+yi<Esc>
+  noremap <C-ч> "+c<Esc>
+  noremap <C-м> i<C-r><C-o>+
+  noremap <C-я> u
+  noremap <C-ы> :w<CR>
+  noremap <C-ф> ggVG
+  inoremap <C-м> <C-r><C-o>+
+  inoremap <C-ы> <Esc>:w<CR>
+  inoremap <C-я> <Esc>ui
 endif
+
+
+function RunVim()
+  NERDTree | wincmd p
+  if g:os == 'linux'
+    call GetPython()
+    let g:ycm_python_interpreter_path = b:python
+  endif
+endfunction
 
 
 function GetPythonPath()

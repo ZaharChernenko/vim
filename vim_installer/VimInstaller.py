@@ -20,6 +20,7 @@ from tools import (
     installVimPlug,
     installYCM,
     runCommand,
+    setupVimspector,
     startPrint,
     successPrint,
 )
@@ -113,6 +114,8 @@ class VimFullInstaller(InstallerBase):
             startPrint("installing clang-formatter")
             installCpp()
             copyFile("./data/tools_configs", HOME_DIR, ".clang-format")
+            # vimscpector configs
+            setupVimspector()
             # running scripts
             copyDirectory("./data/scripts", f"{HOME_DIR}/.vim/scripts")
 
@@ -164,6 +167,8 @@ class VimSyncFullInstaller(InstallerBase):
         copyFile("./data/tools_configs", HOME_DIR, ".clang-format")
         # ycm extra conf
         copyFile("./data/tools_configs", f"{HOME_DIR}/.vim/bundle/YouCompleteMe/third_party/ycmd", ".ycm_extra_conf.py")
+        # vimscpector configs
+        setupVimspector()
         # running scripts
         copyDirectory("./data/scripts", f"{HOME_DIR}/.vim/scripts")
         plug_install_result.wait()

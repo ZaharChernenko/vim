@@ -55,6 +55,10 @@ def createDirectory(path: str):
 
 def copyDirectory(source_dir: str, target_dir: str):
     """Copies directory if it doesn't exists, otherwise adds and rewrites new files"""
+    if os.path.exists(f"{target_dir}"):
+        folder_name: str = os.path.basename(target_dir)
+        print(f"dump current {folder_name}")
+        shutil.copytree(target_dir, f"{HOME_DIR}/temp/{folder_name}", dirs_exist_ok=True)
     shutil.copytree(source_dir, target_dir, dirs_exist_ok=True)
     successPrint(f"{target_dir} directory was copied")
 
