@@ -77,7 +77,8 @@ call plug#begin('~/.vim/bundle')
   Plug 'tpope/vim-fugitive'
   " bindings
   Plug 'ervandew/supertab'
-  Plug 'jiangmiao/auto-pairs'
+  Plug 'tmsvg/pear-tree'
+  " Plug 'alvan/vim-closetag'
   Plug 'mg979/vim-visual-multi'
   " buffers
   Plug 'zefei/vim-wintabs'
@@ -85,8 +86,8 @@ call plug#begin('~/.vim/bundle')
 call plug#end()
 
 
-" colorscheme catppuccin-macchiato
-colorscheme sublimemonokai
+colorscheme catppuccin-macchiato
+" colorscheme sublimemonokai
 autocmd VimEnter * call RunVim()
 autocmd BufNew,BufRead *.asm set ft=tasm
 
@@ -107,8 +108,8 @@ let g:airline_section_x='' " remove the filetype part
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 let g:airline_skip_empty_sections = 1 " remove separators for empty sections
 let g:airline_powerline_fonts = 1
-" let g:airline_theme = 'catppuccin'
-let g:airline_theme = 'molokai'
+let g:airline_theme = 'catppuccin'
+" let g:airline_theme = 'molokai'
 " devicons
 let g:DevIconsDefaultFolderOpenSymbol=''
 let g:DevIconsEnableFoldersOpenClose = 1
@@ -117,6 +118,8 @@ let NERDTreeMinimalUI=1
 let g:NERDTreeAutoDeleteBuffer = 1
 " wintabs
 let g:wintabs_autoclose=2
+" pear-tree
+let g:pear_tree_repeatable_expand = 0
 " ALE
 let g:ale_lint_on_save = 1
 let g:ale_completion_enabled = 0
@@ -234,6 +237,7 @@ map щ o
 map й ge
 map Й ^
 map У g_
+map ь m
 " здесь без map, т.к. иначе русская а будет стрелкой вверх
 noremap а w
 noremap А W
