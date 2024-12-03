@@ -107,7 +107,9 @@ def installPythonDnf():
 
 
 def installPythonBrew():
-    runCommand(["python3", "-m", "pip", "install", "pylint", "isort", "mypy", "black"])
+    # 3.12 because macos has old python version
+    runCommand(["brew", "install", "python@3.12"], True)
+    runCommand(["python3.12", "-m", "pip", "install", "pylint", "isort", "mypy", "black"])
 
 
 def installCppApt():

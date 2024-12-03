@@ -42,6 +42,10 @@ if has('macunix')
   set fillchars+=vert:\│
   let g:os = 'macos'
   let g:ycm_python_interpreter_path = 'python3-intel64'
+  " в macos старый python3.9, который не поддерживает match и generics
+  " при установке на новый macos надо будет обязательно установить через pip
+  " python3.12 -m pip install mypy
+  let g:ale_python_mypy_executable = '/Library/Frameworks/Python.framework/Versions/3.12/bin/mypy'
 else
   " set shell=/bin/zsh
   set guifont=JetBrainsMono\ Nerd\ Font\ Mono\ Regular\ 11
@@ -148,6 +152,7 @@ let g:ale_python_mypy_options = '--ignore-missing-imports --check-untyped-defs
       \ --cache-dir=/dev/null'
 let g:ale_python_isort_options = '--profile black'
 let g:ale_python_auto_pipenv = 1
+let g:ale_python_auto_poetry = 1
 
 highlight clear ALEErrorSign
 highlight clear ALEWarningSign
@@ -238,9 +243,8 @@ map й ge
 map Й ^
 map У g_
 map ь m
-" здесь без map, т.к. иначе русская а будет стрелкой вверх
-noremap а w
-noremap А W
+map а f
+map А F
 " commands
 map ч x
 map Ч X
@@ -566,4 +570,3 @@ function OpenOrToggleTerminal()
   endif
   resize 15
 endfunction
-
