@@ -421,46 +421,62 @@ else
     tnoremap <silent> <Esc>е <C-\><C-n>:resize 1<CR>:wincmd j<CR>
     noremap <silent> <Esc>е :call OpenOrToggleTerminal()<CR><C-\><C-n>i
     inoremap <silent> <Esc>е <Esc>:call OpenOrToggleTerminal()<CR><C-\><C-n>i
+    " code run
     " python
     autocmd Filetype python noremap <buffer> <Esc>r :call RunPython()<CR>
     autocmd filetype python inoremap <buffer> <Esc>r <Esc>:call RunPython()<CR>
-    " Russian
-    autocmd Filetype python noremap <buffer> <Esc>к :call RunPython()<CR>
-    autocmd filetype python inoremap <buffer> <Esc>к <Esc>:call RunPython()<CR>
     " cpp
     autocmd Filetype cpp noremap <buffer> <Esc>r :call RunCpp()<CR>
     autocmd FileType cpp inoremap <buffer> <Esc>r <Esc>:call RunCpp()<CR>
-    " Russian
-    autocmd Filetype cpp noremap <buffer> <Esc>к :call RunCpp()<CR>
-    autocmd FileType cpp inoremap <buffer> <Esc>к <Esc>:call RunCpp()<CR>
     " js
     autocmd Filetype javascript noremap <buffer> <Esc>r :call RunJS()<CR>
     autocmd Filetype javascript inoremap <buffer> <Esc>r <Esc>:call RunJS()<CR>
     " Russian
+    " python
+    autocmd Filetype python noremap <buffer> <Esc>к :call RunPython()<CR>
+    autocmd filetype python inoremap <buffer> <Esc>к <Esc>:call RunPython()<CR>
+    " cpp
+    autocmd Filetype cpp noremap <buffer> <Esc>к :call RunCpp()<CR>
+    autocmd FileType cpp inoremap <buffer> <Esc>к <Esc>:call RunCpp()<CR>
+    " js
     autocmd Filetype javascript noremap <buffer> <Esc>к :call RunJS()<CR>
     autocmd Filetype javascript inoremap <buffer> <Esc>к <Esc>:call RunJS()<CR>
   endif
 
-  " normal cut and copy
+  " ctrl bindings
   noremap <C-c> "+yi<Esc>
   noremap <C-x> "+c<Esc>
-  noremap <C-v> i<C-r><C-o>+
-  noremap <C-z> u
-  noremap <C-s> :w<CR>
-  noremap <C-a> ggVG
-  inoremap <C-v> <C-r><C-o>+
-  inoremap <C-s> <Esc>:w<CR>
+  " ctrl+z
+  nnoremap <C-z> u
+  vnoremap <C-z> <Esc>u
   inoremap <C-z> <Esc>ui
+  " ctrl+a
+  noremap <C-a> ggVG
+  inoremap <C-a> <Esc>ggVG
+  " ctrl+v
+  nnoremap <C-v> a<C-r><C-o>+
+  vnoremap <C-v> xa<C-r><C-o>+
+  inoremap <C-v> <C-r><C-o>+
+  " ctrl+s
+  noremap <C-s> :w<CR>
+  inoremap <C-s> <Esc>:w<CR>
   " Russian
   noremap <C-с> "+yi<Esc>
   noremap <C-ч> "+c<Esc>
-  noremap <C-м> i<C-r><C-o>+
-  noremap <C-я> u
-  noremap <C-ы> :w<CR>
-  noremap <C-ф> ggVG
-  inoremap <C-м> <C-r><C-o>+
-  inoremap <C-ы> <Esc>:w<CR>
+  " ctrl+z
+  nnoremap <C-я> u
+  vnoremap <C-я> <Esc>u
   inoremap <C-я> <Esc>ui
+  " ctrl+a
+  noremap <C-ф> ggVG
+  inoremap <C-ф> <Esc>ggVG
+  " ctrl+v
+  nnoremap <C-м> a<C-r><C-o>+
+  vnoremap <C-м> xa<C-r><C-o>+
+  inoremap <C-м> <C-r><C-o>+
+  " ctrl+s
+  noremap <C-ы> :w<CR>
+  inoremap <C-ы> <Esc>:w<CR>
 endif
 
 
