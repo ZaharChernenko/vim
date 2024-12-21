@@ -287,6 +287,11 @@ if g:os == 'macos'
   noremap <silent> <C-l> :wincmd l<CR>
   noremap <silent> <D-h> :WintabsPrevious<CR>
   noremap <silent> <D-l> :WintabsNext<CR>
+  tnoremap <silent> <C-k> <C-\><C-n>:wincmd k<CR>
+  tnoremap <silent> <C-h> <C-\><C-n>:wincmd h<CR>
+  tnoremap <silent> <C-j> <C-\><C-n>:wincmd j<CR>
+  tnoremap <silent> <C-l> <C-\><C-n>:wincmd l<CR>
+  " closing buffers
   noremap <silent> <D-w> :WintabsClose<CR>
   inoremap <silent> <D-w> <Esc>:WintabsClose<CR>
   " terminal
@@ -340,6 +345,11 @@ else
     noremap <silent> <A-l> :wincmd l<CR>
     noremap <silent> <C-h> :WintabsPrevious<CR>
     noremap <silent> <C-l> :WintabsNext<CR>
+    tnoremap <silent> <A-k> <C-\><C-n>:wincmd k<CR>
+    tnoremap <silent> <A-h> <C-\><C-n>:wincmd h<CR>
+    tnoremap <silent> <A-j> <C-\><C-n>:wincmd j<CR>
+    tnoremap <silent> <A-l> <C-\><C-n>:wincmd l<CR>
+    " closing buffers
     noremap <silent> <C-w> :WintabsClose<CR>
     inoremap <silent> <C-w> <Esc>:WintabsClose<CR>
     " Russian
@@ -402,6 +412,10 @@ else
     noremap <silent> <Esc>h :wincmd h<CR>
     noremap <silent> <Esc>j :wincmd j<CR>
     noremap <silent> <Esc>l :wincmd l<CR>
+    tnoremap <silent> <Esc>k <C-\><C-n>:wincmd k<CR>
+    tnoremap <silent> <Esc>h <C-\><C-n>:wincmd h<CR>
+    tnoremap <silent> <Esc>j <C-\><C-n>:wincmd j<CR>
+    tnoremap <silent> <Esc>l <C-\><C-n>:wincmd l<CR>
     " Russian
     noremap <silent> <Esc>л :wincmd k<CR>
     noremap <silent> <Esc>р :wincmd h<CR>
