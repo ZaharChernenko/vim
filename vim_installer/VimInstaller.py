@@ -118,6 +118,9 @@ class VimFullInstaller(InstallerBase):
             setupVimspector()
             # running scripts
             copyDirectory("./data/scripts", f"{HOME_DIR}/.vim/scripts")
+            # after loading setup
+            createDirectory(f"{HOME_DIR}/.vim/after/plugin")
+            copyFile("./data/vimrc_configs/plugin", f"{HOME_DIR}/.vim/after/plugin", "setup.vim", "setup.vim")
 
             ycm_compilation_result.wait()
 
@@ -141,7 +144,13 @@ class VimPosixMinimalInstaller(InstallerBase):
             copyFile("./data/vimrc_configs", f"{HOME_DIR}", "short.vimrc", ".vimrc")
             plug_install_result: subprocess.Popen = installPlugins()
             copyDirectory("./data/scripts", f"{HOME_DIR}/.vim/scripts")
+
+            # after loading setup
+            createDirectory(f"{HOME_DIR}/.vim/after/plugin")
+            copyFile("./data/vimrc_configs/plugin", f"{HOME_DIR}/.vim/after/plugin", "setup.vim", "setup.vim")
+
             plug_install_result.wait()
+
             successPrint("Minimal installation completed")
 
         except subprocess.CalledProcessError as e:
@@ -171,7 +180,13 @@ class VimSyncFullInstaller(InstallerBase):
         setupVimspector()
         # running scripts
         copyDirectory("./data/scripts", f"{HOME_DIR}/.vim/scripts")
+
+        # after loading setup
+        createDirectory(f"{HOME_DIR}/.vim/after/plugin")
+        copyFile("./data/vimrc_configs/plugin", f"{HOME_DIR}/.vim/after/plugin", "setup.vim", "setup.vim")
+
         plug_install_result.wait()
+
         successPrint("Full sync finished")
 
 
@@ -184,5 +199,11 @@ class VimSyncMinimalInstaller(InstallerBase):
         plug_install_result: subprocess.Popen = installPlugins()
         # running scripts
         copyDirectory("./data/scripts", f"{HOME_DIR}/.vim/scripts")
+
+        # after loading setup
+        createDirectory(f"{HOME_DIR}/.vim/after/plugin")
+        copyFile("./data/vimrc_configs/plugin", f"{HOME_DIR}/.vim/after/plugin", "setup.vim", "setup.vim")
+
         plug_install_result.wait()
+
         successPrint("Minimal sync finished")

@@ -2,6 +2,7 @@ if __name__ == "__main__":
     import argparse
     import sys
 
+    # works only if vim_installer installed in pip
     from vim_installer import InstallationTypes, VimInstaller
 
     parser: argparse.ArgumentParser = argparse.ArgumentParser(description="Vim installer")
