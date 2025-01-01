@@ -343,32 +343,40 @@ else
     noremap <silent> <A-h> :wincmd h<CR>
     noremap <silent> <A-j> :wincmd j<CR>
     noremap <silent> <A-l> :wincmd l<CR>
-    noremap <silent> <C-h> :WintabsPrevious<CR>
-    noremap <silent> <C-l> :WintabsNext<CR>
     tnoremap <silent> <A-k> <C-\><C-n>:wincmd k<CR>
     tnoremap <silent> <A-h> <C-\><C-n>:wincmd h<CR>
     tnoremap <silent> <A-j> <C-\><C-n>:wincmd j<CR>
     tnoremap <silent> <A-l> <C-\><C-n>:wincmd l<CR>
-    " closing buffers
-    noremap <silent> <C-w> :WintabsClose<CR>
-    inoremap <silent> <C-w> <Esc>:WintabsClose<CR>
     " Russian
     noremap <silent> <A-л> :wincmd k<CR>
     noremap <silent> <A-р> :wincmd h<CR>
     noremap <silent> <A-о> :wincmd j<CR>
     noremap <silent> <A-д> :wincmd l<CR>
+    tnoremap <silent> <A-л> <C-\><C-n>:wincmd k<CR>
+    tnoremap <silent> <A-р> <C-\><C-n>:wincmd h<CR>
+    tnoremap <silent> <A-о> <C-\><C-n>:wincmd j<CR>
+    tnoremap <silent> <A-д> <C-\><C-n>:wincmd l<CR>
+    " closing tabs
+    noremap <silent> <C-h> :WintabsPrevious<CR>
+    noremap <silent> <C-l> :WintabsNext<CR>
+    noremap <silent> <C-w> :WintabsClose<CR>
+    inoremap <silent> <C-w> <Esc>:WintabsClose<CR>
+    " Russian
     noremap <silent> <C-р> :WintabsPrevious<CR>
     noremap <silent> <C-д> :WintabsNext<CR>
     noremap <silent> <C-ц> :WintabsClose<CR>
     inoremap <silent> <C-ц> <Esc>:WintabsClose<CR>
     " terminal
-    tnoremap <C-c> <C-W>N
+    " <C-w>N - normal mode in terminal (ctrl+w, shift+n)
+    " все сочетания с ctrl регистронезависимые, поэтому ctrl+shift+w нельзя
+    " забиндить на копирование, т.к. ctrl+c всегда остановка процесса, поэтому
+    " строка ниже бесполезная
+    " tnoremap <C-c> <C-W>N
     tnoremap <C-v> <C-W>"+
     tnoremap <silent> <A-t> <C-\><C-n>:resize 1<CR>:wincmd j<CR>
     noremap <silent> <A-t> :call OpenOrToggleTerminal()<CR><C-\><C-n>i
     inoremap <silent> <A-t> <Esc>:call OpenOrToggleTerminal()<CR><C-\><C-n>i
     " Russian
-    tnoremap <C-с> <C-W>N
     tnoremap <C-м> <C-W>"+
     tnoremap <silent> <A-е> <C-\><C-n>:resize 1<CR>:wincmd j<CR>
     noremap <silent> <A-е> :call OpenOrToggleTerminal()<CR><C-\><C-n>i
@@ -421,6 +429,10 @@ else
     noremap <silent> <Esc>р :wincmd h<CR>
     noremap <silent> <Esc>о :wincmd j<CR>
     noremap <silent> <Esc>д :wincmd l<CR>
+    tnoremap <silent> <Esc>л <C-\><C-n>:wincmd k<CR>
+    tnoremap <silent> <Esc>р <C-\><C-n>:wincmd h<CR>
+    tnoremap <silent> <Esc>о <C-\><C-n>:wincmd j<CR>
+    tnoremap <silent> <Esc>д <C-\><C-n>:wincmd l<CR>
     " NerdTree
     noremap <silent> <Esc>e :NERDTreeToggle<CR>
     inoremap <silent> <Esc>e <Esc>:NERDTreeToggle<CR>i
