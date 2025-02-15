@@ -1,7 +1,7 @@
 import os
 
 from .common import HOME_DIR
-from .common_tools import copyDirectory, runCommand
+from .common_tools import copyDirectory, copyFile, runCommand
 
 
 def installVimPlug():
@@ -93,6 +93,25 @@ def installYCMDnf():
             "npm",
         ],
         True,
+    )
+
+
+def setupYCMExtraConfig():
+    ycm_path: str = "./data/tools_configs/ycm_config"
+    copyFile(
+        source_path=ycm_path,
+        target_path=f"{HOME_DIR}/.vim/bundle/YouCompleteMe/third_party/ycmd",
+        source_filename=".ycm_extra_conf.py",
+    )
+    copyFile(
+        source_path=ycm_path,
+        target_path=f"{HOME_DIR}/.vim/bundle/YouCompleteMe/third_party/ycmd",
+        source_filename="common.py",
+    )
+    copyFile(
+        source_path=ycm_path,
+        target_path=f"{HOME_DIR}/.vim/bundle/YouCompleteMe/third_party/ycmd",
+        source_filename="cpp.py",
     )
 
 
