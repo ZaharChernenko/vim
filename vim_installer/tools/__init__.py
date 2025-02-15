@@ -15,7 +15,7 @@ if __platform_setup is None:
     raise OSError("Unsupported OS or package manager")
 
 if __platform_setup.os in (SupportedOS.MACOS, SupportedOS.LINUX):
-    from .posix_tools import installVimPlug
+    from .posix_tools import installVimPlug, setupYCMExtraConfig
 
     if __platform_setup.os == SupportedOS.MACOS:
         from .posix_tools import setupVimspectorMac as setupVimspector

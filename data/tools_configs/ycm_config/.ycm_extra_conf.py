@@ -34,12 +34,12 @@ from sysconfig import get_path
 
 import ycm_core
 
+from cpp import TCpp
+
 DIR_OF_THIS_SCRIPT = p.abspath(p.dirname(__file__))
 DIR_OF_THIRD_PARTY = p.join(DIR_OF_THIS_SCRIPT, "third_party")
 DIR_OF_WATCHDOG_DEPS = p.join(DIR_OF_THIRD_PARTY, "watchdog_deps")
-SOURCE_EXTENSIONS = [".cpp", ".cxx", ".cc", ".c", ".m", ".mm"]
 
-database = None
 
 # These are the compilation flags that will be used in case there's no
 # compilation database set (by default, one is not set).
@@ -90,50 +90,6 @@ flags = [
     "-std=c++2a",
 ]
 
-# Set this to the absolute path to the folder (NOT the file!) containing the
-# compile_commands.json file to use that instead of 'flags'. See here for
-# more details: http://clang.llvm.org/docs/JSONCompilationDatabase.html
-#
-# You can get CMake to generate this file for you by adding:
-#   set( CMAKE_EXPORT_COMPILE_COMMANDS 1 )
-# to your CMakeLists.txt file.
-#
-# Most projects will NOT need to set this to anything; you can just change the
-# 'flags' list of compilation flags. Notice that YCM itself uses that approach.
-
-
-def findNodeUpwards(start_dir: str, node: str) -> str:
-    """
-    Ищет нужный узел по текущей папке и всем родительским
-    """
-    current_dir, next_dir = start_dir, os.path.dirname(start_dir)
-    while current_dir != next_dir:  # пока не достигнем корня
-        path_to_node = os.path.join(current_dir, node)
-        if os.path.exists(path_to_node):
-            return path_to_node
-        current_dir = next_dir  # поднимаемся на уровень выше
-        next_dir = os.path.dirname(current_dir)
-    return ""
-
-
-# нужно для автодополнения в проекте с системами сборки, например CMake
-compilation_database_folder = os.path.dirname(findNodeUpwards(os.getcwd(), "build/compile_commands.json"))
-
-
-def IsHeaderFile(filename):
-    extension = p.splitext(filename)[1]
-    return extension in {".h", ".hxx", ".hpp", ".hh"}
-
-
-def FindCorrespondingSourceFile(filename):
-    if IsHeaderFile(filename):
-        basename = p.splitext(filename)[0]
-        for extension in SOURCE_EXTENSIONS:
-            replacement_file = basename + extension
-            if p.exists(replacement_file):
-                return replacement_file
-    return filename
-
 
 def PathToPythonUsedDuringBuild():
     try:
@@ -157,10 +113,6 @@ def getPythonInterpreter():
 def Settings(**kwargs):
     # Do NOT import ycm_core at module scope.
 
-    global database
-    if database is None and p.exists(compilation_database_folder):
-        database = ycm_core.CompilationDatabase(compilation_database_folder)
-
     language = kwargs["language"]
 
     if language == "cfamily":
@@ -170,8 +122,8 @@ def Settings(**kwargs):
         # In addition, use this source file as the translation unit. This makes it
         # possible to jump from a declaration in the header file to its definition
         # in the corresponding source file.
-        filename = FindCorrespondingSourceFile(kwargs["filename"])
-
+        filename = TCpp.findCorrespondingSourceFile(kwargs["filename"])
+        database = TCpp.getDatabase(kwargs["filename"])
         if not database:
             return {"flags": flags, "include_paths_relative_to_dir": DIR_OF_THIS_SCRIPT, "override_filename": filename}
 
