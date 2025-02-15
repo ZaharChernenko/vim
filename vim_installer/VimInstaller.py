@@ -99,8 +99,15 @@ class VimFullInstaller(InstallerBase):
             copyFile(
                 "./data/tools_configs", f"{HOME_DIR}/.vim/bundle/YouCompleteMe/third_party/ycmd", ".ycm_extra_conf.py"
             )
+            # --clang-completer нужен для работы CompilationDatabase
+            # подробнее: https://github.com/ycm-core/YouCompleteMe/issues/3678
             ycm_compilation_result: subprocess.Popen = subprocess.Popen(
-                ["python3", f"{HOME_DIR}/.vim/bundle/YouCompleteMe/install.py", "--clangd-completer"]
+                [
+                    "python3",
+                    f"{HOME_DIR}/.vim/bundle/YouCompleteMe/install.py",
+                    "--clangd-completer",
+                    "--clang-completer",
+                ]
             )
 
             # js tools
