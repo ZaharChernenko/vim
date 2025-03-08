@@ -90,7 +90,7 @@ call plug#begin('~/.vim/bundle')
 call plug#end()
 
 
-colorscheme catppuccin-macchiato
+colorscheme catppuccin-mocha
 " colorscheme sublimemonokai
 autocmd VimEnter * call RunVim()
 autocmd BufNew,BufRead *.asm set ft=tasm
@@ -129,7 +129,7 @@ let g:ale_lint_on_save = 1
 let g:ale_completion_enabled = 0
 let g:ale_linters = {
     \'python': ['pylint', 'mypy'],
-    \'cpp': ['cc', 'clang'],
+    \'cpp': ['cc', 'clang', 'cppcheck'],
 \}
 let g:ale_fixers = {
     \'*': ['trim_whitespace'],
@@ -612,3 +612,4 @@ function OpenOrToggleTerminal()
   endif
   resize 15
 endfunction
+

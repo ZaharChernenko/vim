@@ -132,15 +132,15 @@ def installPythonBrew():
 
 
 def installCppApt():
-    runCommand(["sudo", "apt", "install", "-y", "clang-tools-extra"], True)
+    runCommand(["sudo", "apt", "install", "-y", "clang-tools-extra", "cppcheck"], True)
 
 
 def installCppBrew():
-    runCommand(["sudo", "dnf", "install", "-y", "clang-format"], True)
+    runCommand(["sudo", "dnf", "install", "-y", "clang-format", "cppcheck"], True)
 
 
 def installCppDnf():
-    runCommand(["sudo", "dnf", "install", "-y", "clang-tools-extra"], True)
+    runCommand(["sudo", "dnf", "install", "-y", "clang-tools-extra", "cppcheck"], True)
 
 
 def installFontsApt():
