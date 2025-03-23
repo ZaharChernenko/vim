@@ -122,8 +122,6 @@ class VimFullInstaller(InstallerBase):
             copyFile("./data/tools_configs", HOME_DIR, ".clang-format")
             # vimscpector configs
             setupVimspector()
-            # running scripts
-            copyDirectory("./data/scripts", f"{HOME_DIR}/.vim/scripts")
             # after loading setup
             createDirectory(f"{HOME_DIR}/.vim/after/plugin")
             copyFile("./data/vimrc_configs/plugin", f"{HOME_DIR}/.vim/after/plugin", "setup.vim", "setup.vim")
@@ -149,7 +147,6 @@ class VimPosixMinimalInstaller(InstallerBase):
             # vim config
             copyFile("./data/vimrc_configs", f"{HOME_DIR}", "short.vimrc", ".vimrc")
             plug_install_result: subprocess.Popen = installPlugins()
-            copyDirectory("./data/scripts", f"{HOME_DIR}/.vim/scripts")
 
             # after loading setup
             createDirectory(f"{HOME_DIR}/.vim/after/plugin")
@@ -184,8 +181,6 @@ class VimSyncFullInstaller(InstallerBase):
         setupYCMExtraConfig()
         # vimscpector configs
         setupVimspector()
-        # running scripts
-        copyDirectory("./data/scripts", f"{HOME_DIR}/.vim/scripts")
 
         # after loading setup
         createDirectory(f"{HOME_DIR}/.vim/after/plugin")
@@ -203,8 +198,6 @@ class VimSyncMinimalInstaller(InstallerBase):
         # vim config
         copyFile("./data/vimrc_configs", f"{HOME_DIR}", "short.vimrc", ".vimrc")
         plug_install_result: subprocess.Popen = installPlugins()
-        # running scripts
-        copyDirectory("./data/scripts", f"{HOME_DIR}/.vim/scripts")
 
         # after loading setup
         createDirectory(f"{HOME_DIR}/.vim/after/plugin")

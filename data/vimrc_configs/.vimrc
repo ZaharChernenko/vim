@@ -4,8 +4,6 @@ filetype off
 syntax enable
 
 set autochdir
-" set clipboard^=unnamed,unnamedplus после этого x будет копировать в
-" системный буффер, что мне не очень нужно
 set colorcolumn=100
 set completeopt-=preview
 set display+=lastline " for long lines
@@ -41,7 +39,6 @@ if has('macunix')
   set linespace=3
   set fillchars+=vert:\│
   let g:os = 'macos'
-  let g:ycm_python_interpreter_path = 'python3-intel64'
   " в macos старый python3.9, который не поддерживает match и generics
   " при установке на новый macos надо будет обязательно установить через pip
   " python3.12 -m pip install mypy
@@ -53,12 +50,10 @@ else
                     " custom: right, left scroll always,
                     " because of gvim bug
   let g:os = 'linux'
-  let g:ycm_python_interpreter_path = 'python3'
 endif
-let g:home = $HOME
 
-" Plugins search
-call plug#begin('~/.vim/bundle')
+
+call plug#begin("$XDG_CONFIG_HOME/vim/bundle")
   " linter
   Plug 'dense-analysis/ale'
   " autocompleter
@@ -77,28 +72,24 @@ call plug#begin('~/.vim/bundle')
   Plug 'ErichDonGubler/vim-sublime-monokai'
   Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
   Plug 'morhetz/gruvbox'
-  " git
-  Plug 'tpope/vim-fugitive'
   " bindings
   Plug 'ervandew/supertab'
   Plug 'tmsvg/pear-tree'
-  " Plug 'alvan/vim-closetag'
   Plug 'mg979/vim-visual-multi'
   " buffers
   Plug 'zefei/vim-wintabs'
   Plug 'zefei/vim-wintabs-powerline'
+  " code run
+  Plug 'ZaharChernenko/vim-code-runner'
 call plug#end()
 
 
 colorscheme catppuccin-mocha
 " colorscheme sublimemonokai
-autocmd VimEnter * call RunVim()
+" Start NERDTree and put the cursor back in the other window.
+autocmd VimEnter * NERDTree | wincmd p
 autocmd BufNew,BufRead *.asm set ft=tasm
 
-augroup python
-  autocmd!
-  autocmd BufEnter *.py silent! call GetPython()
-augroup END
 
 augroup my-glyph-palette
   autocmd! *
@@ -107,26 +98,26 @@ augroup my-glyph-palette
 augroup END
 
 
-" airline
+" airline start
 let g:airline_section_x='' " remove the filetype part
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 let g:airline_skip_empty_sections = 1 " remove separators for empty sections
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'catppuccin'
 " let g:airline_theme = 'molokai'
-" devicons
-let g:DevIconsDefaultFolderOpenSymbol=''
-let g:DevIconsEnableFoldersOpenClose = 1
-" NERDTree
-let NERDTreeMinimalUI=1
-let g:NERDTreeAutoDeleteBuffer = 1
-" wintabs
-let g:wintabs_autoclose=2
-" pear-tree
-let g:pear_tree_repeatable_expand = 0
-" ALE
+" airline end
+
+" ale start
+highlight clear ALEErrorSign
+highlight clear ALEWarningSign
 let g:ale_lint_on_save = 1
 let g:ale_completion_enabled = 0
+let g:ale_fix_on_save = 1
+let g:ale_warn_about_trailing_whitespace = 0
+let g:ale_warn_about_trailing_blank_lines = 0
+let g:ale_set_signs = 1
+let g:ale_set_highlights = 0
+let g:ale_virtualtext_cursor = 'current'
 let g:ale_linters = {
     \'python': ['pylint', 'mypy'],
     \'cpp': ['cc', 'clang', 'cppcheck'],
@@ -136,28 +127,35 @@ let g:ale_fixers = {
     \'python': ['black', 'isort'],
     \'cpp': ['clang-format']
 \}
-let g:ale_fix_on_save = 1
+" C/C++
 let g:ale_cpp_cc_options = "-std=c++2a -Wall"
 let g:ale_cpp_clangd_options = "-std=c++2a -Wall"
-let g:ale_warn_about_trailing_whitespace = 0
-let g:ale_warn_about_trailing_blank_lines = 0
-let g:ale_set_signs = 1
-let g:ale_set_highlights = 0
-let g:ale_virtualtext_cursor = 'current'
-let g:ale_python_black_options = '--line-length 120'
-let g:ale_python_mypy_options = '--ignore-missing-imports --check-untyped-defs
-      \ --disable-error-code attr-defined
-      \ --disable-error-code import-untyped
-      \ --disable-error-code union-attr
-      \ --cache-dir=/dev/null'
+" Python
 let g:ale_python_isort_options = '--profile black'
 let g:ale_python_auto_pipenv = 1
 let g:ale_python_auto_poetry = 1
+" ale end
 
-highlight clear ALEErrorSign
-highlight clear ALEWarningSign
-" vimspector
-" changing vimspector signs priority
+" coderunner start
+let g:coderunner_save_all_files_before_run = 1
+let g:coderunner_refresh_nerdtree_after_run = 1
+" coderunner end
+
+" devicons start
+let g:DevIconsDefaultFolderOpenSymbol=''
+let g:DevIconsEnableFoldersOpenClose = 1
+" devicons end
+
+" nerdtree start
+let NERDTreeMinimalUI=1
+let g:NERDTreeAutoDeleteBuffer = 1
+" nerdtree end
+
+" pear-tree start
+let g:pear_tree_repeatable_expand = 0
+" pear-tree end
+
+" vimspector start
 let g:vimspector_sign_priority = {
     \    'vimspectorBP':          50,
     \    'vimspectorBPCond':      50,
@@ -167,15 +165,12 @@ let g:vimspector_sign_priority = {
     \    'vimspectorPC':          999,
     \    'vimspectorPCBP':        999,
     \ }
+" vimspector end
 
-" if this is disabled, cpp ycm doesn't work on mac
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
+" ycm start
+let g:ycm_global_ycm_extra_conf = '$XDG_CONFIG_HOME/ycm/.ycm_extra_conf.py'
 let g:ycm_confirm_extra_conf = 0
-let g:ycm_extra_conf_vim_data = [
-  \  'g:ycm_python_interpreter_path'
-  \]
 let g:ycm_enable_diagnostic_highlighting = 0
-let g:ycm_filepath_blacklist = {}
 let g:ycm_filetype_blacklist={
   \   'tagbar' : 1,
   \   'nerdtree' : 1,
@@ -184,20 +179,11 @@ let g:ycm_filetype_blacklist={
   \   'text' : 1,
   \   'csv' : 1,
   \}
+" ycm end
 
-let g:ycm_semantic_triggers =  {
-  \   'scss,css': [ 're!^\s{2,4}', 're!:\s+' ],
-  \   'objc' : ['->', '.'],
-  \   'ocaml' : ['.', '#'],
-  \   'perl' : ['->'],
-  \   'php' : ['->', '::', '(', 'use ', 'namespace ', '\'],
-  \   'cs,java,typescript,d,perl6,scala,vb,elixir,go' : ['.', 're!(?=[a-zA-Z]{3,4})'],
-  \   'html': ['<', '"', '</', ' '],
-  \   'ruby' : ['.', '::'],
-  \   'lua' : ['.', ':'],
-  \   'erlang' : [':'],
-  \   'haskell' : ['.', 're!.'],
-  \ }
+" wintabs start
+let g:wintabs_autoclose=2
+" wintabs end
 
 
 " Hotkeys
@@ -268,7 +254,6 @@ noremap gd :YcmCompleter GoTo<CR>
 noremap <F2> :YcmCompleter RefactorRename<Space>
 inoremap <F2> <Esc>:YcmCompleter RefactorRename<Space>
 
-" autocmd FileType python map <buffer> <C-r> :w<CR>:exec '!python3-intel64' shellescape(@%, 1)<CR>
 if g:os == 'macos'
   let g:SuperTabMappingForward = '<C-tab>'
   " moving in buffer
@@ -301,16 +286,9 @@ if g:os == 'macos'
   " NerdTree
   noremap <silent> <C-e> :NERDTreeToggle<CR>
   inoremap <silent> <C-e> <Esc>:NERDTreeToggle<CR>i
-  " python
-  autocmd Filetype python noremap <buffer> <C-r> :call RunPython()<CR>
-  autocmd Filetype python inoremap <buffer> <C-r> <Esc>:call RunPython()<CR>
-  " cpp
-  autocmd Filetype cpp noremap <buffer> <C-r> :call RunCpp()<CR>
-  autocmd FileType cpp inoremap <buffer> <C-r> <Esc>:call RunCpp()<CR>
-  " js
-  autocmd Filetype javascript noremap <buffer> <C-r> :call RunJS()<CR>
-  autocmd Filetype javascript inoremap <buffer> <C-r> <Esc>:call RunJS()<CR>
-
+  " code run
+  noremap <silent> <C-r> :call coderunner#Run()<CR>
+  inoremap <silent> <C-r> <Esc>:call coderunner#Run()<CR>
 else
   if has("gui_running")
     let g:SuperTabMappingForward = '<A-tab>'
@@ -387,25 +365,12 @@ else
     " Russian
     noremap <silent> <A-у> :NERDTreeToggle<CR>
     inoremap <silent> <A-у> <Esc>:NERDTreeToggle<CR>i
-    " python
-    autocmd FileType python noremap <buffer> <A-r> :call RunPython()<CR>
-    autocmd FileType python inoremap <buffer> <A-r> <Esc>:call RunPython()<CR>
+    " code run
+    noremap <silent> <A-r> :call coderunner#Run()<CR>
+    inoremap <silent> <A-r> <Esc>:call coderunner#Run()<CR>
     " Russian
-    autocmd FileType python noremap <buffer> <A-к> :call RunPython()<CR>
-    autocmd FileType python inoremap <buffer> <A-к> <Esc>:call RunPython()<CR>
-    " cpp
-    autocmd Filetype cpp noremap <buffer> <A-r> :call RunCpp()<CR>
-    autocmd FileType cpp inoremap <buffer> <A-r> <Esc>:call RunCpp()<CR>
-    " Russian
-    autocmd Filetype cpp noremap <buffer> <A-к> :call RunCpp()<CR>
-    autocmd FileType cpp inoremap <buffer> <A-к> <Esc>:call RunCpp()<CR>
-    " js
-    autocmd Filetype javascript noremap <buffer> <A-r> :call RunJS()<CR>
-    autocmd Filetype javascript inoremap <buffer> <A-r> <Esc>:call RunJS()<CR>
-    " Russian
-    autocmd Filetype javascript noremap <buffer> <A-к> :call RunJS()<CR>
-    autocmd Filetype javascript inoremap <buffer> <A-к> <Esc>:call RunJS()<CR>
-
+    noremap <silent> <A-к> :call coderunner#Run()<CR>
+    inoremap <silent> <A-к> <Esc>:call coderunner#Run()<CR>
   else
     let g:SuperTabMappingForward = '<Esc><Tab>'
     " alt in console is escaped seq ^], so this is why <Esc>key works like <A-key>
@@ -448,25 +413,11 @@ else
     noremap <silent> <Esc>е :call OpenOrToggleTerminal()<CR><C-\><C-n>i
     inoremap <silent> <Esc>е <Esc>:call OpenOrToggleTerminal()<CR><C-\><C-n>i
     " code run
-    " python
-    autocmd Filetype python noremap <buffer> <Esc>r :call RunPython()<CR>
-    autocmd filetype python inoremap <buffer> <Esc>r <Esc>:call RunPython()<CR>
-    " cpp
-    autocmd Filetype cpp noremap <buffer> <Esc>r :call RunCpp()<CR>
-    autocmd FileType cpp inoremap <buffer> <Esc>r <Esc>:call RunCpp()<CR>
-    " js
-    autocmd Filetype javascript noremap <buffer> <Esc>r :call RunJS()<CR>
-    autocmd Filetype javascript inoremap <buffer> <Esc>r <Esc>:call RunJS()<CR>
+    noremap <silent> <Esc>r :call coderunner#Run()<CR>
+    inoremap <silent> <Esc>r <Esc>:call coderunner#Run()<CR>
     " Russian
-    " python
-    autocmd Filetype python noremap <buffer> <Esc>к :call RunPython()<CR>
-    autocmd filetype python inoremap <buffer> <Esc>к <Esc>:call RunPython()<CR>
-    " cpp
-    autocmd Filetype cpp noremap <buffer> <Esc>к :call RunCpp()<CR>
-    autocmd FileType cpp inoremap <buffer> <Esc>к <Esc>:call RunCpp()<CR>
-    " js
-    autocmd Filetype javascript noremap <buffer> <Esc>к :call RunJS()<CR>
-    autocmd Filetype javascript inoremap <buffer> <Esc>к <Esc>:call RunJS()<CR>
+    noremap <silent> <Esc>к :call coderunner#Run()<CR>
+    inoremap <silent> <Esc>к <Esc>:call coderunner#Run()<CR>
   endif
 
   " ctrl bindings
@@ -506,97 +457,6 @@ else
 endif
 
 
-function RunVim()
-  NERDTree | wincmd p
-  if g:os == 'linux'
-    " gvim имеет баг, когда при открытии вима через файл не определяется venv
-    let b:python = GetPythonPath()
-    let g:ycm_python_interpreter_path = b:python
-    " без normal! будет ошибка, что плагин не загружен
-    normal! YcmRestartServer
-  endif
-endfunction
-
-
-function GetPythonPath()
-  let venv_dirs = ['.venv', 'venv', 'virtualenv']
-  for dir in venv_dirs
-    " если папка была найдена в текущей директории, то путь будет
-    " относительный, иначе абсолютный
-    let check_dir = finddir(dir, ';')
-    if check_dir != ''
-      if check_dir == dir
-        let venv_dir = $"{getcwd()}/{dir}"
-      else
-        let venv_dir = check_dir
-      endif
-      if isdirectory($"{venv_dir}/bin")
-        return escape($"{venv_dir}/bin/python3", ' \')
-      endif
-    endif
-  endfor
-
-  if g:os == 'macos'
-      return 'python3-intel64'
-  endif
-      return 'python3'
-endfunction
-
-
-function GetPython()
-    if exists("b:python") == 0
-      let b:python = GetPythonPath()
-    endif
-
-    if g:ycm_python_interpreter_path != b:python
-      let g:ycm_python_interpreter_path = b:python
-      YcmRestartServer
-    endif
-endfunction
-
-
-function RunPython()
-  wall
-  execute $"ter {b:python} {escape(expand('%'), ' \')}"
-  NERDTreeRefreshRoot
-endfunction
-
-
-function CppCheckRecompile()
-  let recompile = 0
-  if filereadable("output") == 0
-    return 1
-  endif
-
-  for buf in getbufinfo({'bufmodified': 1})
-    if buf.changed
-      return 1
-    endif
-  endfor
-
-  for file in split(globpath('.', '*.cpp'), '\n') + split(globpath('.', '*.h'), '\n')
-    if strftime('%y%m%d %T', getftime('output')) < strftime('%y%m%d %T', getftime(file))
-      return 1
-    endif
-  endfor
-
-  return 0
-endfunction
-
-
-function RunCpp()
-  let recompile = CppCheckRecompile()
-  if recompile == 1
-    wall
-    execute $"ter bash {g:home}/.vim/scripts/cpp.sh"
-  else
-    ter ./output
-  endif
-
-  NERDTreeRefreshRoot
-endfunction
-
-
 function OpenOrToggleTerminal()
   " Проверяем, есть ли уже открытый терминал
   if winnr('$') > 1 && bufwinnr($"!{$SHELL}") != -1
@@ -612,4 +472,3 @@ function OpenOrToggleTerminal()
   endif
   resize 15
 endfunction
-
