@@ -1,13 +1,16 @@
 import os
-import sys
 import typing
 
 from . import interface
 
 
 class TPythonCompleter(interface.ICompleter):
-    VENV_NODES: typing.Final[tuple[str, ...]] = (".venv/bin/python3", "venv/bin/python3", "virtualenv/bin/python3")
-    DEFAULT_PYTHON3: typing.Final[str] = "python3-intel64" if sys.platform == "darwin" else "python3"
+    VENV_NODES: typing.Final[tuple[str, ...]] = (
+        os.path.normpath(".venv/bin/python3"),
+        os.path.normpath("venv/bin/python3"),
+        os.path.normpath("virtualenv/bin/python3"),
+    )
+    DEFAULT_PYTHON3: typing.Final[str] = "python3"
 
     @classmethod
     def find_python_path_in_filesystem(cls, source_dir_path: str) -> str:

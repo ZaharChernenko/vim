@@ -10,9 +10,9 @@ from . import interface
 
 class TCppCompleter(interface.ICompleter, abc.ABC):
     AUTOCOMPLETE_NODES: typing.Final[tuple[str, ...]] = (
-        "build/Debug/compile_commands.json",
-        "build/Release/compile_commands.json",
-        "build/compile_commands.json",
+        os.path.normpath("build/Debug/compile_commands.json"),
+        os.path.normpath("build/Release/compile_commands.json"),
+        os.path.normpath("build/compile_commands.json"),
     )
     HEADER_EXTENSIONS: typing.Final[frozenset[str]] = frozenset((".h", ".hxx", ".hpp", ".hh"))
     SOURCE_EXTENSIONS: typing.Final[tuple[str, ...]] = (".cpp", ".cxx", ".cc", ".c", ".m", ".mm")
