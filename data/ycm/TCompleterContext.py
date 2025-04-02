@@ -14,4 +14,4 @@ class TCompleterContext:
         completer: typing.Optional[typing.Type[completers.ICompleter]] = cls.LANG_TO_COMPLETER.get(
             kwargs["language"], None
         )
-        return completer.complete(**kwargs) if completer is not None else None
+        return None if completer is None else completer.complete(**kwargs)

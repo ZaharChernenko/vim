@@ -3,9 +3,11 @@ if __name__ == "__main__":
     import sys
 
     # works only if vim_installer installed in pip
-    from vim_installer import InstallationTypes, VimInstaller
+    from VimInstaller import InstallationTypes, VimInstaller
 
-    parser: argparse.ArgumentParser = argparse.ArgumentParser(description="Vim installer")
+    parser: argparse.ArgumentParser = argparse.ArgumentParser(
+        description="Vim installer"
+    )
     parser.add_argument(
         "-f",
         "--full",
@@ -41,7 +43,9 @@ if __name__ == "__main__":
     args: argparse.Namespace = parser.parse_args()
 
     try:
-        mode: InstallationTypes = InstallationTypes(sum((args.full, args.minimal, args.sync_full, args.sync_minimal)))
+        mode: InstallationTypes = InstallationTypes(
+            sum((args.full, args.minimal, args.sync_full, args.sync_minimal))
+        )
     except ValueError:
         print("Error, only one flag must be chosen")
         parser.print_help()

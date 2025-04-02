@@ -5,11 +5,12 @@ import typing
 
 import ycm_core
 
-from . import interface
+import path_utils
+from completers import ICompleter
 
 
-class TCppCompleter(interface.ICompleter, abc.ABC):
-    AUTOCOMPLETE_NODES: typing.Final[tuple[str, ...]] = (
+class TCppCompleter(ICompleter):
+    DATABASE_NODES: typing.Final[tuple[str, ...]] = (
         os.path.normpath("build/Debug/compile_commands.json"),
         os.path.normpath("build/Release/compile_commands.json"),
         os.path.normpath("build/compile_commands.json"),
@@ -86,17 +87,8 @@ class TCppCompleter(interface.ICompleter, abc.ABC):
         Most projects will NOT need to set this to anything; you can just change the
         'flags' list of compilation flags. Notice that YCM itself uses that approach.
         """
-        path: typing.Optional[str] = None
-        modification_time: typing.Optional[float] = None
-        for node in cls.AUTOCOMPLETE_NODES:
-            path_cur = cls.find_node_upwards(source_path, node)
-            if path_cur is not None:
-                modification_time_cur = os.path.getmtime(path_cur)
-                if path is None or modification_time < modification_time_cur:
-                    path = path_cur
-                    modification_time = modification_time_cur
-
-        return None if path is None else os.path.dirname(path)
+        database_path: typing.Optional[str] = path_utils.bfs_newest_node_upwards(source_path, cls.DATABASE_NODES)
+        return None if database_path is None else os.path.dirname(database_path)
 
 
 class TClangCompleter(TCppCompleter):
