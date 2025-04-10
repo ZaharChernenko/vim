@@ -39,10 +39,6 @@ if has('macunix')
   set linespace=3
   set fillchars+=vert:\│
   let g:os = 'macos'
-  " в macos старый python3.9, который не поддерживает match и generics
-  " при установке на новый macos надо будет обязательно установить через pip
-  " python3.12 -m pip install mypy
-  let g:ale_python_mypy_executable = '/Library/Frameworks/Python.framework/Versions/3.12/bin/mypy'
 else
   " set shell=/bin/zsh
   set guifont=JetBrainsMono\ Nerd\ Font\ Mono\ Regular\ 11
@@ -79,11 +75,15 @@ call plug#begin("$XDG_CONFIG_HOME/vim/bundle")
   " buffers
   Plug 'zefei/vim-wintabs'
   Plug 'zefei/vim-wintabs-powerline'
+  " search
+  Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+  Plug 'junegunn/fzf.vim'
   " code run
   Plug 'ZaharChernenko/vim-code-runner'
 call plug#end()
 
 
+" colorscheme codedark
 colorscheme catppuccin-mocha
 " colorscheme sublimemonokai
 " Start NERDTree and put the cursor back in the other window.
@@ -103,6 +103,7 @@ let g:airline_section_x='' " remove the filetype part
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 let g:airline_skip_empty_sections = 1 " remove separators for empty sections
 let g:airline_powerline_fonts = 1
+" let g:airline_theme = 'codedark'
 let g:airline_theme = 'catppuccin'
 " let g:airline_theme = 'molokai'
 " airline end
@@ -132,13 +133,10 @@ let g:ale_cpp_cc_options = "-std=c++2a -Wall"
 let g:ale_cpp_clangd_options = "-std=c++2a -Wall"
 " Python
 let g:ale_python_isort_options = '--profile black'
-let g:ale_python_auto_pipenv = 1
-let g:ale_python_auto_poetry = 1
 " ale end
 
 " coderunner start
 let g:coderunner_save_all_files_before_run = 1
-let g:coderunner_refresh_nerdtree_after_run = 1
 " coderunner end
 
 " devicons start
@@ -146,8 +144,25 @@ let g:DevIconsDefaultFolderOpenSymbol=''
 let g:DevIconsEnableFoldersOpenClose = 1
 " devicons end
 
+" fzf start
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'VertSplit'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+" fzf end
+
 " nerdtree start
-let NERDTreeMinimalUI=1
+let NERDTreeMinimalUI = 1
 let g:NERDTreeAutoDeleteBuffer = 1
 " nerdtree end
 
