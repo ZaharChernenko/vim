@@ -5,7 +5,8 @@ import completers
 
 class TCompleterContext:
     LANG_TO_COMPLETER: typing.Final[typing.Dict[str, typing.Type[completers.ICompleter]]] = {
-        "python": completers.TPythonCompleter,
+        # python completer now unused, because i activate virtual env before starting vim
+        # "python": completers.TPythonCompleter,
         "cfamily": completers.TClangCompleter,
     }
 
