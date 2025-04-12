@@ -1,54 +1,3 @@
-filetype plugin indent on
-filetype off
-
-syntax enable
-
-set autochdir
-set colorcolumn=100
-set completeopt-=preview
-set display+=lastline " for long lines
-set encoding=utf-8
-set expandtab
-set fillchars+=eob:\-
-set fillchars+=vert:\│
-set history=1000
-set listchars+=precedes:<,extends:>
-set mouse=a
-set nobackup
-set nocompatible  " отключаем совместимость с vi
-set nohlsearch " отключаем подсветку после поиска
-set noswapfile
-set nowrap
-set number
-set shiftwidth=4
-set sidescroll=5
-set signcolumn=yes
-set smartindent
-set smarttab
-set softtabstop=4
-set t_Co=256
-set tabstop=4
-set undolevels=1000 " изменяем размер истории последних изменений
-set whichwrap+=<,>,h,l,[,] " перемещение на следующую строку после достижения конца
-set wildchar=<Tab>
-set wildmenu " автодополнение в командном режиме
-
-
-if has('macunix')
-  set guifont=JetBrainsMono\ Nerd\ Font\ Regular:h13
-  set linespace=3
-  set fillchars+=vert:\│
-  let g:os = 'macos'
-else
-  " set shell=/bin/zsh
-  set guifont=JetBrainsMono\ Nerd\ Font\ Mono\ Regular\ 11
-  set guioptions=rl " egmrLtT - default value,
-                    " custom: right, left scroll always,
-                    " because of gvim bug
-  let g:os = 'linux'
-endif
-
-
 call plug#begin("$XDG_CONFIG_HOME/vim/bundle")
   " linter
   Plug 'dense-analysis/ale'
@@ -81,6 +30,55 @@ call plug#begin("$XDG_CONFIG_HOME/vim/bundle")
   " code run
   Plug 'ZaharChernenko/vim-code-runner'
 call plug#end()
+
+
+filetype plugin indent on " enable filetype detecting, indents and plugins loading
+syntax enable " syntax highlighting
+" set is used for setting internal vim variables
+set colorcolumn=100 " show a vertical line at column 100
+set completeopt-=preview " disable preview window
+set display+=lastline " for long lines
+set encoding=utf-8
+set expandtab " convert tabs to spaces.
+set fillchars+=eob:\ " " replace ~ at end of buffer with a space
+set fillchars+=vert:\│ " use │ for vertical window splits
+set history=1000
+set mouse=a " for the weak in spirit
+set nobackup
+set nohlsearch " turn off the backlight after searching
+set noswapfile
+set nowrap " disable line wrapping
+set number " show numbers column
+" define how many spaces will be inserted when pressed <Tab> at the beginning of a line and when shifting
+set shiftwidth=4
+set sidescroll=5
+set signcolumn=yes " always show the sign column for linter marks
+set smartindent
+set smarttab
+" define how many spaces will be inserted when pressed <Tab> in insert mode except shiftwidth case
+" by this formula: softtabstop - (one_based_column_index - 1) % softtabstop
+set softtabstop=4
+set t_Co=256 " 256-color mode in the terminal, default is 16
+set tabstop=4 " define the visual width of the tab character in spaces
+set undolevels=1000
+set whichwrap+=<,>,h,l,[,] " moving to the next line after reaching the end
+set wildchar=<Tab>
+set wildmenu " autocompletion suggestions in command mode
+
+
+if has('macunix')
+  set guifont=JetBrainsMono\ Nerd\ Font\ Regular:h13
+  set linespace=3
+  " set fillchars+=vert:\│
+  let g:os = 'macos'
+else
+  " set shell=/bin/zsh
+  set guifont=JetBrainsMono\ Nerd\ Font\ Mono\ Regular\ 11
+  set guioptions=rl " egmrLtT - default value,
+                    " custom: right, left scroll always,
+                    " because of gvim bug
+  let g:os = 'linux'
+endif
 
 
 " colorscheme codedark
@@ -487,3 +485,4 @@ function OpenOrToggleTerminal()
   endif
   resize 15
 endfunction
+
