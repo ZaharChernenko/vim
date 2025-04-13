@@ -232,3 +232,52 @@ function RunVim()
     normal! YcmRestartServer
   endif
 endfunction
+
+
+function OpenOrToggleTerminal()
+  " Проверяем, есть ли уже открытый терминал
+  if winnr('$') > 1 && bufwinnr($"!{$SHELL}") != -1
+    " Если терминал открыт, переключаемся на него
+    let term_win = bufwinnr($"!{$SHELL}")
+    execute term_win . 'wincmd w'
+  else
+    if &filetype == 'nerdtree'
+      wincmd l
+    endif
+    " Если терминал не открыт, открываем его
+    ter
+  endif
+  resize 15
+endfunction
+
+
+function ToggleTerminal(is_from_insert)
+    " checking if there is already an open VISIBLE terminal, then hide,
+    " otherwise create or show buffer
+    let term_window_number = bufwinnr($"!{$SHELL}")
+    if term_window_number != -1
+        let s:term_window_height = winheight(term_window_number)
+        execute $"{term_window_number} hide"
+        if a:is_from_insert == 1
+            call feedkeys("i", 'n')
+        endif
+    else
+        let previous_nerdtree_status = g:NERDTree.IsOpen()
+        let term_buffer_number = bufnr($"!{$SHELL}")
+        NERDTreeClose
+        if term_buffer_number != -1
+            execute $"topleft sbuffer {term_buffer_number}"
+            execute $"{bufwinnr(term_buffer_number)} resize {s:term_window_height}"
+            call feedkeys("i", 'n')
+        else
+            topleft ter
+            resize 15
+        endif
+
+        if previous_nerdtree_status == 1
+            NERDTreeFocus
+            wincmd p
+        endif
+    endif
+endfunction
+
