@@ -293,9 +293,9 @@ if g:os == 'macos'
   noremap <silent> <D-w> :WintabsClose<CR>
   inoremap <silent> <D-w> <Esc>:WintabsClose<CR>
   " terminal
-  tnoremap <silent> <C-t> <C-\><C-n>:resize 1<CR>:wincmd j<CR>
-  noremap <silent> <C-t> :call OpenOrToggleTerminal()<CR><C-\><C-n>i
-  inoremap <silent> <C-t> <Esc>:call OpenOrToggleTerminal()<CR><C-\><C-n>i
+  tnoremap <silent> <C-t> <C-\><C-n>:call ToggleTerminal(0)<CR>
+  noremap <silent> <C-t> :call ToggleTerminal(0)<CR>
+  inoremap <silent> <C-t> <Esc>:call ToggleTerminal(1)<CR>
   " NerdTree
   noremap <silent> <C-e> :NERDTreeToggle<CR>
   inoremap <silent> <C-e> <Esc>:NERDTreeToggle<CR>i
@@ -364,14 +364,14 @@ else
     " строка ниже бесполезная
     " tnoremap <C-c> <C-W>N
     tnoremap <C-v> <C-W>"+
-    tnoremap <silent> <A-t> <C-\><C-n>:resize 1<CR>:wincmd j<CR>
-    noremap <silent> <A-t> :call OpenOrToggleTerminal()<CR><C-\><C-n>i
-    inoremap <silent> <A-t> <Esc>:call OpenOrToggleTerminal()<CR><C-\><C-n>i
+    tnoremap <silent> <A-t> <C-\><C-n>:call ToggleTerminal(0)<CR>
+    noremap <silent> <A-t> :call ToggleTerminal(0)<CR>
+    inoremap <silent> <A-t> <Esc>:call ToggleTerminal(1)<CR>
     " Russian
     tnoremap <C-м> <C-W>"+
-    tnoremap <silent> <A-е> <C-\><C-n>:resize 1<CR>:wincmd j<CR>
-    noremap <silent> <A-е> :call OpenOrToggleTerminal()<CR><C-\><C-n>i
-    inoremap <silent> <A-е> <Esc>:call OpenOrToggleTerminal()<CR><C-\><C-n>i
+    tnoremap <silent> <A-е> <C-\><C-n>:call ToggleTerminal(0)<CR>
+    noremap <silent> <A-е> :call ToggleTerminal(0)<CR>
+    inoremap <silent> <A-е> <Esc>:call ToggleTerminal(1)<CR>
     " NerdTree
     noremap <silent> <A-e> :NERDTreeToggle<CR>
     inoremap <silent> <A-e> <Esc>:NERDTreeToggle<CR>i
@@ -418,13 +418,13 @@ else
     noremap <silent> <Esc>у :NERDTreeToggle<CR>
     inoremap <silent> <Esc>у <Esc>:NERDTreeToggle<CR>i
     " terminal
-    tnoremap <silent> <Esc>t <C-\><C-n>:resize 1<CR>:wincmd j<CR>
-    noremap <silent> <Esc>t :call OpenOrToggleTerminal()<CR><C-\><C-n>i
-    inoremap <silent> <Esc>t <Esc>:call OpenOrToggleTerminal()<CR><C-\><C-n>i
+    tnoremap <silent> <Esc>t <C-\><C-n>:call ToggleTerminal(0)<CR>
+    noremap <silent> <Esc>t :call ToggleTerminal(0)<CR>
+    inoremap <silent> <Esc>t <Esc>:call ToggleTerminal(1)<CR>
     " Russian
-    tnoremap <silent> <Esc>е <C-\><C-n>:resize 1<CR>:wincmd j<CR>
-    noremap <silent> <Esc>е :call OpenOrToggleTerminal()<CR><C-\><C-n>i
-    inoremap <silent> <Esc>е <Esc>:call OpenOrToggleTerminal()<CR><C-\><C-n>i
+    tnoremap <silent> <Esc>е <C-\><C-n>:call ToggleTerminal(0)<CR>
+    noremap <silent> <Esc>е :call ToggleTerminal(0)<CR>
+    inoremap <silent> <Esc>е <Esc>:call ToggleTerminal(1)<CR>
     " code run
     noremap <silent> <Esc>r :call coderunner#Run()<CR>
     inoremap <silent> <Esc>r <Esc>:call coderunner#Run()<CR>
@@ -470,19 +470,33 @@ else
 endif
 
 
-function OpenOrToggleTerminal()
-  " Проверяем, есть ли уже открытый терминал
-  if winnr('$') > 1 && bufwinnr($"!{$SHELL}") != -1
-    " Если терминал открыт, переключаемся на него
-    let term_win = bufwinnr($"!{$SHELL}")
-    execute term_win . 'wincmd w'
-  else
-    if &filetype == 'nerdtree'
-      wincmd l
+function ToggleTerminal(is_from_insert)
+    " checking if there is already an open VISIBLE terminal, then hide,
+    " otherwise create or show buffer
+    let term_window_number = bufwinnr($"!{$SHELL}")
+    if term_window_number != -1
+        let s:term_window_height = winheight(term_window_number)
+        execute $"{term_window_number} hide"
+        if a:is_from_insert == 1
+            call feedkeys("i", 'n')
+        endif
+    else
+        let previous_nerdtree_status = g:NERDTree.IsOpen()
+        let term_buffer_number = bufnr($"!{$SHELL}")
+        NERDTreeClose
+        if term_buffer_number != -1
+            execute $"topleft sbuffer {term_buffer_number}"
+            execute $"{bufwinnr(term_buffer_number)} resize {s:term_window_height}"
+            call feedkeys("i", 'n')
+        else
+            topleft ter
+            resize 15
+        endif
+
+        if previous_nerdtree_status == 1
+            NERDTreeFocus
+            wincmd p
+        endif
     endif
-    " Если терминал не открыт, открываем его
-    ter
-  endif
-  resize 15
 endfunction
 
