@@ -1,4 +1,3 @@
-" Hotkeys
 let g:SuperTabMappingBackward = '<tab>'
 let g:NERDTreeMapOpenVSplit = 'v'
 " moving in normal mode
@@ -95,11 +94,19 @@ if has('macunix')
   " terminal
   autocmd FileType floaterm noremap <buffer> <silent> <ScrollWheelDown> :call ScrollDown()<CR>
   autocmd FileType floaterm noremap <buffer> <silent> <ScrollWheelUp> :call ScrollUp()<CR>
+  autocmd FileType floaterm noremap <buffer> <silent> <D-h> :FloatermPrev<CR>
+  autocmd FileType floaterm noremap <buffer> <silent> <D-l> :FloatermNext<CR>
+  autocmd FileType floaterm noremap <buffer> <silent> <D-t> :FloatermNew<CR>
   autocmd FileType floaterm tnoremap <buffer> <silent> <D-h> <C-\><C-n>:FloatermPrev<CR>
   autocmd FileType floaterm tnoremap <buffer> <silent> <D-l> <C-\><C-n>:FloatermNext<CR>
+  autocmd FileType floaterm tnoremap <buffer> <silent> <D-t> <C-\><C-n>:FloatermNew<CR>
   tnoremap <silent> <C-t> <C-\><C-n>:FloatermToggle<CR>
   noremap <silent> <C-t> :FloatermToggle<CR>
   inoremap <silent> <C-t> <Esc>:FloatermToggle<CR>
+  " fzf
+  autocmd FileType fzf tnoremap <buffer> <silent> <ScrollWheelRight> <NOP>
+  autocmd FileType fzf tnoremap <buffer> <silent> <ScrollWheelLeft> <NOP>
+  autocmd FileType fzf tnoremap <buffer> <C-t> <ESC>
   " NerdTree
   noremap <silent> <C-e> :NERDTreeToggle<CR>
   inoremap <silent> <C-e> <Esc>:NERDTreeToggle<CR>i
@@ -109,8 +116,8 @@ if has('macunix')
 else
   if has("gui_running")
     let g:SuperTabMappingForward = '<A-tab>'
-    noremap <A-ScrollWheelUp> 3zh
-    noremap <A-ScrollWheelDown> 3zl
+    noremap <A-ScrollWheelUp> <ScrollWheelRight>
+    noremap <A-ScrollWheelDown> <ScrollWheelLeft>
 
     noremap <A-a> <left>
     noremap <A-w> <up>
