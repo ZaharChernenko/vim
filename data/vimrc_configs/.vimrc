@@ -190,6 +190,8 @@ autocmd FileType c,cpp,python let b:ycm_hover = {
         \ 'borderchars': ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
     \ },
 \ }
+command! YcmFindDoc call youcompleteme#finder#FindSymbol('document')
+command! YcmFindProj call youcompleteme#finder#FindSymbol('workspace')
 highlight clear YcmErrorSign
 highlight clear YcmWarningSign
 let g:ycm_confirm_extra_conf = 0
@@ -208,4 +210,3 @@ let g:ycm_global_ycm_extra_conf = '$XDG_CONFIG_HOME/ycm/.ycm_extra_conf.py'
 " wintabs start
 let g:wintabs_autoclose=2
 " wintabs end
-

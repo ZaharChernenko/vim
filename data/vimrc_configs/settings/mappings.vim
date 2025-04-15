@@ -63,6 +63,7 @@ noremap жс :call vimspector#ClearBreakpoints()<CR>
 noremap жк :wa<CR>:call vimspector#Launch()<CR>
 " ycm
 noremap gd :YcmCompleter GoTo<CR>
+noremap пв :YcmCompleter GoTo<CR>
 noremap <F2> :YcmCompleter RefactorRename<Space>
 inoremap <F2> <Esc>:YcmCompleter RefactorRename<Space>
 
@@ -77,6 +78,10 @@ if has('macunix')
   inoremap <C-w> <up>
   inoremap <C-s> <down>
   inoremap <C-d> <right>
+  tnoremap <C-a> <left>
+  tnoremap <C-w> <up>
+  tnoremap <C-s> <down>
+  tnoremap <C-d> <right>
   " moving between buffers
   noremap <silent> <C-k> :wincmd k<CR>
   noremap <silent> <C-h> :wincmd h<CR>
@@ -106,6 +111,10 @@ if has('macunix')
   " fzf
   autocmd FileType fzf tnoremap <buffer> <silent> <ScrollWheelRight> <NOP>
   autocmd FileType fzf tnoremap <buffer> <silent> <ScrollWheelLeft> <NOP>
+  autocmd FileType fzf tnoremap <buffer> <C-a> <left>
+  autocmd FileType fzf tnoremap <buffer> <C-w> <up>
+  autocmd FileType fzf tnoremap <buffer> <C-s> <down>
+  autocmd FileType fzf tnoremap <buffer> <C-d> <right>
   autocmd FileType fzf tnoremap <buffer> <C-t> <ESC>
   " NerdTree
   noremap <silent> <C-e> :NERDTreeToggle<CR>
