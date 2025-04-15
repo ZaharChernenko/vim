@@ -84,6 +84,8 @@ else
   set guioptions=rl " egmrLtT - default value,
                     " custom: right, left scroll always,
                     " because of gvim bug
+  " browser for GBrowse and gx
+  let g:netrw_browsex_viewer = "yandex-browser"
 endif
 
 autocmd BufNew,BufRead *.asm set ft=tasm
