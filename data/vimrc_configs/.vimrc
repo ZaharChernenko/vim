@@ -190,6 +190,8 @@ autocmd FileType c,cpp,python let b:ycm_hover = {
         \ 'borderchars': ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
     \ },
 \ }
+highlight clear YcmErrorSign
+highlight clear YcmWarningSign
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_enable_diagnostic_highlighting = 0
 let g:ycm_filetype_blacklist = {
