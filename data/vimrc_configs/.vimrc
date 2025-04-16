@@ -1,12 +1,27 @@
 call plug#begin("$XDG_CONFIG_HOME/vim/bundle")
-  " linter
-  Plug 'dense-analysis/ale'
+  " buffers navigation
+  Plug 'zefei/vim-wintabs'
+  Plug 'zefei/vim-wintabs-powerline'
+  " filesystem navigation
+  Plug 'preservim/nerdtree'
+  " terminal
+  Plug 'voldikss/vim-floaterm'
+  " search
+  Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+  Plug 'junegunn/fzf.vim'
+  " git
+  Plug 'tpope/vim-fugitive'
+  Plug 'shumphrey/fugitive-gitlab.vim' " for github support GBrowse
+  Plug 'tpope/vim-rhubarb' " for github support GBrowse
   " autocompleter
   Plug 'ycm-core/YouCompleteMe'
+  " linter
+  Plug 'dense-analysis/ale'
+  " code runner
+  Plug 'ZaharChernenko/vim-code-runner'
   " debugger
   Plug 'puremourning/vimspector'
   " ui
-  Plug 'preservim/nerdtree'
   Plug 'sheerun/vim-polyglot'
   Plug 'ryanoasis/vim-devicons'
   Plug 'lambdalisue/glyph-palette.vim'
@@ -21,20 +36,6 @@ call plug#begin("$XDG_CONFIG_HOME/vim/bundle")
   Plug 'ervandew/supertab'
   Plug 'tmsvg/pear-tree'
   Plug 'mg979/vim-visual-multi'
-  " buffers
-  Plug 'zefei/vim-wintabs'
-  Plug 'zefei/vim-wintabs-powerline'
-  " terminal
-  Plug 'voldikss/vim-floaterm'
-  " search
-  Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-  Plug 'junegunn/fzf.vim'
-  " git
-  Plug 'tpope/vim-fugitive'
-  Plug 'shumphrey/fugitive-gitlab.vim' " for github support GBrowse
-  Plug 'tpope/vim-rhubarb' " for github support GBrowse
-  " code run
-  Plug 'ZaharChernenko/vim-code-runner'
 call plug#end()
 
 
@@ -110,10 +111,10 @@ let g:ale_completion_enabled = 0
 let g:ale_cpp_cc_options = "-std=c++2a -Wall"
 let g:ale_cpp_clangd_options = "-std=c++2a -Wall"
 let g:ale_fixers = {
-    \ '*': ['trim_whitespace'],
+    \ '*': ['trim_whitespace', 'remove_trailing_lines'],
     \ 'python': ['black', 'isort'],
     \ 'cpp': ['clang-format']
-\}
+\ }
 let g:ale_fix_on_save = 1
 let g:ale_linters = {
     \ 'python': ['pylint', 'mypy'],
@@ -181,6 +182,10 @@ let g:vimspector_sign_priority = {
 \ }
 " vimspector end
 
+" wintabs start
+let g:wintabs_autoclose=2
+" wintabs end
+
 " ycm start
 autocmd FileType c,cpp,python let b:ycm_hover = {
     \ 'command': 'GetDoc',
@@ -190,8 +195,6 @@ autocmd FileType c,cpp,python let b:ycm_hover = {
         \ 'borderchars': ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
     \ },
 \ }
-command! YcmFindDoc call youcompleteme#finder#FindSymbol('document')
-command! YcmFindProj call youcompleteme#finder#FindSymbol('workspace')
 highlight clear YcmErrorSign
 highlight clear YcmWarningSign
 let g:ycm_confirm_extra_conf = 0
@@ -208,8 +211,3 @@ let g:ycm_filetype_blacklist = {
 let g:ycm_global_ycm_extra_conf = '$XDG_CONFIG_HOME/ycm/.ycm_extra_conf.py'
 let g:ycm_warning_symbol = 'W'
 " ycm end
-
-" wintabs start
-let g:wintabs_autoclose=2
-" wintabs end
-
