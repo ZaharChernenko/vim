@@ -117,7 +117,7 @@ let g:ale_fixers = {
 let g:ale_fix_on_save = 1
 let g:ale_linters = {
     \ 'python': ['pylint', 'mypy'],
-    \ 'cpp': ['cc', 'clang', 'cppcheck'],
+    \ 'cpp': ['cppcheck'],
 \ }
 let g:ale_lint_on_save = 1
 let g:ale_set_highlights = 0
@@ -196,6 +196,7 @@ highlight clear YcmErrorSign
 highlight clear YcmWarningSign
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_enable_diagnostic_highlighting = 0
+let g:ycm_error_symbol = 'E'
 let g:ycm_filetype_blacklist = {
     \ 'tagbar' : 1,
     \ 'nerdtree' : 1,
@@ -205,8 +206,10 @@ let g:ycm_filetype_blacklist = {
     \ 'csv' : 1,
 \ }
 let g:ycm_global_ycm_extra_conf = '$XDG_CONFIG_HOME/ycm/.ycm_extra_conf.py'
+let g:ycm_warning_symbol = 'W'
 " ycm end
 
 " wintabs start
 let g:wintabs_autoclose=2
 " wintabs end
+
