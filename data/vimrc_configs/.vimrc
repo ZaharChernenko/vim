@@ -43,7 +43,8 @@ execute $"source {$XDG_CONFIG_HOME}/vim/settings/functions.vim"
 execute $"source {$XDG_CONFIG_HOME}/vim/settings/shortcuts.vim"
 
 
-autocmd VimEnter * call SetUp()
+call PreSetup()
+autocmd VimEnter * call PostSetup()
 
 colorscheme catppuccin-mocha
 " colorscheme codedark

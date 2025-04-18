@@ -1,18 +1,11 @@
-function SetUp()
+function PreSetup()
     if has('gui_running')
-        call SetUpGui()
+        call PreSetupGUI()
     endif
-    " this is necessary because gvim opens the home directory by default
-    cd %:p:h
-    " Start NERDTree and put the cursor back in the other window.
-    NERDTree | wincmd p
-    " if you don't disable this combination, then the second key will be expected in visual mode
-    " check it by launch :verbose map a
-    unmap a%
 endfunction
 
 
-function SetUpGui()
+function PreSetupGUI()
     if has('macunix')
         set guifont=JetBrainsMono\ Nerd\ Font\ Regular:h13
         set linespace=3
@@ -23,6 +16,17 @@ function SetUpGui()
         " browser for GBrowse and gx
         let g:netrw_browsex_viewer = "yandex-browser"
     endif
+endfunction
+
+
+function PostSetup()
+    " this is necessary because gvim opens the home directory by default
+    cd %:p:h
+    " Start NERDTree and put the cursor back in the other window.
+    NERDTree | wincmd p
+    " if you don't disable this combination, then the second key will be expected in visual mode
+    " check it by launch :verbose map a
+    unmap a%
 endfunction
 
 
