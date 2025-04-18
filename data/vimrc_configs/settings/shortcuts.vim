@@ -1,5 +1,5 @@
-let g:SuperTabMappingBackward = '<tab>'
 let g:NERDTreeMapOpenVSplit = 'v'
+let g:SuperTabMappingBackward = '<tab>'
 " moving in normal mode
 noremap a <left>
 noremap A <left>
@@ -97,11 +97,13 @@ if has('macunix')
   noremap <silent> <D-w> :WintabsClose<CR>
   inoremap <silent> <D-w> <Esc>:WintabsClose<CR>
   " terminal
-  autocmd FileType floaterm noremap <buffer> <silent> <ScrollWheelDown> :call ScrollDown()<CR>
   autocmd FileType floaterm noremap <buffer> <silent> <ScrollWheelUp> :call ScrollUp()<CR>
+  autocmd FileType floaterm noremap <buffer> <silent> <ScrollWheelDown> :call ScrollDown()<CR>
   autocmd FileType floaterm noremap <buffer> <silent> <D-h> :FloatermPrev<CR>
   autocmd FileType floaterm noremap <buffer> <silent> <D-l> :FloatermNext<CR>
   autocmd FileType floaterm noremap <buffer> <silent> <D-t> :FloatermNew<CR>
+  autocmd FileType floaterm tnoremap <buffer> <silent> <ScrollWheelUp> <C-\><C-n>:call ScrollUp()<CR>
+  autocmd FileType floaterm tnoremap <buffer> <silent> <ScrollWheelDown> <C-\><C-n>:call ScrollDown()<CR>
   autocmd FileType floaterm tnoremap <buffer> <silent> <D-h> <C-\><C-n>:FloatermPrev<CR>
   autocmd FileType floaterm tnoremap <buffer> <silent> <D-l> <C-\><C-n>:FloatermNext<CR>
   autocmd FileType floaterm tnoremap <buffer> <silent> <D-t> <C-\><C-n>:FloatermNew<CR>
@@ -109,6 +111,7 @@ if has('macunix')
   noremap <silent> <C-t> :FloatermToggle<CR>
   inoremap <silent> <C-t> <Esc>:FloatermToggle<CR>
   " fzf
+  " this two due to the fact that the side scroll is perceived as vertical
   autocmd FileType fzf tnoremap <buffer> <silent> <ScrollWheelRight> <NOP>
   autocmd FileType fzf tnoremap <buffer> <silent> <ScrollWheelLeft> <NOP>
   autocmd FileType fzf tnoremap <buffer> <C-a> <left>
@@ -127,7 +130,6 @@ else
     let g:SuperTabMappingForward = '<A-tab>'
     noremap <A-ScrollWheelUp> <ScrollWheelRight>
     noremap <A-ScrollWheelDown> <ScrollWheelLeft>
-
     noremap <A-a> <left>
     noremap <A-w> <up>
     noremap <A-s> <down>
@@ -288,4 +290,3 @@ else
   noremap <C-ы> :w<CR>
   inoremap <C-ы> <Esc>:w<CR>
 endif
-

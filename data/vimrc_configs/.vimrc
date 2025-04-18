@@ -40,11 +40,16 @@ call plug#end()
 
 
 execute $"source {$XDG_CONFIG_HOME}/vim/settings/functions.vim"
-execute $"source {$XDG_CONFIG_HOME}/vim/settings/mappings.vim"
+execute $"source {$XDG_CONFIG_HOME}/vim/settings/shortcuts.vim"
 
+
+autocmd VimEnter * call SetUp()
+
+colorscheme catppuccin-mocha
+" colorscheme codedark
+" colorscheme sublimemonokai
 
 filetype plugin indent on " enable filetype detecting, indents and plugins loading
-syntax enable " syntax highlighting
 " set is used for setting internal vim variables
 set colorcolumn=100 " show a vertical line at column 100
 set completeopt-=preview " disable preview window
@@ -76,23 +81,8 @@ set whichwrap+=<,>,h,l,[,] " moving to the next line after reaching the end
 set wildchar=<Tab>
 set wildmenu " autocompletion suggestions in command mode
 
+syntax enable " syntax highlighting
 
-if has('macunix')
-  set guifont=JetBrainsMono\ Nerd\ Font\ Regular:h13
-  set linespace=3
-else
-  set guifont=JetBrainsMono\ Nerd\ Font\ Mono\ Regular\ 11
-  set guioptions=rl " egmrLtT - default value,
-                    " custom: right, left scroll always,
-                    " because of gvim bug
-  " browser for GBrowse and gx
-  let g:netrw_browsex_viewer = "yandex-browser"
-endif
-
-autocmd BufNew,BufRead *.asm set ft=tasm
-colorscheme catppuccin-mocha
-" colorscheme codedark
-" colorscheme sublimemonokai
 
 " airline start
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
@@ -108,8 +98,6 @@ let g:airline_theme = 'catppuccin'
 highlight clear ALEErrorSign
 highlight clear ALEWarningSign
 let g:ale_completion_enabled = 0
-let g:ale_cpp_cc_options = "-std=c++2a -Wall"
-let g:ale_cpp_clangd_options = "-std=c++2a -Wall"
 let g:ale_fixers = {
     \ '*': ['trim_whitespace', 'remove_trailing_lines'],
     \ 'python': ['black', 'isort'],
@@ -160,10 +148,8 @@ autocmd FileType nerdtree,startify call glyph_palette#apply()
 " glyph-palette end
 
 " nerdtree start
-" Start NERDTree and put the cursor back in the other window.
-autocmd VimEnter * NERDTree | wincmd p
-let g:NERDTreeMinimalUI = 1
 let g:NERDTreeAutoDeleteBuffer = 1
+let g:NERDTreeMinimalUI = 1
 " nerdtree end
 
 " pear-tree start

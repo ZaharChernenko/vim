@@ -281,3 +281,9 @@ function ToggleTerminal(is_from_insert)
     endif
 endfunction
 
+
+" not used because you can't highlight, just click
+function FocusOnClick()
+    let mouse_pos = getmousepos()
+    call cursor(mouse_pos.line, mouse_pos.column)
+endfunction
